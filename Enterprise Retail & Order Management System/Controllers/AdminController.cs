@@ -15,7 +15,7 @@ namespace Enterprise_Retail___Order_Management_System.Controllers
         {
             _getUsersService = getUsersService;
         }
-        [Authorize(Roles = "customer")]
+        [Authorize(Roles = "Customer")]
         [HttpGet("GetUsers")]
         public async Task<List<User>> GetAllUsers()
         {
