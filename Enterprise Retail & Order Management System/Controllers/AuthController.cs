@@ -29,5 +29,17 @@ namespace Enterprise_Retail___Order_Management_System.Controllers
 
             return Ok("User registered successfully.");
         }
+
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(UserLogin userlogin)
+        {
+            var result = await _authService.LoginAsync(userlogin);
+            if (result == "Invalid email or password.")
+            {
+                return Unauthorized(result);
+            }
+            return Ok(result);
+        }
     }
 }
