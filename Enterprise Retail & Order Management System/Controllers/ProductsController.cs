@@ -2,6 +2,7 @@
 using Enterprise_Retail___Order_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Enterprise_Retail___Order_Management_System.Controllers;
 
@@ -12,20 +13,29 @@ public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(
+        IProductService productService)
     {
         _productService = productService;
     }
 
     // GET: api/Products
-    // Customer + Admin
+    // Admin + Customer
     [HttpGet]
     [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetProducts(
         [FromQuery] ProductQueryDto query)
     {
+        var role = User.FindFirst(
+            ClaimTypes.Role)?.Value;
+
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return Forbid();
+        }
+
         var result = await _productService
-            .GetProductsAsync(query);
+            .GetProductsAsync(query, role);
 
         return Ok(new
         {
@@ -37,14 +47,22 @@ public class ProductsController : ControllerBase
     }
 
     // GET: api/Products/1
-    // Customer + Admin
+    // Admin + Customer
     [HttpGet("{productId:int}")]
     [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetProductById(
         int productId)
     {
+        var role = User.FindFirst(
+            ClaimTypes.Role)?.Value;
+
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return Forbid();
+        }
+
         var product = await _productService
-            .GetProductByIdAsync(productId);
+            .GetProductByIdAsync(productId, role);
 
         if (product == null)
         {
@@ -72,7 +90,10 @@ public class ProductsController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetProductById),
-            new { productId = product.ProductId },
+            new
+            {
+                productId = product.ProductId
+            },
             product);
     }
 
@@ -85,15 +106,19 @@ public class ProductsController : ControllerBase
         UpdateProductDto request)
     {
         var result = await _productService
-            .UpdateProductAsync(productId, request);
+            .UpdateProductAsync(
+                productId,
+                request);
 
         if (!result)
         {
             return NotFound(
-                "Product not found, category is invalid, or product already exists.");
+                "Product not found, category is invalid, " +
+                "or product already exists.");
         }
 
-        return Ok("Product updated successfully.");
+        return Ok(
+            "Product updated successfully.");
     }
 
     // PATCH: api/Products/1/deactivate
@@ -111,6 +136,7 @@ public class ProductsController : ControllerBase
             return NotFound("Product not found.");
         }
 
-        return Ok("Product deactivated successfully.");
+        return Ok(
+            "Product deactivated successfully.");
     }
 }

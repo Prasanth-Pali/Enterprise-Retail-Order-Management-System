@@ -15,13 +15,34 @@ public class ProductService : IProductService
     }
 
     public async Task<(List<ProductResponseDto> Products, int TotalCount)>
-        GetProductsAsync(ProductQueryDto query)
+        GetProductsAsync(
+            ProductQueryDto query,
+            string role)
     {
         var productsQuery = _context.Products
             .AsNoTracking()
             .Include(x => x.Category)
             .AsQueryable();
 
+        // Customer can see only active products.
+        // Admin can see both active and inactive products.
+        if (role.Equals(
+            "customer",
+            StringComparison.OrdinalIgnoreCase))
+        {
+            productsQuery = productsQuery
+                .Where(x => x.IsActive);
+        }
+
+        // Admin can use this filter to see
+        // active/inactive products separately.
+        if (query.IsActive.HasValue)
+        {
+            productsQuery = productsQuery
+                .Where(x => x.IsActive == query.IsActive.Value);
+        }
+
+        // Search
         if (!string.IsNullOrWhiteSpace(query.Search))
         {
             var search = query.Search.Trim();
@@ -32,32 +53,31 @@ public class ProductService : IProductService
                  x.Description.Contains(search)));
         }
 
+        // Category filter
         if (query.CategoryId.HasValue)
         {
-            productsQuery = productsQuery.Where(x =>
-                x.CategoryId == query.CategoryId.Value);
+            productsQuery = productsQuery
+                .Where(x => x.CategoryId == query.CategoryId.Value);
         }
 
-        if (query.IsActive.HasValue)
-        {
-            productsQuery = productsQuery.Where(x =>
-                x.IsActive == query.IsActive.Value);
-        }
-
+        // Minimum price
         if (query.MinPrice.HasValue)
         {
-            productsQuery = productsQuery.Where(x =>
-                x.Price >= query.MinPrice.Value);
+            productsQuery = productsQuery
+                .Where(x => x.Price >= query.MinPrice.Value);
         }
 
+        // Maximum price
         if (query.MaxPrice.HasValue)
         {
-            productsQuery = productsQuery.Where(x =>
-                x.Price <= query.MaxPrice.Value);
+            productsQuery = productsQuery
+                .Where(x => x.Price <= query.MaxPrice.Value);
         }
 
+        // Total records before pagination
         var totalCount = await productsQuery.CountAsync();
 
+        // Pagination
         var products = await productsQuery
             .OrderByDescending(x => x.CreatedAt)
             .Skip((query.PageNumber - 1) * query.PageSize)
@@ -81,12 +101,24 @@ public class ProductService : IProductService
     }
 
     public async Task<ProductResponseDto?> GetProductByIdAsync(
-        int productId)
+        int productId,
+        string role)
     {
-        return await _context.Products
+        var productsQuery = _context.Products
             .AsNoTracking()
             .Include(x => x.Category)
-            .Where(x => x.ProductId == productId)
+            .Where(x => x.ProductId == productId);
+
+        // Customer cannot access inactive products.
+        if (role.Equals(
+            "customer",
+            StringComparison.OrdinalIgnoreCase))
+        {
+            productsQuery = productsQuery
+                .Where(x => x.IsActive);
+        }
+
+        return await productsQuery
             .Select(x => new ProductResponseDto
             {
                 ProductId = x.ProductId,
@@ -106,6 +138,7 @@ public class ProductService : IProductService
     public async Task<ProductResponseDto?> CreateProductAsync(
         CreateProductDto request)
     {
+        // Category must exist and be active.
         var categoryExists = await _context.Categories
             .AnyAsync(x =>
                 x.CategoryId == request.CategoryId &&
@@ -118,6 +151,8 @@ public class ProductService : IProductService
 
         var productName = request.ProductName.Trim();
 
+        // Prevent duplicate product
+        // within the same category.
         var duplicateExists = await _context.Products
             .AnyAsync(x =>
                 x.ProductName == productName &&
@@ -143,7 +178,9 @@ public class ProductService : IProductService
 
         await _context.SaveChangesAsync();
 
-        return await GetProductByIdAsync(product.ProductId);
+        return await GetProductByIdAsync(
+            product.ProductId,
+            "admin");
     }
 
     public async Task<bool> UpdateProductAsync(
@@ -151,13 +188,15 @@ public class ProductService : IProductService
         UpdateProductDto request)
     {
         var product = await _context.Products
-            .FirstOrDefaultAsync(x => x.ProductId == productId);
+            .FirstOrDefaultAsync(x =>
+                x.ProductId == productId);
 
         if (product == null)
         {
             return false;
         }
 
+        // Category must exist and be active.
         var categoryExists = await _context.Categories
             .AnyAsync(x =>
                 x.CategoryId == request.CategoryId &&
@@ -170,6 +209,8 @@ public class ProductService : IProductService
 
         var productName = request.ProductName.Trim();
 
+        // Prevent duplicate product name
+        // within the same category.
         var duplicateExists = await _context.Products
             .AnyAsync(x =>
                 x.ProductId != productId &&
@@ -193,10 +234,12 @@ public class ProductService : IProductService
         return true;
     }
 
-    public async Task<bool> DeactivateProductAsync(int productId)
+    public async Task<bool> DeactivateProductAsync(
+        int productId)
     {
         var product = await _context.Products
-            .FirstOrDefaultAsync(x => x.ProductId == productId);
+            .FirstOrDefaultAsync(x =>
+                x.ProductId == productId);
 
         if (product == null)
         {
