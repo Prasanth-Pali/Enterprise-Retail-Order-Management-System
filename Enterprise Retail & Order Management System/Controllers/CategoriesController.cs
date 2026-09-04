@@ -2,6 +2,7 @@
 using Enterprise_Retail___Order_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Enterprise_Retail___Order_Management_System.Controllers;
 
@@ -12,19 +13,27 @@ public class CategoriesController : ControllerBase
 {
     private readonly ICategoryService _categoryService;
 
-    public CategoriesController(ICategoryService categoryService)
+    public CategoriesController(
+        ICategoryService categoryService)
     {
         _categoryService = categoryService;
     }
 
-    // GET: api/Categories
     [HttpGet]
     [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetCategories(
         [FromQuery] CategoryQueryDto query)
     {
+        var role = User.FindFirst(
+            ClaimTypes.Role)?.Value;
+
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return Forbid();
+        }
+
         var result = await _categoryService
-            .GetCategoriesAsync(query);
+            .GetCategoriesAsync(query, role);
 
         return Ok(new
         {
@@ -35,14 +44,21 @@ public class CategoriesController : ControllerBase
         });
     }
 
-    // GET: api/Categories/1
-    [Authorize(Roles = "admin")]
     [HttpGet("{categoryId:int}")]
+    [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetCategoryById(
         int categoryId)
     {
+        var role = User.FindFirst(
+            ClaimTypes.Role)?.Value;
+
+        if (string.IsNullOrWhiteSpace(role))
+        {
+            return Forbid();
+        }
+
         var category = await _categoryService
-            .GetCategoryByIdAsync(categoryId);
+            .GetCategoryByIdAsync(categoryId, role);
 
         if (category == null)
         {
@@ -52,9 +68,8 @@ public class CategoriesController : ControllerBase
         return Ok(category);
     }
 
-    // POST: api/Categories
-    [Authorize(Roles = "admin")]
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> CreateCategory(
         CreateCategoryDto request)
     {
@@ -69,19 +84,23 @@ public class CategoriesController : ControllerBase
 
         return CreatedAtAction(
             nameof(GetCategoryById),
-            new { categoryId = category.CategoryId },
+            new
+            {
+                categoryId = category.CategoryId
+            },
             category);
     }
 
-    // PUT: api/Categories/1
-    [Authorize(Roles = "admin")]
     [HttpPut("{categoryId:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> UpdateCategory(
         int categoryId,
         UpdateCategoryDto request)
     {
         var result = await _categoryService
-            .UpdateCategoryAsync(categoryId, request);
+            .UpdateCategoryAsync(
+                categoryId,
+                request);
 
         if (!result)
         {
@@ -89,12 +108,12 @@ public class CategoriesController : ControllerBase
                 "Category not found or category name already exists.");
         }
 
-        return Ok("Category updated successfully.");
+        return Ok(
+            "Category updated successfully.");
     }
 
-    // PATCH: api/Categories/1/deactivate
-    [Authorize(Roles = "admin")]
     [HttpPatch("{categoryId:int}/deactivate")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeactivateCategory(
         int categoryId)
     {
@@ -103,9 +122,11 @@ public class CategoriesController : ControllerBase
 
         if (!result)
         {
-            return NotFound("Category not found.");
+            return NotFound(
+                "Category not found or category is already inactive.");
         }
 
-        return Ok("Category deactivated successfully.");
+        return Ok(
+            "Category deactivated successfully.");
     }
 }

@@ -5,9 +5,13 @@ namespace Enterprise_Retail___Order_Management_System.Services.Interfaces;
 public interface ICategoryService
 {
     Task<(List<CategoryResponseDto> Categories, int TotalCount)>
-        GetCategoriesAsync(CategoryQueryDto query);
+        GetCategoriesAsync(
+            CategoryQueryDto query,
+            string role);
 
-    Task<CategoryResponseDto?> GetCategoryByIdAsync(int categoryId);
+    Task<CategoryResponseDto?> GetCategoryByIdAsync(
+        int categoryId,
+        string role);
 
     Task<CategoryResponseDto?> CreateCategoryAsync(
         CreateCategoryDto request);
@@ -16,5 +20,6 @@ public interface ICategoryService
         int categoryId,
         UpdateCategoryDto request);
 
-    Task<bool> DeactivateCategoryAsync(int categoryId);
+    Task<bool> DeactivateCategoryAsync(
+        int categoryId);
 }

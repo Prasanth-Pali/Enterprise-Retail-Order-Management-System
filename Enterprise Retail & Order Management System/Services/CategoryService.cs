@@ -15,11 +15,30 @@ public class CategoryService : ICategoryService
     }
 
     public async Task<(List<CategoryResponseDto> Categories, int TotalCount)>
-        GetCategoriesAsync(CategoryQueryDto query)
+        GetCategoriesAsync(
+            CategoryQueryDto query,
+            string role)
     {
         var categoriesQuery = _context.Categories
             .AsNoTracking()
             .AsQueryable();
+
+        // Customer can see only active categories.
+        // Admin can see both active and inactive categories.
+        if (role.Equals(
+            "customer",
+            StringComparison.OrdinalIgnoreCase))
+        {
+            categoriesQuery = categoriesQuery
+                .Where(x => x.IsActive);
+        }
+
+        // Admin can filter active/inactive categories.
+        if (query.IsActive.HasValue)
+        {
+            categoriesQuery = categoriesQuery
+                .Where(x => x.IsActive == query.IsActive.Value);
+        }
 
         // Search
         if (!string.IsNullOrWhiteSpace(query.Search))
@@ -30,13 +49,6 @@ public class CategoryService : ICategoryService
                 x.CategoryName.Contains(search) ||
                 (x.Description != null &&
                  x.Description.Contains(search)));
-        }
-
-        // Active / Inactive filter
-        if (query.IsActive.HasValue)
-        {
-            categoriesQuery = categoriesQuery.Where(x =>
-                x.IsActive == query.IsActive.Value);
         }
 
         // Total records before pagination
@@ -61,11 +73,24 @@ public class CategoryService : ICategoryService
     }
 
     public async Task<CategoryResponseDto?> GetCategoryByIdAsync(
-        int categoryId)
+        int categoryId,
+        string role)
     {
-        return await _context.Categories
+        var categoriesQuery = _context.Categories
             .AsNoTracking()
-            .Where(x => x.CategoryId == categoryId)
+            .Where(x => x.CategoryId == categoryId);
+
+        // Customer cannot access inactive category
+        // even if they know the CategoryId.
+        if (role.Equals(
+            "customer",
+            StringComparison.OrdinalIgnoreCase))
+        {
+            categoriesQuery = categoriesQuery
+                .Where(x => x.IsActive);
+        }
+
+        return await categoriesQuery
             .Select(x => new CategoryResponseDto
             {
                 CategoryId = x.CategoryId,
@@ -153,6 +178,12 @@ public class CategoryService : ICategoryService
             .FirstOrDefaultAsync(x => x.CategoryId == categoryId);
 
         if (category == null)
+        {
+            return false;
+        }
+
+        // Already inactive
+        if (!category.IsActive)
         {
             return false;
         }
