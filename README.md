@@ -4,49 +4,6 @@ A real-time, enterprise-style Retail & Order Management System built using **ASP
 
 The project is being developed incrementally using a **layered architecture** and real-world backend development practices.
 
----
-
-## 🚀 Project Status
-
-### Completed
-
-* User Registration & Login
-* JWT Authentication
-* Role-Based Authorization
-* BCrypt Password Hashing
-* User Management
-* Category Management
-* Product Management
-* Product Stock Management
-* Order Management
-* Order Item Management
-* Payment Management
-* Pagination
-* Search & Filtering
-* DTO-based API design
-* Service Layer Architecture
-* Entity Framework Core
-* SQL Server Database-First
-* Swagger / OpenAPI
-* Input Validation
-* Transaction Handling
-* Customer/Admin access separation
-* Order status workflow
-
-### Currently Under Development
-
-* Refresh Token
-* Global Exception Handling
-* Structured Logging
-* Angular Frontend
-* Payment Gateway Integration
-* Testing
-* Docker
-* CI/CD
-* Azure Deployment
-
----
-
 # 🛠️ Technologies Used
 
 ## Backend
