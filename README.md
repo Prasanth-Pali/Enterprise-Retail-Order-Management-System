@@ -1,97 +1,140 @@
 # Enterprise Retail & Order Management System
 
-A real-time enterprise-style Retail & Order Management System built using ASP.NET Core Web API, SQL Server and Entity Framework Core.
+A real-time, enterprise-style Retail & Order Management System built using **ASP.NET Core Web API, SQL Server, Entity Framework Core, JWT Authentication, and BCrypt**.
 
-The application provides secure authentication, role-based authorization, user management, product and category management, cart management, order processing and payment management.
-
----
-
-## 🚀 Features
-
-- User Registration and Login
-- JWT Authentication
-- Role-Based Authorization
-- BCrypt Password Hashing
-- User Management
-- Category Management
-- Product Management
-- Cart Management
-- Order Management
-- Payment Management
-- Pagination
-- Search and Filtering
-- DTO-based API design
-- Service Layer Architecture
-- Entity Framework Core
-- SQL Server Database
-- Swagger API Documentation
-- Input Validation
-- Secure API Endpoints
+The project is being developed incrementally using a **layered architecture** and real-world backend development practices.
 
 ---
 
-## 🛠️ Technologies Used
+## 🚀 Project Status
 
-### Backend
-- C#
-- ASP.NET Core Web API
-- .NET 10
-- Entity Framework Core
-- LINQ
-- JWT Authentication
-- BCrypt.Net
+### Completed
 
-### Database
-- Microsoft SQL Server
-- SQL Server Express
-- Entity Framework Core Database-First
+* User Registration & Login
+* JWT Authentication
+* Role-Based Authorization
+* BCrypt Password Hashing
+* User Management
+* Category Management
+* Product Management
+* Product Stock Management
+* Order Management
+* Order Item Management
+* Payment Management
+* Pagination
+* Search & Filtering
+* DTO-based API design
+* Service Layer Architecture
+* Entity Framework Core
+* SQL Server Database-First
+* Swagger / OpenAPI
+* Input Validation
+* Transaction Handling
+* Customer/Admin access separation
+* Order status workflow
 
-### API Documentation
-- Swagger / OpenAPI
+### Currently Under Development
 
-### Frontend
-- Angular
-- TypeScript
-- HTML
-- CSS
-- AG Grid
-
-### DevOps
-- Git
-- GitHub
-- Azure DevOps
-- CI/CD
-- Docker
+* Refresh Token
+* Global Exception Handling
+* Structured Logging
+* Angular Frontend
+* Payment Gateway Integration
+* Testing
+* Docker
+* CI/CD
+* Azure Deployment
 
 ---
 
-## 🏗️ Architecture
+# 🛠️ Technologies Used
+
+## Backend
+
+* C#
+* ASP.NET Core Web API
+* .NET 10
+* Entity Framework Core
+* LINQ
+* JWT Authentication
+* BCrypt.Net
+
+## Database
+
+* Microsoft SQL Server
+* SQL Server Express
+* Entity Framework Core Database-First
+
+## API Documentation
+
+* Swagger / OpenAPI
+
+## Frontend
+
+Planned:
+
+* Angular
+* TypeScript
+* HTML
+* CSS
+* AG Grid
+
+## DevOps
+
+Planned:
+
+* Git
+* GitHub
+* Azure DevOps
+* Docker
+* CI/CD
+* Azure
+
+---
+
+# 🏗️ Architecture
 
 The application follows a layered architecture:
 
-Controller → Service → Entity Framework Core → SQL Server
+```text
+Client
+   ↓
+Controller Layer
+   ↓
+Service Layer
+   ↓
+Entity Framework Core
+   ↓
+SQL Server
+```
 
 ### Controller Layer
 
 Responsible for:
 
-- Receiving HTTP requests
-- Model validation
-- Returning HTTP responses
-- Authorization
+* Receiving HTTP requests
+* Model validation
+* Authorization
+* Returning HTTP responses
 
 ### Service Layer
 
 Responsible for:
 
-- Business logic
-- Database operations
-- Validation logic
-- Data processing
+* Business logic
+* Validation
+* Database operations
+* Data processing
+* Transaction handling
 
 ### DTO Layer
 
-Used to control the data exposed through APIs and prevent direct exposure of database entities.
+DTOs are used to:
+
+* Control API request/response data
+* Avoid exposing database entities directly
+* Validate incoming requests
+* Improve API security and maintainability
 
 ### Data Layer
 
@@ -99,16 +142,16 @@ Entity Framework Core is used to communicate with SQL Server.
 
 ---
 
-## 📁 Project Structure
+# 📁 Project Structure
 
+```text
 Enterprise Retail & Order Management System
-
+│
 ├── Controllers
 │   ├── AuthController.cs
 │   ├── UsersController.cs
 │   ├── CategoriesController.cs
 │   ├── ProductsController.cs
-│   ├── CartController.cs
 │   ├── OrdersController.cs
 │   └── PaymentsController.cs
 │
@@ -117,7 +160,6 @@ Enterprise Retail & Order Management System
 │   ├── Users
 │   ├── Categories
 │   ├── Products
-│   ├── Cart
 │   ├── Orders
 │   └── Payments
 │
@@ -125,7 +167,6 @@ Enterprise Retail & Order Management System
 │   ├── User.cs
 │   ├── Category.cs
 │   ├── Product.cs
-│   ├── Cart.cs
 │   ├── Order.cs
 │   ├── OrderItem.cs
 │   ├── Payment.cs
@@ -137,7 +178,6 @@ Enterprise Retail & Order Management System
 │   │   ├── IUserService.cs
 │   │   ├── ICategoryService.cs
 │   │   ├── IProductService.cs
-│   │   ├── ICartService.cs
 │   │   ├── IOrderService.cs
 │   │   └── IPaymentService.cs
 │   │
@@ -145,320 +185,465 @@ Enterprise Retail & Order Management System
 │   ├── UserService.cs
 │   ├── CategoryService.cs
 │   ├── ProductService.cs
-│   ├── CartService.cs
 │   ├── OrderService.cs
 │   └── PaymentService.cs
 │
 ├── Program.cs
 ├── appsettings.json
 └── Enterprise Retail & Order Management System.csproj
+```
 
 ---
 
-## 🔐 Authentication & Authorization
+# 🔐 Authentication & Authorization
 
-The application uses JWT Bearer Authentication.
+The application uses **JWT Bearer Authentication**.
 
-### Authentication Flow
+## Authentication Flow
 
-1. User registers using the Register API.
-2. Password is securely hashed using BCrypt.
-3. User logs in using email and password.
-4. API validates the credentials.
-5. JWT token is generated.
-6. Client sends the JWT token with subsequent requests.
-7. API validates the token before allowing access.
+```text
+User Registration
+       ↓
+Password hashed using BCrypt
+       ↓
+User Login
+       ↓
+Credentials validated
+       ↓
+JWT generated
+       ↓
+Client sends JWT
+       ↓
+API validates JWT
+       ↓
+Authorized API access
+```
 
-### Roles
+## Roles
 
 The application supports:
 
-- admin
-- customer
+* `admin`
+* `customer`
 
 Example:
 
+```csharp
 [Authorize(Roles = "admin")]
+```
 
-Only authenticated admin users can access admin-level APIs.
+Admin-only APIs are protected using role-based authorization.
+
+Customer APIs are restricted to authenticated customers where required.
 
 ---
 
-## 👤 User Management
+# 🔑 Password Security
 
-User management provides enterprise-style operations such as:
+Passwords are never stored as plain text.
 
-- Get users
-- Get user by ID
-- Search users
-- Filter users by role
-- Filter users by active status
-- Pagination
-- Update user
-- Deactivate user
+BCrypt is used to hash passwords before storing them in SQL Server.
 
-### Get Users
+```text
+Plain Password
+      ↓
+    BCrypt
+      ↓
+Password Hash
+      ↓
+SQL Server
+```
 
-GET:
+During login, the supplied password is verified against the stored BCrypt hash.
 
-/api/Users
+---
 
-Optional query parameters:
+# 👤 User Management
 
-/api/Users?pageNumber=1&pageSize=10
+The User Management module provides:
 
-/api/Users?search=rahul
+* Get users
+* Get user by ID
+* Search users
+* Filter users by role
+* Filter users by active status
+* Pagination
+* Update user
+* Deactivate user
 
-/api/Users?role=customer
+### Example
 
-/api/Users?isActive=true
+```http
+GET /api/Users?pageNumber=1&pageSize=10
+```
+
+Search:
+
+```http
+GET /api/Users?search=rahul
+```
+
+Role filter:
+
+```http
+GET /api/Users?role=customer
+```
+
+Active status:
+
+```http
+GET /api/Users?isActive=true
+```
 
 Combined:
 
-/api/Users?pageNumber=1&pageSize=10&search=rahul&role=customer&isActive=true
+```http
+GET /api/Users?pageNumber=1&pageSize=10&search=rahul&role=customer&isActive=true
+```
 
-The API returns:
-
-- User data
-- Total record count
-- Page number
-- Page size
-
-PasswordHash is never returned to the client.
+`PasswordHash` is never returned through API responses.
 
 ---
 
-## 📦 Category Management
+# 📦 Category Management
 
 Categories are used to organize products.
 
 Example categories:
 
-- Electronics
-- Mobiles
-- Laptops
-- Home Appliances
+* Electronics
+* Mobiles
+* Laptops
+* Home Appliances
 
-Operations include:
+Operations:
 
-- Create category
-- Get categories
-- Get category by ID
-- Update category
-- Deactivate category
+* Create category
+* Get categories
+* Get category by ID
+* Update category
+* Deactivate category
+
+### Role-based behavior
+
+**Admin:**
+
+* Can manage categories
+* Can view active and inactive categories
+
+**Customer:**
+
+* Can view active categories only
+* Cannot access inactive categories
 
 ---
 
-## 🛍️ Product Management
+# 🛍️ Product Management
 
 Product management provides:
 
-- Create product
-- Get products
-- Get product by ID
-- Update product
-- Search products
-- Filter products by category
-- Pagination
-- Stock management
-- Activate/deactivate product
+* Create product
+* Get products
+* Get product by ID
+* Update product
+* Search products
+* Filter products by category
+* Pagination
+* Stock management
+* Deactivate product
 
 Example:
 
-GET:
-
-/api/Products?pageNumber=1&pageSize=10
+```http
+GET /api/Products?pageNumber=1&pageSize=10
+```
 
 Search:
 
-/api/Products?search=Samsung
+```http
+GET /api/Products?search=Samsung
+```
 
 Category filter:
 
-/api/Products?categoryId=2
+```http
+GET /api/Products?categoryId=2
+```
+
+### Role-based behavior
+
+**Admin:**
+
+* Can create products
+* Can update products
+* Can deactivate products
+* Can view active and inactive products
+
+**Customer:**
+
+* Can view active products only
+* Cannot access inactive products
 
 ---
 
-## 🛒 Cart Management
+# 📋 Order Management
 
-Customers can manage products in their shopping cart.
+Orders follow an enterprise-style order workflow.
 
-Operations include:
+## Order Status
 
-- Add product to cart
-- Get cart
-- Update quantity
-- Remove product
-- Clear cart
+```text
+Pending
+   ↓
+Confirmed
+   ↓
+Shipped
+   ↓
+Delivered
+```
 
-Cart maintains:
+Cancellation is supported from applicable stages.
 
-- User
-- Product
-- Quantity
+```text
+Pending → Cancelled
+Confirmed → Cancelled
+```
 
-A unique constraint is maintained for User + Product to avoid duplicate cart records.
+## Order Creation
 
----
+When a customer creates an order, the API:
 
-## 📋 Order Management
+1. Validates the customer
+2. Validates order items
+3. Validates products
+4. Checks product stock
+5. Gets the current product price
+6. Creates the order
+7. Creates order items
+8. Calculates total amount
+9. Reduces product stock
+10. Saves everything inside a database transaction
 
-Order processing follows an enterprise-style workflow.
+### Order structure
 
-Order statuses:
+```text
+Order
+ ├── Customer
+ ├── Order Date
+ ├── Shipping Address
+ ├── Total Amount
+ ├── Status
+ │
+ └── Order Items
+      ├── Product
+      ├── Quantity
+      ├── Unit Price
+      └── Subtotal
+```
 
-- Pending
-- Confirmed
-- Shipped
-- Delivered
-- Cancelled
+### Customer access
 
-Order contains:
+Customers can view only their own orders.
 
-- Customer
-- Order date
-- Shipping address
-- Total amount
-- Order items
-- Product
-- Quantity
-- Unit price
-- Subtotal
+### Admin access
 
-Example order flow:
-
-Customer → Cart → Order → Payment → Order Confirmation → Shipment → Delivery
-
----
-
-## 💳 Payment Management
-
-Payment module maintains payment information for orders.
-
-Supported payment methods:
-
-- Credit Card
-- Debit Card
-- UPI
-- Net Banking
-- Cash on Delivery
-
-Payment statuses:
-
-- Pending
-- Success
-- Failed
-- Refunded
-
-Payment contains:
-
-- Order
-- Payment method
-- Payment status
-- Transaction ID
-- Payment date
-- Amount
+Admins can view all orders and manage order status.
 
 ---
 
-## 🗄️ Database
+# 💳 Payment Management
 
-The application uses Microsoft SQL Server.
+The project currently implements a **payment simulation/business workflow** using the existing Payments table.
 
-Database name:
+No real payment gateway is integrated yet.
 
+## Supported Payment Methods
+
+* Credit Card
+* Debit Card
+* UPI
+* Net Banking
+* Cash on Delivery
+
+## Payment Statuses
+
+* Pending
+* Success
+* Failed
+* Refunded
+
+## Current Payment Flow
+
+```text
+Customer
+   ↓
+Create Order
+   ↓
+Order Status = Pending
+   ↓
+Create Payment
+   ↓
+Validate Order
+   ↓
+Validate Payment Amount
+   ↓
+Validate Payment Method
+   ↓
+Create Payment Record
+   ↓
+Payment Status = Success
+   ↓
+Order Status = Confirmed
+```
+
+The current implementation simulates successful payment after all business validations pass.
+
+### Important
+
+Actual payment processing through providers such as Razorpay or Stripe is **not implemented yet**.
+
+A future implementation can integrate a real payment gateway with:
+
+* Payment gateway checkout
+* Transaction verification
+* Webhooks
+* Signature verification
+* Payment failure handling
+* Refund processing
+
+---
+
+# 🗄️ Database
+
+The application uses:
+
+**Microsoft SQL Server**
+
+Database:
+
+```text
 RetailFlowDB
+```
 
-Main tables:
+## Main Tables
 
-- Users
-- Categories
-- Products
-- Cart
-- Orders
-- OrderItems
-- Payments
+```text
+Users
+Categories
+Products
+Orders
+OrderItems
+Payments
+```
 
 ### Relationships
 
+```text
 Users
-↓
+  ↓
 Orders
-↓
+  ↓
 OrderItems
-↓
+  ↓
 Products
-↓
+  ↓
 Categories
 
 Orders
-↓
+  ↓
 Payments
+```
 
-Users
-↓
-Cart
-↓
-Products
+The project currently uses the existing database schema and does not introduce an additional Cart table.
 
 ---
 
-## 🔄 Entity Framework Core
+# 🔄 Entity Framework Core
 
-The project uses Entity Framework Core with Database-First approach.
+The application uses **Entity Framework Core Database-First**.
 
-The database models are generated using:
-
-Scaffold-DbContext
+Database models are generated using `Scaffold-DbContext`.
 
 Example:
 
+```powershell
 Scaffold-DbContext "Server=.\SQLEXPRESS;Database=RetailFlowDB;Trusted_Connection=True;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Context RetailFlowDbContext -Force
+```
+
+This generates:
+
+* Entity models
+* `RetailFlowDbContext`
+* Database relationships
 
 ---
 
-## ✅ Validation
+# ✅ Input Validation
 
-The application uses ASP.NET Core Data Annotations for request validation.
+ASP.NET Core Data Annotations are used for request validation.
 
-Examples:
+Validation includes:
 
-- Required fields
-- String length validation
-- Email validation
-- Phone number validation
-- Strong password validation
-- Numeric range validation
+* Required fields
+* String length
+* Email validation
+* Phone number validation
+* Strong password validation
+* Numeric range validation
+* Order quantity validation
+* Shipping address validation
 
-Example password requirements:
+## Password Requirements
 
-- Minimum 8 characters
-- Uppercase letter
-- Lowercase letter
-- Number
-- Special character
-
----
-
-## 🔒 Security
-
-Security practices implemented include:
-
-- JWT authentication
-- Role-based authorization
-- BCrypt password hashing
-- PasswordHash never returned in API responses
-- HTTPS
-- DTO-based request/response handling
-- Database constraints
-- Input validation
-- Active/inactive user control
+* Minimum 8 characters
+* Uppercase letter
+* Lowercase letter
+* Number
+* Special character
 
 ---
 
-## 📡 HTTP Status Codes
+# 🔒 Security
 
-The APIs follow standard HTTP status codes.
+Implemented security practices include:
+
+* JWT authentication
+* Role-based authorization
+* BCrypt password hashing
+* DTO-based API design
+* PasswordHash excluded from responses
+* Input validation
+* Active/inactive user control
+* Database constraints
+* Protected API endpoints
+
+---
+
+# 🔄 Transactions
+
+Database transactions are used for critical operations.
+
+For example, order creation performs:
+
+```text
+Create Order
+     +
+Create Order Items
+     +
+Reduce Product Stock
+     +
+Calculate Total
+```
+
+These operations are executed inside a transaction so that a failure can roll back the operation.
+
+Payment processing also uses a transaction while creating the payment and confirming the order.
+
+---
+
+# 📡 HTTP Status Codes
+
+The API follows standard HTTP status codes.
 
 ### 200 OK
 
@@ -470,11 +655,11 @@ New resource created successfully.
 
 ### 400 Bad Request
 
-Invalid request or validation failure.
+Invalid request or business validation failure.
 
 ### 401 Unauthorized
 
-Authentication required or invalid JWT token.
+Authentication is required or JWT is invalid.
 
 ### 403 Forbidden
 
@@ -494,174 +679,236 @@ Unexpected server-side error.
 
 ---
 
-## ▶️ How to Run
+# ▶️ How to Run
 
-### 1. Clone the Repository
+## 1. Clone Repository
 
+```bash
 git clone https://github.com/Prasanth-Pali/Enterprise-Retail-Order-Management-System.git
+```
 
-### 2. Open the Project
+## 2. Open the Project
 
 Open the solution using:
 
-- Visual Studio
-- Visual Studio Code
+* Visual Studio
+* Visual Studio Code
 
-### 3. Configure SQL Server
+## 3. Configure SQL Server
 
 Make sure SQL Server Express is running.
 
 Default instance:
 
+```text
 .\SQLEXPRESS
+```
 
-### 4. Create Database
+## 4. Create Database
 
 Create:
 
+```text
 RetailFlowDB
+```
 
-Run the provided SQL database script.
+Run the project database SQL script.
 
-### 5. Configure Connection String
+## 5. Configure Connection String
 
-Update appsettings.json:
+Update `appsettings.json`:
 
-Server=.\SQLEXPRESS;Database=RetailFlowDB;Trusted_Connection=True;TrustServerCertificate=True;
+```json
+{
+  "ConnectionStrings": {
+    "RetailFlowConnection": "Server=.\\SQLEXPRESS;Database=RetailFlowDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  }
+}
+```
 
-### 6. Restore Packages
+## 6. Restore Packages
 
+```bash
 dotnet restore
+```
 
-### 7. Build Project
+## 7. Build
 
+```bash
 dotnet build
+```
 
-### 8. Run Application
+## 8. Run
 
+```bash
 dotnet run
+```
 
-### 9. Open Swagger
+## 9. Open Swagger
 
 After starting the application, open the Swagger URL displayed by ASP.NET Core.
 
-Swagger can be used to test all APIs.
+Swagger can be used to test the APIs.
 
 ---
 
-## 🧪 API Testing Flow
+# 🧪 API Testing Flow
 
 Recommended testing sequence:
 
-### Step 1
+### Step 1 — Register
+
+```http
+POST /api/Auth/register
+```
 
 Register a customer.
 
-POST:
+### Step 2 — Login
 
-/api/Auth/register
+```http
+POST /api/Auth/login
+```
 
-### Step 2
+Get the JWT token.
 
-Login.
+### Step 3 — Authorize
 
-POST:
+Use Swagger's **Authorize** button:
 
-/api/Auth/login
-
-### Step 3
-
-Copy the JWT token.
-
-### Step 4
-
-Authorize Swagger using:
-
+```text
 Bearer YOUR_TOKEN
+```
 
-### Step 5
+### Step 4 — Test Categories
 
-Access authorized APIs.
+```http
+GET /api/Categories
+```
 
-For example:
+### Step 5 — Test Products
 
-GET /api/Users
-
+```http
 GET /api/Products
+```
 
-GET /api/Orders
+### Step 6 — Create Order
+
+```http
+POST /api/Orders
+```
+
+The order starts with:
+
+```text
+Pending
+```
+
+### Step 7 — Create Payment
+
+```http
+POST /api/Payments
+```
+
+After successful payment processing:
+
+```text
+Payment = Success
+Order = Confirmed
+```
+
+### Step 8 — Get Order
+
+```http
+GET /api/Orders/{id}
+```
+
+### Step 9 — Get Payment
+
+```http
+GET /api/Payments/order/{orderId}
+```
 
 ---
 
-## 🔄 Git Workflow
+# 🔀 Git Workflow
 
-The project uses Git for source control.
+The project uses Git and GitHub for source control.
 
 Typical workflow:
 
+```bash
 git status
 
 git add .
 
-git commit -m "Implemented user management APIs"
+git commit -m "Implemented payment management"
 
 git push origin master
+```
 
 ---
 
-## 🚀 Future Enhancements
+# 🚀 Future Enhancements
 
-Planned enhancements include:
+The following features are planned as the project evolves:
 
-- Angular frontend
-- AG Grid integration
-- Global exception handling middleware
-- Structured logging
-- Refresh token implementation
-- Email notifications
-- Advanced product search
-- Sorting and filtering
-- Order tracking
-- Payment gateway integration
-- Docker containerization
-- Azure deployment
-- Azure DevOps CI/CD pipeline
-- Unit testing
-- Integration testing
-- Redis caching
-- Message queues
-- API versioning
+* Refresh Token
+* Global Exception Handling Middleware
+* Structured Logging
+* Consistent API Response Model
+* Angular Frontend
+* AG Grid
+* Real Payment Gateway Integration
+* Email Notifications
+* Advanced Product Search
+* Advanced Sorting & Filtering
+* Order Tracking
+* Unit Testing
+* Integration Testing
+* Docker Containerization
+* Azure Deployment
+* Azure DevOps CI/CD
+* Redis Caching
+* Message Queues
+* API Versioning
+* Production-level concurrency handling
 
 ---
 
-## 🎯 Project Goal
+# 🎯 Project Goal
 
-The goal of this project is to build an enterprise-style full-stack Retail & Order Management application following real-world software development practices.
+The goal of this project is to build an enterprise-style full-stack Retail & Order Management application using real-world software development practices.
 
 The project demonstrates:
 
-- ASP.NET Core Web API development
-- Clean layered architecture
-- REST API design
-- SQL Server
-- Entity Framework Core
-- Database-First development
-- JWT authentication
-- Role-based authorization
-- Secure password hashing
-- DTOs
-- Service layer
-- Pagination
-- Search and filtering
-- Git and GitHub
-- Angular integration
-- CI/CD and cloud deployment concepts
+* ASP.NET Core Web API
+* REST API design
+* Layered architecture
+* Service Layer
+* DTO-based design
+* SQL Server
+* Entity Framework Core
+* Database-First development
+* JWT Authentication
+* Role-Based Authorization
+* BCrypt Password Hashing
+* Pagination
+* Search & Filtering
+* Stock Management
+* Order Processing
+* Payment Processing
+* Database Transactions
+* Input Validation
+* Git & GitHub
+
+The project is being developed incrementally with a focus on **maintainability, security, scalability, and real-world enterprise development practices**.
 
 ---
 
-## 👨‍💻 Author
+# 👨‍💻 Author
 
-PRASANTH PALI
+**PRASANTH PALI**
 
 Software Engineer | .NET Developer
 
@@ -671,8 +918,10 @@ https://github.com/Prasanth-Pali
 
 ---
 
-## ⭐ Project Status
+# ⭐ Project Status
 
-🚧 Actively under development
+🚧 **Actively Under Development**
 
-The backend APIs are being developed incrementally following enterprise-style architecture and real-world development practices.
+Core backend modules including **Authentication, User Management, Category Management, Product Management, Order Management, and Payment Management** have been implemented.
+
+The next phase focuses on **refresh tokens, global exception handling, logging, frontend integration, testing, Docker, CI/CD, and Azure deployment**.
