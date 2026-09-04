@@ -1,91 +1,109 @@
 ﻿using Enterprise_Retail___Order_Management_System.DTOs;
 using Enterprise_Retail___Order_Management_System.Models;
-using Enterprise_Retail___Order_Management_System.Services;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
+namespace Enterprise_Retail___Order_Management_System.Services;
 
-namespace RetailFlow.Services
+public class AuthService : IAuthService
 {
-    public class AuthService : IAuthService
+    private readonly RetailFlowDbContext _context;
+    private readonly IConfiguration _configuration;
+
+    public AuthService(
+        RetailFlowDbContext context,
+        IConfiguration configuration)
     {
-        private readonly RetailFlowDbContext _context;
-        private readonly IConfiguration _configuration;
+        _context = context;
+        _configuration = configuration;
+    }
 
-        public AuthService(RetailFlowDbContext context, IConfiguration configuration)
+    public async Task<bool> RegisterAsync(RegisterRequest request)
+    {
+        var existingUser = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == request.Email);
+
+        if (existingUser != null)
         {
-            _context = context;
-            _configuration = configuration;
+            return false;
         }
 
-        public async Task<bool> RegisterAsync(Register request)
+        var user = new User
         {
-            // Check if user already exists
-            var existingUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == request.Email);
+            FullName = request.FullName,
+            Email = request.Email,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
+            Role = "customer",
+            PhoneNumber = request.PhoneNumber,
+            Address = request.Address,
+            IsActive = true
+        };
 
-            if (existingUser != null)
-            {
-                return false;
-            }
+        _context.Users.Add(user);
 
-            // Create new user
-            var user = new User
-            {
-                Name = request.Name,
-                Email = request.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password),
-                Role = "Customer"
-            };
+        await _context.SaveChangesAsync();
 
-            // Add user
-            _context.Users.Add(user);
+        return true;
+    }
 
-            // Save to database
-            await _context.SaveChangesAsync();
+    public async Task<string?> LoginAsync(LoginRequest request)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(x => x.Email == request.Email);
 
-            return true;
+        if (user == null)
+        {
+            return null;
         }
 
-        public async Task<String> LoginAsync(UserLogin userlogin)
+        bool passwordValid = BCrypt.Net.BCrypt.Verify(
+            request.Password,
+            user.PasswordHash);
+
+        if (!passwordValid)
         {
-            // Find user by email
-            var foundUser = await _context.Users
-                .FirstOrDefaultAsync(u => u.Email == userlogin.Email);
-            if (foundUser == null || !BCrypt.Net.BCrypt.Verify(userlogin.Password, foundUser.PasswordHash))
-            {
-                return "Invalid email or password.";
-            }
-            // Here you would typically generate a JWT token or similar for the authenticated user
-            // For simplicity, we will just return a success message
-            //JWT token generation 
-
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, foundUser.Name),
-                new Claim(ClaimTypes.Email, foundUser.Email),
-                new Claim(ClaimTypes.Role, foundUser.Role)
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)); 
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddHours(1),
-                signingCredentials: creds
-                );
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return null;
         }
+
+        var claims = new List<Claim>
+        {
+            new Claim(
+                ClaimTypes.NameIdentifier,
+                user.UserId.ToString()),
+
+            new Claim(
+                ClaimTypes.Name,
+                user.FullName),
+
+            new Claim(
+                ClaimTypes.Email,
+                user.Email),
+
+            new Claim(
+                ClaimTypes.Role,
+                user.Role)
+        };
+
+        var key = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(
+                _configuration["Jwt:Key"]!));
+
+        var credentials = new SigningCredentials(
+            key,
+            SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddHours(1),
+            signingCredentials: credentials
+        );
+
+        return new JwtSecurityTokenHandler()
+            .WriteToken(token);
     }
 }

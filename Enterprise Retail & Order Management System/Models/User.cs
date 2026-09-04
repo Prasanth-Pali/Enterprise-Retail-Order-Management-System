@@ -7,7 +7,7 @@ public partial class User
 {
     public int UserId { get; set; }
 
-    public string Name { get; set; } = null!;
+    public string FullName { get; set; } = null!;
 
     public string Email { get; set; } = null!;
 
@@ -15,9 +15,13 @@ public partial class User
 
     public string Role { get; set; } = null!;
 
-    public DateTime CreatedAt { get; set; }
+    public string? PhoneNumber { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    public string? Address { get; set; }
+
+    public bool IsActive { get; set; }
+
+    public DateTime CreatedAt { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

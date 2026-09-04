@@ -1,45 +1,47 @@
 ﻿using Enterprise_Retail___Order_Management_System.DTOs;
 using Enterprise_Retail___Order_Management_System.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Enterprise_Retail___Order_Management_System.Controllers
+namespace Enterprise_Retail___Order_Management_System.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class AuthController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class AuthController : ControllerBase
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
     {
-        private readonly IAuthService _authService;
+        _authService = authService;
+    }
 
-        public AuthController(IAuthService authService)
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterRequest request)
+    {
+        var result = await _authService.RegisterAsync(request);
+
+        if (!result)
         {
-            _authService = authService;
+            return BadRequest("User with this email already exists.");
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> Register(Register request)
+        return Ok("Registration successful.");
+    }
+
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(LoginRequest request)
+    {
+        var token = await _authService.LoginAsync(request);
+
+        if (token == null)
         {
-            var result = await _authService.RegisterAsync(request);
-
-            if (!result)
-            {
-                return BadRequest("Email already exists.");
-            }
-
-            return Ok("User registered successfully.");
+            return Unauthorized("Invalid email or password.");
         }
 
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(UserLogin userlogin)
+        return Ok(new
         {
-            var result = await _authService.LoginAsync(userlogin);
-            if (result == "Invalid email or password.")
-            {
-                return Unauthorized(result);
-            }
-            return Ok(result);
-        }
+            message = "Login successful.",
+            token = token
+        });
     }
 }

@@ -17,9 +17,11 @@ public partial class Product
 
     public int CategoryId { get; set; }
 
+    public bool IsActive { get; set; }
+
     public DateTime CreatedAt { get; set; }
 
-    public virtual ICollection<Cart> Carts { get; set; } = new List<Cart>();
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Category Category { get; set; } = null!;
 

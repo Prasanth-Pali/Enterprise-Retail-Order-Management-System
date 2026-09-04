@@ -1,9 +1,10 @@
+
 using Enterprise_Retail___Order_Management_System.Models;
 using Enterprise_Retail___Order_Management_System.Services;
+using Enterprise_Retail___Order_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using RetailFlow.Services;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -37,9 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 
-builder.Services.AddScoped<IAuthService, AuthService>();
 
-builder.Services.AddScoped<IGetUsers,GetUsers>();
 
 builder.Services.AddDbContext<RetailFlowDbContext>(options =>
     options.UseSqlServer(
@@ -48,6 +47,9 @@ builder.Services.AddDbContext<RetailFlowDbContext>(options =>
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
