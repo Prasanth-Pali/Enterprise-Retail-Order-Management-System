@@ -1,0 +1,395 @@
+
+.payments-container {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+  height: 70px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+  .topbar h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #1f2937;
+  }
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.payments-content {
+  padding: 30px;
+}
+
+.page-header {
+  margin-bottom: 25px;
+}
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 28px;
+  }
+
+  .page-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+
+/* =========================
+   PAYMENT CARD
+========================= */
+
+.payment-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+  .payment-card h2 {
+    margin: 0 0 20px;
+    font-size: 19px;
+    color: #111827;
+  }
+
+
+/* =========================
+   FORM
+========================= */
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+  .form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+  }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: #2563eb;
+    }
+
+
+/* =========================
+   FORM BUTTONS
+========================= */
+
+.form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 25px;
+}
+
+.pay-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .pay-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+  }
+
+  .pay-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+.reset-btn {
+  padding: 10px 20px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .reset-btn:hover {
+    background: #f3f4f6;
+  }
+
+
+/* =========================
+   FIND PAYMENT
+========================= */
+
+.find-payment {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+  .find-payment input {
+    width: 250px;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+  }
+
+    .find-payment input:focus {
+      border-color: #2563eb;
+    }
+
+.find-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #374151;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .find-btn:hover:not(:disabled) {
+    background: #1f2937;
+  }
+
+  .find-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+.success-message {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+
+/* =========================
+   PAYMENT DETAILS
+========================= */
+
+.payment-details-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 25px;
+  margin-bottom: 20px;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+  .details-header h2 {
+    margin: 0 0 5px;
+    font-size: 19px;
+    color: #111827;
+  }
+
+  .details-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+
+/* =========================
+   PAYMENT STATUS
+========================= */
+
+.payment-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+  .payment-status.success {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .payment-status.pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .payment-status.failed {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+
+/* =========================
+   DETAILS GRID
+========================= */
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+  .detail-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+  }
+
+  .detail-item span {
+    font-size: 14px;
+    color: #111827;
+  }
+
+  .detail-item strong {
+    font-size: 18px;
+    color: #111827;
+  }
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   DETAILS ACTIONS
+========================= */
+
+.details-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .payments-content {
+    padding: 20px 15px;
+  }
+
+  .topbar {
+    padding: 0 15px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .pay-btn,
+  .reset-btn {
+    width: 100%;
+  }
+
+  .find-payment {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+    .find-payment input {
+      width: 100%;
+    }
+
+  .find-btn {
+    width: 100%;
+  }
+
+  .details-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+}
+

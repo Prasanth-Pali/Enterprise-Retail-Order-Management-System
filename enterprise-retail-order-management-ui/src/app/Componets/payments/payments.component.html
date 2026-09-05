@@ -1,0 +1,328 @@
+
+<div class="payments-container">
+
+  <!-- =========================
+       TOP BAR
+  ========================== -->
+  <div class="topbar">
+
+    <h2>Payments</h2>
+
+  </div>
+
+
+  <div class="payments-content">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+    <div class="page-header">
+
+      <div>
+        <h1>Payment Management</h1>
+        <p>Process and view customer payments</p>
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         PAYMENT FORM
+    ========================== -->
+    <div class="payment-card">
+
+      <h2>Make Payment</h2>
+
+      <div class="form-grid">
+
+        <!-- Order ID -->
+        <div class="form-group">
+
+          <label>
+            Order ID
+          </label>
+
+          <input type="number"
+                 [(ngModel)]="orderId"
+                 placeholder="Enter Order ID"
+                 min="1">
+
+        </div>
+
+
+        <!-- Amount -->
+        <div class="form-group">
+
+          <label>
+            Amount
+          </label>
+
+          <input type="number"
+                 [(ngModel)]="amount"
+                 placeholder="Enter Amount"
+                 min="0.01"
+                 step="0.01">
+
+        </div>
+
+
+        <!-- Payment Method -->
+        <div class="form-group">
+
+          <label>
+            Payment Method
+          </label>
+
+          <select [(ngModel)]="paymentMethod">
+
+            <option value="">
+              Select Payment Method
+            </option>
+
+            <option value="CreditCard">
+              Credit Card
+            </option>
+
+            <option value="DebitCard">
+              Debit Card
+            </option>
+
+            <option value="UPI">
+              UPI
+            </option>
+
+            <option value="NetBanking">
+              Net Banking
+            </option>
+
+            <option value="CashOnDelivery">
+              Cash On Delivery
+            </option>
+
+          </select>
+
+        </div>
+
+      </div>
+
+
+      <!-- Buttons -->
+      <div class="form-actions">
+
+        <button type="button"
+                class="pay-btn"
+                [disabled]="isLoading"
+                (click)="makePayment()">
+
+          {{ isLoading ? 'Processing...' : 'Make Payment' }}
+
+        </button>
+
+
+        <button type="button"
+                class="reset-btn"
+                (click)="resetPayment()">
+
+          Reset
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         GET PAYMENT
+    ========================== -->
+    <div class="payment-card">
+
+      <h2>Find Payment</h2>
+
+      <div class="find-payment">
+
+        <input type="number"
+               [(ngModel)]="orderId"
+               placeholder="Enter Order ID"
+               min="1">
+
+
+        <button type="button"
+                class="find-btn"
+                [disabled]="isLoading"
+                (click)="getPayment()">
+
+          {{ isLoading ? 'Loading...' : 'Get Payment' }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUCCESS MESSAGE
+    ========================== -->
+    <div class="success-message"
+         *ngIf="successMessage">
+
+      {{ successMessage }}
+
+    </div>
+
+
+    <!-- =========================
+         ERROR MESSAGE
+    ========================= -->
+    <div class="error-message"
+         *ngIf="errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- =========================
+         PAYMENT DETAILS
+    ========================== -->
+    <div class="payment-details-card"
+         *ngIf="payment">
+
+      <div class="details-header">
+
+        <div>
+
+          <h2>
+            Payment Details
+          </h2>
+
+          <p>
+            Payment information for Order
+            #{{ payment.orderId }}
+          </p>
+
+        </div>
+
+        <span class="payment-status"
+              [ngClass]="payment.paymentStatus.toLowerCase()">
+
+          {{ payment.paymentStatus }}
+
+        </span>
+
+      </div>
+
+
+      <div class="details-grid">
+
+        <!-- Payment ID -->
+        <div class="detail-item">
+
+          <label>
+            Payment ID
+          </label>
+
+          <span>
+            #{{ payment.paymentId }}
+          </span>
+
+        </div>
+
+
+        <!-- Order ID -->
+        <div class="detail-item">
+
+          <label>
+            Order ID
+          </label>
+
+          <span>
+            #{{ payment.orderId }}
+          </span>
+
+        </div>
+
+
+        <!-- Payment Method -->
+        <div class="detail-item">
+
+          <label>
+            Payment Method
+          </label>
+
+          <span>
+            {{ payment.paymentMethod }}
+          </span>
+
+        </div>
+
+
+        <!-- Amount -->
+        <div class="detail-item">
+
+          <label>
+            Amount
+          </label>
+
+          <strong>
+            ₹{{ payment.amount | number:'1.2-2' }}
+          </strong>
+
+        </div>
+
+
+        <!-- Transaction ID -->
+        <div class="detail-item full-width">
+
+          <label>
+            Transaction ID
+          </label>
+
+          <span>
+            {{ payment.transactionId || 'N/A' }}
+          </span>
+
+        </div>
+
+
+        <!-- Payment Date -->
+        <div class="detail-item full-width">
+
+          <label>
+            Payment Date
+          </label>
+
+          <span>
+
+            {{
+              payment.paymentDate
+                ? (payment.paymentDate | date:'dd-MM-yyyy HH:mm')
+                : 'N/A'
+            }}
+
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- Close / Reset -->
+      <div class="details-actions">
+
+        <button type="button"
+                class="reset-btn"
+                (click)="resetPayment()">
+
+          Close
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

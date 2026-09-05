@@ -32,6 +32,10 @@ export class AdminComponent {
     this.router.navigate(['/orders']);
   }
 
+  goToPayments(): void {
+    this.router.navigate(['/payments']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

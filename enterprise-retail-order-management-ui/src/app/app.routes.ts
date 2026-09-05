@@ -6,6 +6,7 @@ import { UsersComponent } from './Componets/users/users.component';
 import { CategoriesComponent } from './Componets/categories/categories.component';
 import { ProductsComponent } from './Componets/products/products.component';
 import { OrdersComponent } from './Componets/orders/orders.component';
+import { PaymentsComponent } from './Componets/payments/payments.component';
 
 
 export const routes: Routes = [
@@ -48,6 +49,13 @@ export const routes: Routes = [
   {
     path: 'orders',
     component: OrdersComponent,
+    canActivate: [authGuard],
+    data: { role: 'admin' }
+  },
+
+  {
+    path: 'payments',
+    component: PaymentsComponent,
     canActivate: [authGuard],
     data: { role: 'admin' }
   },
