@@ -18,6 +18,7 @@ public class PaymentsController : ControllerBase
         _paymentService = paymentService;
     }
 
+    // Customer creates payment
     [HttpPost]
     [Authorize(Roles = "customer")]
     public async Task<IActionResult> CreatePayment(
@@ -46,6 +47,35 @@ public class PaymentsController : ControllerBase
         return Ok(payment);
     }
 
+    // Admin gets payment history
+    [HttpGet]
+    [Authorize(Roles = "admin")]
+    public async Task<IActionResult> GetPayments(
+        [FromQuery] PaymentQueryDto query)
+    {
+        if (query.PageNumber < 1)
+        {
+            query.PageNumber = 1;
+        }
+
+        if (query.PageSize < 1 || query.PageSize > 100)
+        {
+            query.PageSize = 10;
+        }
+
+        var result =
+            await _paymentService.GetPaymentsAsync(query);
+
+        return Ok(new
+        {
+            data = result.Payments,
+            totalCount = result.TotalCount,
+            pageNumber = query.PageNumber,
+            pageSize = query.PageSize
+        });
+    }
+
+    // Admin or customer gets payment for a specific order
     [HttpGet("order/{orderId:int}")]
     [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetPaymentByOrderId(

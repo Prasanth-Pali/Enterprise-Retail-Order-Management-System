@@ -14,6 +14,8 @@ public class PaymentService : IPaymentService
         _context = context;
     }
 
+
+
     public async Task<PaymentResponseDto?> CreatePaymentAsync(
         int userId,
         CreatePaymentDto request)
@@ -148,4 +150,61 @@ public class PaymentService : IPaymentService
             })
             .FirstOrDefaultAsync();
     }
+
+    public async Task<(List<PaymentResponseDto> Payments, int TotalCount)>
+    GetPaymentsAsync(PaymentQueryDto query)
+    {
+        var paymentsQuery = _context.Payments
+            .AsNoTracking()
+            .AsQueryable();
+
+        // Search by Order ID or Transaction ID
+        if (!string.IsNullOrWhiteSpace(query.Search))
+        {
+            var search = query.Search.Trim();
+
+            if (int.TryParse(search, out int orderId))
+            {
+                paymentsQuery = paymentsQuery.Where(x =>
+                    x.OrderId == orderId ||
+                    (x.TransactionId != null &&
+                     x.TransactionId.Contains(search)));
+            }
+            else
+            {
+                paymentsQuery = paymentsQuery.Where(x =>
+                    x.TransactionId != null &&
+                    x.TransactionId.Contains(search));
+            }
+        }
+
+        // Filter by payment status
+        if (!string.IsNullOrWhiteSpace(query.PaymentStatus))
+        {
+            paymentsQuery = paymentsQuery.Where(x =>
+                x.PaymentStatus == query.PaymentStatus);
+        }
+
+        var totalCount = await paymentsQuery.CountAsync();
+
+        // Pagination
+        var payments = await paymentsQuery
+            .OrderByDescending(x => x.PaymentDate)
+            .Skip((query.PageNumber - 1) * query.PageSize)
+            .Take(query.PageSize)
+            .Select(x => new PaymentResponseDto
+            {
+                PaymentId = x.PaymentId,
+                OrderId = x.OrderId,
+                PaymentMethod = x.PaymentMethod,
+                PaymentStatus = x.PaymentStatus,
+                TransactionId = x.TransactionId,
+                PaymentDate = x.PaymentDate,
+                Amount = x.Amount
+            })
+            .ToListAsync();
+
+        return (payments, totalCount);
+    }
+
 }

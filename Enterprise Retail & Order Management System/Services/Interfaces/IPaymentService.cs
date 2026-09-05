@@ -12,4 +12,6 @@ public interface IPaymentService
         int orderId,
         int userId,
         string role);
+
+    Task<(List<PaymentResponseDto> Payments, int TotalCount)> GetPaymentsAsync(PaymentQueryDto query);
 }

@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import {
   Payment,
@@ -17,195 +18,178 @@ import {
   templateUrl: './payments.component.html',
   styleUrl: './payments.component.css'
 })
-export class PaymentsComponent {
+export class PaymentsComponent implements OnInit {
 
-  // =========================
-  // PAYMENT INPUTS
-  // =========================
+  payments: Payment[] = [];
 
-  orderId: number | null = null;
+  search = '';
+  selectedStatus = '';
 
-  amount: number | null = null;
-
-  paymentMethod = '';
-
-
-  // =========================
-  // PAYMENT RESPONSE
-  // =========================
-
-  payment: Payment | null = null;
-
-
-  // =========================
-  // UI STATE
-  // =========================
+  currentPage = 1;
+  pageSize = 10;
+  totalCount = 0;
 
   isLoading = false;
 
   successMessage = '';
-
   errorMessage = '';
 
+  showPaymentDetailsModal = false;
+  selectedPayment: Payment | null = null;
 
   constructor(
-    private paymentService: PaymentService
+    private paymentService: PaymentService,
+    private router: Router
   ) { }
 
+  ngOnInit(): void {
+    this.loadPayments();
+  }
 
-  // =========================
-  // MAKE PAYMENT
-  // =========================
-
-  makePayment(): void {
-
-    this.successMessage = '';
-    this.errorMessage = '';
-    this.payment = null;
-
-
-    // Validation
-    if (
-      !this.orderId ||
-      this.amount === null ||
-      this.amount <= 0 ||
-      !this.paymentMethod
-    ) {
-
-      this.errorMessage =
-        'Please enter valid payment details.';
-
-      return;
-    }
-
+  // Load payment history
+  loadPayments(): void {
 
     this.isLoading = true;
-
+    this.errorMessage = '';
 
     this.paymentService
-      .createPayment({
-
-        orderId: this.orderId,
-
-        paymentMethod: this.paymentMethod,
-
-        amount: this.amount
-
-      })
+      .getPayments(
+        this.currentPage,
+        this.pageSize,
+        this.search || undefined,
+        this.selectedStatus || undefined
+      )
       .subscribe({
-
         next: (response) => {
 
           console.log(
-            'PAYMENT RESPONSE:',
+            'PAYMENTS RESPONSE:',
             response
           );
 
-          this.payment = response;
-
-          this.successMessage =
-            'Payment processed successfully!';
+          this.payments = response.data;
+          this.totalCount = response.totalCount;
 
           this.isLoading = false;
-
         },
 
         error: (error) => {
 
           console.error(
-            'PAYMENT ERROR:',
+            'PAYMENTS API ERROR:',
             error
           );
 
           this.errorMessage =
             error.error ||
-            'Payment could not be processed.';
+            'Unable to load payment history.';
 
           this.isLoading = false;
-
         }
-
       });
   }
 
+  // Search / filter
+  filterPayments(): void {
 
-  // =========================
-  // GET PAYMENT
-  // =========================
+    this.currentPage = 1;
 
-  getPayment(): void {
+    this.loadPayments();
+  }
 
-    this.successMessage = '';
-    this.errorMessage = '';
-    this.payment = null;
+  // Clear search and filter
+  clearFilters(): void {
 
+    this.search = '';
+    this.selectedStatus = '';
+    this.currentPage = 1;
 
-    if (!this.orderId) {
+    this.loadPayments();
+  }
 
-      this.errorMessage =
-        'Please enter an Order ID.';
+  // Pagination
+  goToPage(page: number): void {
 
+    if (
+      page < 1 ||
+      page > this.totalPages
+    ) {
       return;
     }
 
+    this.currentPage = page;
+
+    this.loadPayments();
+  }
+
+  get totalPages(): number {
+
+    return Math.ceil(
+      this.totalCount /
+      this.pageSize
+    );
+  }
+
+  get pages(): number[] {
+
+    return Array.from(
+      {
+        length: this.totalPages
+      },
+      (_, index) => index + 1
+    );
+  }
+
+  // View payment details
+  viewPayment(orderId: number): void {
 
     this.isLoading = true;
-
+    this.errorMessage = '';
 
     this.paymentService
-      .getPaymentByOrderId(this.orderId)
+      .getPaymentByOrderId(orderId)
       .subscribe({
-
-        next: (response) => {
+        next: (payment) => {
 
           console.log(
             'PAYMENT DETAILS:',
-            response
+            payment
           );
 
-          this.payment = response;
+          this.selectedPayment = payment;
+          this.showPaymentDetailsModal = true;
 
           this.isLoading = false;
-
         },
 
         error: (error) => {
 
           console.error(
-            'GET PAYMENT ERROR:',
+            'PAYMENT DETAILS ERROR:',
             error
           );
 
           this.errorMessage =
             error.error ||
-            'Payment not found.';
+            'Unable to load payment details.';
 
           this.isLoading = false;
-
         }
-
       });
   }
 
+  // Close details popup
+  closePaymentDetails(): void {
 
-  // =========================
-  // RESET
-  // =========================
-
-  resetPayment(): void {
-
-    this.orderId = null;
-
-    this.amount = null;
-
-    this.paymentMethod = '';
-
-    this.payment = null;
-
-    this.successMessage = '';
-
-    this.errorMessage = '';
-
+    this.showPaymentDetailsModal = false;
+    this.selectedPayment = null;
   }
 
+  // Back to Admin Dashboard
+  goBack(): void {
+
+    this.router.navigate([
+      '/admin'
+    ]);
+  }
 }
