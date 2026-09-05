@@ -1,68 +1,67 @@
-# Enterprise Retail & Order Management System
+# 🛒 Enterprise Retail & Order Management System
 
-A real-time, enterprise-style Retail & Order Management System built using **ASP.NET Core Web API, SQL Server, Entity Framework Core, JWT Authentication, and BCrypt**.
+A full-stack enterprise-style Retail & Order Management System built using **ASP.NET Core Web API, Angular, SQL Server, Entity Framework Core, JWT Authentication, and BCrypt**.
 
-The project is being developed incrementally using a **layered architecture** and real-world backend development practices.
+The application provides role-based management for users, categories, products, orders, inventory, and payments. It follows a layered architecture with separation between **Controllers, Services, DTOs, and Data Access**.
 
-# 🛠️ Technologies Used
+---
 
-## Backend
+## 🚀 Project Overview
 
-* C#
-* ASP.NET Core Web API
-* .NET 10
-* Entity Framework Core
-* LINQ
-* JWT Authentication
-* BCrypt.Net
+**RetailFlow** is designed to simulate a real-world retail management application where administrators can manage the business operations and customers can browse products, place orders, and make payments.
 
-## Database
+### 👨‍💼 Admin
 
-* Microsoft SQL Server
-* SQL Server Express
-* Entity Framework Core Database-First
+Admins can:
 
-## API Documentation
+* Manage users
+* Manage categories
+* Manage products
+* Manage inventory
+* View all orders
+* Update order status
+* View payment transactions
+* Search, filter and paginate management data
 
-* Swagger / OpenAPI
+### 👤 Customer
 
-## Frontend
+Customers can:
 
-Planned:
-
-* Angular
-* TypeScript
-* HTML
-* CSS
-* AG Grid
-
-## DevOps
-
-Planned:
-
-* Git
-* GitHub
-* Azure DevOps
-* Docker
-* CI/CD
-* Azure
+* Register and login
+* Browse active categories
+* Browse active products
+* Search products
+* Place orders
+* View their own orders
+* Make payments
+* Track order status
 
 ---
 
 # 🏗️ Architecture
 
-The application follows a layered architecture:
+The backend follows a **Layered Architecture**.
 
 ```text
-Client
-   ↓
-Controller Layer
-   ↓
-Service Layer
-   ↓
-Entity Framework Core
-   ↓
-SQL Server
+                    Angular Client
+                         │
+                         ▼
+                  ASP.NET Core API
+                         │
+                         ▼
+                 Controller Layer
+                         │
+                         ▼
+                   Service Layer
+                         │
+                         ▼
+                    DTO Layer
+                         │
+                         ▼
+                 Entity Framework Core
+                         │
+                         ▼
+                    SQL Server
 ```
 
 ### Controller Layer
@@ -70,8 +69,9 @@ SQL Server
 Responsible for:
 
 * Receiving HTTP requests
-* Model validation
+* Request validation
 * Authorization
+* Calling service methods
 * Returning HTTP responses
 
 ### Service Layer
@@ -81,107 +81,108 @@ Responsible for:
 * Business logic
 * Validation
 * Database operations
-* Data processing
+* Order processing
+* Payment processing
+* Stock management
 * Transaction handling
 
 ### DTO Layer
 
 DTOs are used to:
 
-* Control API request/response data
+* Control request and response data
 * Avoid exposing database entities directly
 * Validate incoming requests
-* Improve API security and maintainability
+* Improve API maintainability
+* Reduce unnecessary data exposure
 
 ### Data Layer
 
-Entity Framework Core is used to communicate with SQL Server.
+**Entity Framework Core Database-First** is used to communicate with SQL Server.
 
 ---
 
-# 📁 Project Structure
+# 🛠️ Technology Stack
 
-```text
-Enterprise Retail & Order Management System
-│
-├── Controllers
-│   ├── AuthController.cs
-│   ├── UsersController.cs
-│   ├── CategoriesController.cs
-│   ├── ProductsController.cs
-│   ├── OrdersController.cs
-│   └── PaymentsController.cs
-│
-├── DTOs
-│   ├── Auth
-│   ├── Users
-│   ├── Categories
-│   ├── Products
-│   ├── Orders
-│   └── Payments
-│
-├── Models
-│   ├── User.cs
-│   ├── Category.cs
-│   ├── Product.cs
-│   ├── Order.cs
-│   ├── OrderItem.cs
-│   ├── Payment.cs
-│   └── RetailFlowDbContext.cs
-│
-├── Services
-│   ├── Interfaces
-│   │   ├── IAuthService.cs
-│   │   ├── IUserService.cs
-│   │   ├── ICategoryService.cs
-│   │   ├── IProductService.cs
-│   │   ├── IOrderService.cs
-│   │   └── IPaymentService.cs
-│   │
-│   ├── AuthService.cs
-│   ├── UserService.cs
-│   ├── CategoryService.cs
-│   ├── ProductService.cs
-│   ├── OrderService.cs
-│   └── PaymentService.cs
-│
-├── Program.cs
-├── appsettings.json
-└── Enterprise Retail & Order Management System.csproj
-```
+## Backend
+
+* C#
+* ASP.NET Core Web API
+* .NET 10
+* Entity Framework Core
+* LINQ
+* JWT Bearer Authentication
+* BCrypt.Net
+* Data Annotations
+* REST APIs
+* Swagger / OpenAPI
+
+## Frontend
+
+* Angular
+* TypeScript
+* HTML5
+* CSS3
+* Angular Reactive Forms
+* Angular HTTP Client
+* Angular Route Guards
+* HTTP Interceptors
+* AG Grid
+* Local Storage
+
+## Database
+
+* Microsoft SQL Server
+* SQL Server Express
+* Entity Framework Core Database-First
+
+## Development & Source Control
+
+* Visual Studio
+* Visual Studio Code
+* Git
+* GitHub
 
 ---
 
-# 🔐 Authentication & Authorization
+# ✨ Key Features
 
-The application uses **JWT Bearer Authentication**.
+## 🔐 Authentication & Authorization
 
-## Authentication Flow
+The application implements JWT-based authentication.
+
+### Authentication Flow
 
 ```text
 User Registration
        ↓
-Password hashed using BCrypt
+Password Validation
+       ↓
+BCrypt Password Hashing
        ↓
 User Login
        ↓
-Credentials validated
+Credential Validation
        ↓
-JWT generated
+JWT Token Generation
        ↓
-Client sends JWT
+Token Stored on Client
        ↓
-API validates JWT
+HTTP Interceptor Adds Bearer Token
        ↓
-Authorized API access
+API Validates JWT
+       ↓
+Role-Based API Access
 ```
 
-## Roles
+### Supported Roles
 
-The application supports:
+```text
+Admin
+Customer
+```
 
-* `admin`
-* `customer`
+Role-based authorization is implemented using ASP.NET Core authorization attributes.
 
 Example:
 
@@ -189,17 +190,13 @@ Example:
 [Authorize(Roles = "admin")]
 ```
 
-Admin-only APIs are protected using role-based authorization.
-
-Customer APIs are restricted to authenticated customers where required.
+Customer-specific APIs are protected using authenticated user information from JWT claims.
 
 ---
 
 # 🔑 Password Security
 
 Passwords are never stored as plain text.
-
-BCrypt is used to hash passwords before storing them in SQL Server.
 
 ```text
 Plain Password
@@ -215,20 +212,24 @@ During login, the supplied password is verified against the stored BCrypt hash.
 
 ---
 
-# 👤 User Management
+# 👥 User Management
 
-The User Management module provides:
+Admin users can manage registered users.
+
+### Features
 
 * Get users
 * Get user by ID
 * Search users
-* Filter users by role
-* Filter users by active status
+* Filter by role
+* Filter by active status
 * Pagination
-* Update user
-* Deactivate user
+* Update user information
+* Deactivate users
 
-### Example
+Sensitive fields such as `PasswordHash` are not returned through API responses.
+
+Example:
 
 ```http
 GET /api/Users?pageNumber=1&pageSize=10
@@ -246,19 +247,11 @@ Role filter:
 GET /api/Users?role=customer
 ```
 
-Active status:
+Status filter:
 
 ```http
 GET /api/Users?isActive=true
 ```
-
-Combined:
-
-```http
-GET /api/Users?pageNumber=1&pageSize=10&search=rahul&role=customer&isActive=true
-```
-
-`PasswordHash` is never returned through API responses.
 
 ---
 
@@ -266,48 +259,38 @@ GET /api/Users?pageNumber=1&pageSize=10&search=rahul&role=customer&isActive=true
 
 Categories are used to organize products.
 
-Example categories:
-
-* Electronics
-* Mobiles
-* Laptops
-* Home Appliances
-
-Operations:
+### Admin Features
 
 * Create category
-* Get categories
-* Get category by ID
+* View categories
+* View category by ID
 * Update category
 * Deactivate category
+* Search categories
+* Filter categories
+* Pagination
 
-### Role-based behavior
+### Customer Access
 
-**Admin:**
-
-* Can manage categories
-* Can view active and inactive categories
-
-**Customer:**
-
-* Can view active categories only
-* Cannot access inactive categories
+Customers can view active categories only.
 
 ---
 
 # 🛍️ Product Management
 
-Product management provides:
+The Product module manages product information and inventory.
 
-* Create product
-* Get products
-* Get product by ID
-* Update product
+### Features
+
+* Create products
+* View products
+* View product by ID
+* Update products
 * Search products
-* Filter products by category
+* Filter by category
 * Pagination
 * Stock management
-* Deactivate product
+* Deactivate products
 
 Example:
 
@@ -327,27 +310,28 @@ Category filter:
 GET /api/Products?categoryId=2
 ```
 
-### Role-based behavior
+### Role-Based Access
 
-**Admin:**
+**Admin**
 
-* Can create products
-* Can update products
-* Can deactivate products
-* Can view active and inactive products
+* Create products
+* Update products
+* Deactivate products
+* View active and inactive products
 
-**Customer:**
+**Customer**
 
-* Can view active products only
-* Cannot access inactive products
+* View active products
+* Search active products
+* Browse available inventory
 
 ---
 
 # 📋 Order Management
 
-Orders follow an enterprise-style order workflow.
+Orders implement a real-world order processing workflow.
 
-## Order Status
+## Order Lifecycle
 
 ```text
 Pending
@@ -359,62 +343,62 @@ Shipped
 Delivered
 ```
 
-Cancellation is supported from applicable stages.
+Cancellation is supported from applicable stages:
 
 ```text
-Pending → Cancelled
-Confirmed → Cancelled
+Pending ──────→ Cancelled
+
+Confirmed ────→ Cancelled
 ```
 
-## Order Creation
+## Order Creation Flow
 
-When a customer creates an order, the API:
-
-1. Validates the customer
-2. Validates order items
-3. Validates products
-4. Checks product stock
-5. Gets the current product price
-6. Creates the order
-7. Creates order items
-8. Calculates total amount
-9. Reduces product stock
-10. Saves everything inside a database transaction
-
-### Order structure
+When a customer creates an order:
 
 ```text
-Order
- ├── Customer
- ├── Order Date
- ├── Shipping Address
- ├── Total Amount
- ├── Status
- │
- └── Order Items
-      ├── Product
-      ├── Quantity
-      ├── Unit Price
-      └── Subtotal
+Validate Customer
+       ↓
+Validate Order Items
+       ↓
+Validate Products
+       ↓
+Check Stock
+       ↓
+Get Current Product Price
+       ↓
+Create Order
+       ↓
+Create Order Items
+       ↓
+Calculate Total
+       ↓
+Reduce Product Stock
+       ↓
+Commit Transaction
 ```
 
-### Customer access
+The complete order creation process is executed inside a database transaction.
+
+### Customer
 
 Customers can view only their own orders.
 
-### Admin access
+### Admin
 
-Admins can view all orders and manage order status.
+Admins can:
+
+* View all orders
+* View order details
+* Update order status
+* Manage the order lifecycle
 
 ---
 
 # 💳 Payment Management
 
-The project currently implements a **payment simulation/business workflow** using the existing Payments table.
+The application currently implements a **payment simulation/business workflow** rather than connecting to a real payment provider.
 
-No real payment gateway is integrated yet.
-
-## Supported Payment Methods
+### Supported Payment Methods
 
 * Credit Card
 * Debit Card
@@ -422,21 +406,14 @@ No real payment gateway is integrated yet.
 * Net Banking
 * Cash on Delivery
 
-## Payment Statuses
-
-* Pending
-* Success
-* Failed
-* Refunded
-
-## Current Payment Flow
+### Payment Flow
 
 ```text
 Customer
    ↓
 Create Order
    ↓
-Order Status = Pending
+Order = Pending
    ↓
 Create Payment
    ↓
@@ -448,25 +425,14 @@ Validate Payment Method
    ↓
 Create Payment Record
    ↓
-Payment Status = Success
+Payment = Success
    ↓
-Order Status = Confirmed
+Order = Confirmed
 ```
 
-The current implementation simulates successful payment after all business validations pass.
+Payment creation and order confirmation are handled within a database transaction.
 
-### Important
-
-Actual payment processing through providers such as Razorpay or Stripe is **not implemented yet**.
-
-A future implementation can integrate a real payment gateway with:
-
-* Payment gateway checkout
-* Transaction verification
-* Webhooks
-* Signature verification
-* Payment failure handling
-* Refund processing
+> ⚠️ No real payment gateway such as Razorpay or Stripe is currently integrated.
 
 ---
 
@@ -493,33 +459,38 @@ OrderItems
 Payments
 ```
 
-### Relationships
+## Database Relationships
 
 ```text
 Users
-  ↓
+  │
+  ▼
 Orders
-  ↓
+  │
+  ▼
 OrderItems
-  ↓
+  │
+  ▼
 Products
-  ↓
+  │
+  ▼
 Categories
 
 Orders
-  ↓
+  │
+  ▼
 Payments
 ```
 
-The project currently uses the existing database schema and does not introduce an additional Cart table.
+The application uses the existing database schema and does not introduce a separate Cart table.
 
 ---
 
 # 🔄 Entity Framework Core
 
-The application uses **Entity Framework Core Database-First**.
+The project uses **Entity Framework Core Database-First**.
 
-Database models are generated using `Scaffold-DbContext`.
+Database entities and the DbContext are generated from the existing SQL Server database using `Scaffold-DbContext`.
 
 Example:
 
@@ -529,9 +500,101 @@ Scaffold-DbContext "Server=.\SQLEXPRESS;Database=RetailFlowDB;Trusted_Connection
 
 This generates:
 
-* Entity models
+* Entity classes
 * `RetailFlowDbContext`
 * Database relationships
+
+---
+
+# 🌐 Angular Frontend
+
+The project includes an Angular-based frontend.
+
+The frontend communicates with the ASP.NET Core Web API through HTTP services.
+
+## Frontend Modules
+
+```text
+Login
+   │
+   ├── Register
+   │
+   └── Authentication
+
+Admin Dashboard
+   │
+   ├── Users
+   ├── Categories
+   ├── Products
+   ├── Orders
+   └── Payments
+
+Customer
+   │
+   ├── Products
+   ├── Categories
+   └── Orders
+```
+
+### Angular Features
+
+* Reactive Forms
+* HTTP Services
+* JWT Authentication
+* HTTP Interceptor
+* Route Guards
+* Role-based navigation
+* Local Storage token management
+* Search
+* Filtering
+* Pagination
+* Modal-based CRUD operations
+* AG Grid
+* Responsive dark/glass UI
+
+---
+
+# 🔒 Angular Security Flow
+
+After successful login, the JWT token is stored on the client.
+
+```text
+Login API
+    ↓
+JWT Token
+    ↓
+localStorage
+    ↓
+Angular HTTP Interceptor
+    ↓
+Authorization: Bearer <token>
+    ↓
+ASP.NET Core API
+```
+
+Protected routes are handled using Angular route guards.
+
+Unauthorized users are redirected to the login page.
+
+---
+
+# 🔎 Search, Filtering & Pagination
+
+The application implements server-side search/filtering and pagination for management modules.
+
+Examples include:
+
+* User search
+* User role filtering
+* User status filtering
+* Category search
+* Product search
+* Product category filtering
+* Order filtering
+* Payment search
+* Payment status filtering
+
+Pagination reduces the amount of data returned from the API and improves application performance.
 
 ---
 
@@ -542,15 +605,17 @@ ASP.NET Core Data Annotations are used for request validation.
 Validation includes:
 
 * Required fields
-* String length
 * Email validation
+* String length
 * Phone number validation
 * Strong password validation
 * Numeric range validation
 * Order quantity validation
 * Shipping address validation
+* Product stock validation
+* Payment amount validation
 
-## Password Requirements
+### Password Requirements
 
 * Minimum 8 characters
 * Uppercase letter
@@ -560,25 +625,9 @@ Validation includes:
 
 ---
 
-# 🔒 Security
+# 🔄 Database Transactions
 
-Implemented security practices include:
-
-* JWT authentication
-* Role-based authorization
-* BCrypt password hashing
-* DTO-based API design
-* PasswordHash excluded from responses
-* Input validation
-* Active/inactive user control
-* Database constraints
-* Protected API endpoints
-
----
-
-# 🔄 Transactions
-
-Database transactions are used for critical operations.
+Transactions are used for critical business operations.
 
 For example, order creation performs:
 
@@ -587,52 +636,140 @@ Create Order
      +
 Create Order Items
      +
-Reduce Product Stock
-     +
 Calculate Total
+     +
+Reduce Product Stock
+     ↓
+Commit Transaction
 ```
 
-These operations are executed inside a transaction so that a failure can roll back the operation.
+If an operation fails, the transaction can roll back the changes.
 
-Payment processing also uses a transaction while creating the payment and confirming the order.
+Payment processing also uses transaction handling while creating the payment and confirming the order.
 
 ---
 
-# 📡 HTTP Status Codes
+# 📡 API Endpoints
 
-The API follows standard HTTP status codes.
+## Authentication
 
-### 200 OK
+```http
+POST /api/Auth/register
+POST /api/Auth/login
+```
 
-Request completed successfully.
+## Users
 
-### 201 Created
+```http
+GET    /api/Users
+GET    /api/Users/{id}
+PUT    /api/Users/{id}
+PATCH  /api/Users/{id}/deactivate
+```
 
-New resource created successfully.
+## Categories
 
-### 400 Bad Request
+```http
+GET    /api/Categories
+GET    /api/Categories/{id}
+POST   /api/Categories
+PUT    /api/Categories/{id}
+PATCH  /api/Categories/{id}/deactivate
+```
 
-Invalid request or business validation failure.
+## Products
 
-### 401 Unauthorized
+```http
+GET    /api/Products
+GET    /api/Products/{id}
+POST   /api/Products
+PUT    /api/Products/{id}
+PATCH  /api/Products/{id}/deactivate
+```
 
-Authentication is required or JWT is invalid.
+## Orders
 
-### 403 Forbidden
+```http
+POST   /api/Orders
+GET    /api/Orders
+GET    /api/Orders/{id}
+PATCH  /api/Orders/{id}/status
+```
 
-Authenticated user does not have sufficient permissions.
+## Payments
 
-### 404 Not Found
+```http
+POST   /api/Payments
+GET    /api/Payments
+GET    /api/Payments/order/{orderId}
+```
 
-Requested resource does not exist.
+---
 
-### 409 Conflict
+# 📁 Project Structure
 
-Resource conflicts with existing data.
-
-### 500 Internal Server Error
-
-Unexpected server-side error.
+```text
+Enterprise-Retail-Order-Management-System
+│
+├── Enterprise Retail & Order Management System
+│   │
+│   ├── Controllers
+│   │   ├── AuthController.cs
+│   │   ├── UsersController.cs
+│   │   ├── CategoriesController.cs
+│   │   ├── ProductsController.cs
+│   │   ├── OrdersController.cs
+│   │   └── PaymentsController.cs
+│   │
+│   ├── DTOs
+│   │   ├── Auth
+│   │   ├── Users
+│   │   ├── Categories
+│   │   ├── Products
+│   │   ├── Orders
+│   │   └── Payments
+│   │
+│   ├── Models
+│   │   ├── User.cs
+│   │   ├── Category.cs
+│   │   ├── Product.cs
+│   │   ├── Order.cs
+│   │   ├── OrderItem.cs
+│   │   ├── Payment.cs
+│   │   └── RetailFlowDbContext.cs
+│   │
+│   ├── Services
+│   │   ├── Interfaces
+│   │   ├── AuthService.cs
+│   │   ├── UserService.cs
+│   │   ├── CategoryService.cs
+│   │   ├── ProductService.cs
+│   │   ├── OrderService.cs
+│   │   └── PaymentService.cs
+│   │
+│   ├── Program.cs
+│   ├── appsettings.json
+│   └── *.csproj
+│
+├── enterprise-retail-order-management-ui
+│   │
+│   ├── src
+│   │   ├── app
+│   │   │   ├── components
+│   │   │   ├── services
+│   │   │   ├── guards
+│   │   │   ├── interceptors
+│   │   │   └── Models
+│   │   └── styles.css
+│   │
+│   ├── angular.json
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── Enterprise Retail & Order Management System.slnx
+├── .gitignore
+└── README.md
+```
 
 ---
 
@@ -644,16 +781,15 @@ Unexpected server-side error.
 git clone https://github.com/Prasanth-Pali/Enterprise-Retail-Order-Management-System.git
 ```
 
-## 2. Open the Project
+```bash
+cd Enterprise-Retail-Order-Management-System
+```
 
-Open the solution using:
+---
 
-* Visual Studio
-* Visual Studio Code
+## 2. Configure SQL Server
 
-## 3. Configure SQL Server
-
-Make sure SQL Server Express is running.
+Make sure SQL Server Express is installed and running.
 
 Default instance:
 
@@ -661,19 +797,17 @@ Default instance:
 .\SQLEXPRESS
 ```
 
-## 4. Create Database
-
-Create:
+Create/use:
 
 ```text
 RetailFlowDB
 ```
 
-Run the project database SQL script.
+---
 
-## 5. Configure Connection String
+## 3. Configure Connection String
 
-Update `appsettings.json`:
+Update the backend `appsettings.json`:
 
 ```json
 {
@@ -683,108 +817,135 @@ Update `appsettings.json`:
 }
 ```
 
-## 6. Restore Packages
+> For production environments, connection strings and JWT secrets should be stored securely rather than committed to source control.
+
+---
+
+## 4. Run Backend
+
+Navigate to the backend project:
+
+```bash
+cd "Enterprise Retail & Order Management System"
+```
+
+Restore packages:
 
 ```bash
 dotnet restore
 ```
 
-## 7. Build
+Build:
 
 ```bash
 dotnet build
 ```
 
-## 8. Run
+Run:
 
 ```bash
 dotnet run
 ```
 
-## 9. Open Swagger
-
-After starting the application, open the Swagger URL displayed by ASP.NET Core.
-
-Swagger can be used to test the APIs.
+The API will start using the configured ASP.NET Core development URL.
 
 ---
 
-# 🧪 API Testing Flow
+# 🧪 Swagger / API Testing
 
-Recommended testing sequence:
+After starting the backend, open the Swagger URL shown by ASP.NET Core.
 
-### Step 1 — Register
-
-```http
-POST /api/Auth/register
-```
-
-Register a customer.
-
-### Step 2 — Login
-
-```http
-POST /api/Auth/login
-```
-
-Get the JWT token.
-
-### Step 3 — Authorize
-
-Use Swagger's **Authorize** button:
+### Recommended Testing Flow
 
 ```text
-Bearer YOUR_TOKEN
+1. Register
+      ↓
+2. Login
+      ↓
+3. Copy JWT Token
+      ↓
+4. Swagger → Authorize
+      ↓
+5. Test Categories
+      ↓
+6. Test Products
+      ↓
+7. Create Order
+      ↓
+8. Create Payment
+      ↓
+9. Verify Order
+      ↓
+10. Verify Payment
 ```
 
-### Step 4 — Test Categories
-
-```http
-GET /api/Categories
-```
-
-### Step 5 — Test Products
-
-```http
-GET /api/Products
-```
-
-### Step 6 — Create Order
-
-```http
-POST /api/Orders
-```
-
-The order starts with:
+For Swagger authorization:
 
 ```text
-Pending
+Bearer YOUR_JWT_TOKEN
 ```
 
-### Step 7 — Create Payment
+---
 
-```http
-POST /api/Payments
+# ▶️ Run Angular Frontend
+
+Navigate to the Angular project:
+
+```bash
+cd enterprise-retail-order-management-ui
 ```
 
-After successful payment processing:
+Install dependencies:
 
-```text
-Payment = Success
-Order = Confirmed
+```bash
+npm install
 ```
 
-### Step 8 — Get Order
+Start Angular:
 
-```http
-GET /api/Orders/{id}
+```bash
+ng serve
 ```
 
-### Step 9 — Get Payment
+Open the Angular application in the browser using the URL displayed by Angular CLI.
 
-```http
-GET /api/Payments/order/{orderId}
-```
+Make sure the backend API is running before using the frontend.
+
+---
+
+# 🔐 Security Practices
+
+The project implements:
+
+* JWT authentication
+* Role-based authorization
+* BCrypt password hashing
+* DTO-based API design
+* Protected API endpoints
+* Angular route guards
+* HTTP interceptor for JWT
+* Input validation
+* Active/inactive user management
+* PasswordHash exclusion from API responses
+* Database constraints
+* Transaction handling
+
+---
+
+# 📊 HTTP Status Codes
+
+The API uses standard HTTP status codes.
+
+| Status Code | Meaning                               |
+| ----------- | ------------------------------------- |
+| 200         | Request completed successfully        |
+| 201         | Resource created successfully         |
+| 400         | Invalid request / validation failure  |
+| 401         | Authentication required / invalid JWT |
+| 403         | Insufficient permissions              |
+| 404         | Resource not found                    |
+| 409         | Resource conflict                     |
+| 500         | Internal server error                 |
 
 ---
 
@@ -796,30 +957,25 @@ Typical workflow:
 
 ```bash
 git status
-
 git add .
-
-git commit -m "Implemented payment management"
-
+git commit -m "Updated retail management module"
 git push origin master
 ```
 
 ---
 
-# 🚀 Future Enhancements
+# 🚧 Future Enhancements
 
-The following features are planned as the project evolves:
+The following features can be added in future iterations:
 
 * Refresh Token
 * Global Exception Handling Middleware
 * Structured Logging
-* Consistent API Response Model
-* Angular Frontend
-* AG Grid
+* Consistent API Response Wrapper
 * Real Payment Gateway Integration
 * Email Notifications
 * Advanced Product Search
-* Advanced Sorting & Filtering
+* Advanced Sorting and Filtering
 * Order Tracking
 * Unit Testing
 * Integration Testing
@@ -830,36 +986,81 @@ The following features are planned as the project evolves:
 * Message Queues
 * API Versioning
 * Production-level concurrency handling
+* Improved inventory concurrency control
 
 ---
 
-# 🎯 Project Goal
+# 🎯 Project Highlights
 
-The goal of this project is to build an enterprise-style full-stack Retail & Order Management application using real-world software development practices.
-
-The project demonstrates:
+This project demonstrates practical enterprise application development using:
 
 * ASP.NET Core Web API
-* REST API design
-* Layered architecture
+* RESTful API design
+* Layered Architecture
 * Service Layer
 * DTO-based design
-* SQL Server
+* Dependency Injection
 * Entity Framework Core
 * Database-First development
+* SQL Server
+* LINQ
 * JWT Authentication
 * Role-Based Authorization
 * BCrypt Password Hashing
-* Pagination
+* Angular
+* TypeScript
+* HTTP Interceptors
+* Route Guards
 * Search & Filtering
-* Stock Management
+* Server-side Pagination
+* Inventory Management
 * Order Processing
-* Payment Processing
+* Payment Workflow
 * Database Transactions
 * Input Validation
 * Git & GitHub
 
-The project is being developed incrementally with a focus on **maintainability, security, scalability, and real-world enterprise development practices**.
+---
+
+# 📌 Current Project Status
+
+**Status: 🚧 Actively Under Development**
+
+### ✅ Implemented
+
+* JWT Authentication
+* User Registration & Login
+* Role-Based Authorization
+* User Management
+* Category Management
+* Product Management
+* Inventory/Stock Management
+* Order Management
+* Order Status Workflow
+* Payment Simulation
+* Angular Frontend
+* Angular Route Guards
+* JWT HTTP Interceptor
+* Search & Filtering
+* Pagination
+* Modal-based management UI
+* SQL Server Database
+* EF Core Database-First
+* Swagger / OpenAPI
+
+### 🔜 Planned
+
+* Refresh Tokens
+* Global Exception Handling
+* Structured Logging
+* Automated Testing
+* Real Payment Gateway
+* Docker
+* Azure Deployment
+* Azure DevOps CI/CD
+* Redis
+* Message Queues
+* API Versioning
 
 ---
 
@@ -870,15 +1071,12 @@ The project is being developed incrementally with a focus on **maintainability, 
 Software Engineer | .NET Developer
 
 GitHub:
-
 https://github.com/Prasanth-Pali
 
 ---
 
-# ⭐ Project Status
+## ⭐ Project
 
-🚧 **Actively Under Development**
+**Enterprise Retail & Order Management System**
 
-Core backend modules including **Authentication, User Management, Category Management, Product Management, Order Management, and Payment Management** have been implemented.
-
-The next phase focuses on **refresh tokens, global exception handling, logging, frontend integration, testing, Docker, CI/CD, and Azure deployment**.
+Built to demonstrate real-world **.NET Full Stack development, REST API design, SQL Server, Angular, authentication, authorization, business logic, and enterprise application architecture.**
