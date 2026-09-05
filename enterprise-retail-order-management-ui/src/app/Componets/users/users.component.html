@@ -1,0 +1,397 @@
+<div class="users-container">
+
+  <!-- HEADER -->
+
+  <header class="topbar">
+
+    <div>
+      <h1>RetailFlow</h1>
+      <span>User Management</span>
+    </div>
+
+    <button type="button"
+            class="back-btn"
+            (click)="goBack()">
+      ← Back
+    </button>
+
+  </header>
+
+
+  <main class="users-content">
+
+    <div class="page-header">
+
+      <div>
+        <h2>Users</h2>
+        <p>Manage registered users and customers</p>
+      </div>
+
+    </div>
+
+    <div class="success-message"
+         *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <div class="error-message"
+         *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+
+    <!-- FILTER SECTION -->
+
+    <div class="filter-card">
+
+      <div class="filter-group">
+
+        <label>Search</label>
+
+        <input type="text"
+               [(ngModel)]="search"
+               placeholder="Search by name or email"
+               (keyup.enter)="searchUsers()" />
+
+      </div>
+
+
+      <div class="filter-group">
+
+        <label>Role</label>
+
+        <select [(ngModel)]="selectedRole"
+                (change)="filterUsers()">
+
+          <option value="">
+            All Roles
+          </option>
+
+          <option value="admin">
+            Admin
+          </option>
+
+          <option value="customer">
+            Customer
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="filter-group">
+
+        <label>Status</label>
+
+        <select [(ngModel)]="selectedStatus"
+                (change)="filterUsers()">
+
+          <option value="">
+            All Status
+          </option>
+
+          <option value="active">
+            Active
+          </option>
+
+          <option value="inactive">
+            Inactive
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="filter-buttons">
+
+        <button class="search-btn"
+                (click)="searchUsers()">
+          Search
+        </button>
+
+        <button class="clear-btn"
+                (click)="clearFilters()">
+          Clear
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- ERROR -->
+
+    <div class="error-message"
+         *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+
+    <!-- LOADING -->
+
+    <div class="loading"
+         *ngIf="isLoading">
+      Loading users...
+    </div>
+
+
+    <!-- USERS TABLE -->
+
+    <div class="table-card"
+         *ngIf="!isLoading">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Full Name</th>
+
+            <th>Email</th>
+
+            <th>Role</th>
+
+            <th>Phone</th>
+
+            <th>Status</th>
+
+            <th>Created At</th>
+
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr *ngFor="let user of users">
+
+            <td>
+              {{ user.fullName }}
+            </td>
+
+            <td>
+              {{ user.email }}
+            </td>
+
+            <td>
+
+              <span class="role-badge"
+                    [class.admin]="user.role === 'admin'"
+                    [class.customer]="user.role === 'customer'">
+                {{ user.role }}
+              </span>
+
+            </td>
+
+            <td>
+              {{ user.phoneNumber || '-' }}
+            </td>
+
+            <td>
+
+              <span class="status-badge"
+                    [class.active]="user.isActive"
+                    [class.inactive]="!user.isActive">
+
+                {{ user.isActive ? 'Active' : 'Inactive' }}
+
+              </span>
+
+            </td>
+
+            <td>
+              {{ user.createdAt | date:'dd-MM-yyyy' }}
+            </td>
+
+            <td class="actions">
+
+              <button class="edit-btn"
+                      (click)="editUser(user)">
+                Edit
+              </button>
+
+              <button class="deactivate-btn"
+                      *ngIf="user.isActive"
+                      (click)="openDeactivateModal(user)">
+                Deactivate
+              </button>
+
+            </td>
+
+          </tr>
+
+
+          <!-- NO DATA -->
+
+          <tr *ngIf="users.length === 0">
+
+            <td colspan="7"
+                class="no-data">
+              No users found.
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- PAGINATION -->
+
+    <div class="pagination"
+         *ngIf="totalPages > 0">
+
+      <button [disabled]="currentPage === 1"
+              (click)="previousPage()">
+        Previous
+      </button>
+
+
+      <button *ngFor="let page of pages"
+              [class.current]="page === currentPage"
+              (click)="goToPage(page)">
+        {{ page }}
+      </button>
+
+
+      <button [disabled]="currentPage === totalPages"
+              (click)="nextPage()">
+        Next
+      </button>
+
+    </div>
+
+
+  </main>
+
+
+  <!-- EDIT MODAL -->
+
+  <div class="modal-overlay"
+       *ngIf="showEditModal">
+
+    <div class="modal">
+
+      <div class="modal-header">
+
+        <h2>Edit User</h2>
+
+        <button class="close-btn"
+                (click)="closeEditModal()">
+          ×
+        </button>
+
+      </div>
+
+
+      <form [formGroup]="editForm"
+            (ngSubmit)="updateUser()">
+
+        <div class="form-group">
+
+          <label>Full Name</label>
+
+          <input type="text"
+                 formControlName="fullName" />
+
+          <small *ngIf="
+              editForm.get('fullName')?.touched &&
+              editForm.get('fullName')?.invalid
+            ">
+            Full name is required.
+          </small>
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Phone Number</label>
+
+          <input type="text"
+                 formControlName="phoneNumber" />
+
+        </div>
+
+
+        <div class="form-group">
+
+          <label>Address</label>
+
+          <textarea formControlName="address"
+                    rows="4"></textarea>
+
+        </div>
+
+
+        <div class="modal-actions">
+
+          <button type="button"
+                  class="cancel-btn"
+                  (click)="closeEditModal()">
+            Cancel
+          </button>
+
+          <button type="submit"
+                  class="save-btn">
+            Update User
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- DEACTIVATE CONFIRMATION MODAL -->
+
+<div class="modal-overlay"
+     *ngIf="showDeactivateModal">
+
+  <div class="confirm-modal">
+
+    <h2>Deactivate User</h2>
+
+    <p>
+      Are you sure you want to deactivate
+      <strong>
+        {{ selectedUserForDeactivate?.fullName }}
+      </strong>?
+    </p>
+
+    <p class="warning-text">
+      This user will no longer be active.
+    </p>
+
+    <div class="modal-actions">
+
+      <button type="button"
+              class="cancel-btn"
+              (click)="closeDeactivateModal()">
+        Cancel
+      </button>
+
+      <button type="button"
+              class="confirm-deactivate-btn"
+              (click)="confirmDeactivate()">
+        Deactivate
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

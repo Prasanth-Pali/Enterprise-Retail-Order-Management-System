@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { LoginResponse } from '../Models/login-responce';
 import { LoginRequest } from '../Models/login-request';
 
 @Injectable({
@@ -12,13 +13,15 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  login(request: LoginRequest): Observable<string> {
-    return this.http.post(
+  login(request: LoginRequest): Observable<LoginResponse> {
+
+    return this.http.post<LoginResponse>(
       `${this.apiUrl}/login`,
-      request,
-      {
-        responseType: 'text'
-      }
+      request
     );
+  }
+
+  logout(): void {
+    localStorage.removeItem('token');
   }
 }

@@ -1,0 +1,54 @@
+.admin-container {
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+  .topbar h1 {
+    margin: 0;
+  }
+
+  .topbar span {
+    color: #666;
+  }
+
+  .topbar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+.dashboard {
+  padding: 40px;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.menu-card {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+  .menu-card h3 {
+    margin-top: 0;
+  }
+
+  .menu-card p {
+    color: #666;
+  }

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -30,7 +31,8 @@ export class LoginComponent {
 
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   login(): void {
@@ -49,13 +51,15 @@ export class LoginComponent {
     };
 
     this.authService.login(request).subscribe({
-      next: (token) => {
+      next: (response) => {
 
-        localStorage.setItem('token', token);
+        console.log("Login successful");
 
-        console.log('JWT Token:', token);
+        localStorage.setItem('token', response.token);
 
         this.isLoading = false;
+
+        this.router.navigate(['/admin']);
       },
 
       error: (error) => {

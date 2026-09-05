@@ -1,0 +1,53 @@
+<div class="admin-container">
+
+  <header class="topbar">
+
+    <div>
+      <h1>RetailFlow</h1>
+      <span>Admin Dashboard</span>
+    </div>
+
+    <button (click)="logout()">
+      Logout
+    </button>
+
+  </header>
+
+  <main class="dashboard">
+
+    <h2>Dashboard</h2>
+
+    <div class="menu-grid">
+
+      <div class="menu-card">
+        <h3>Users</h3>
+        <button (click)="goToUsers()">
+          <p>Manage users</p>
+        </button>
+      </div>
+
+      <div class="menu-card">
+        <h3>Categories</h3>
+        <p>Manage product categories</p>
+      </div>
+
+      <div class="menu-card">
+        <h3>Products</h3>
+        <p>Manage products and inventory</p>
+      </div>
+
+      <div class="menu-card">
+        <h3>Orders</h3>
+        <p>View and manage orders</p>
+      </div>
+
+      <div class="menu-card">
+        <h3>Payments</h3>
+        <p>View payment information</p>
+      </div>
+
+    </div>
+
+  </main>
+
+</div>

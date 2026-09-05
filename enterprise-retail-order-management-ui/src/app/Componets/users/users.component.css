@@ -1,0 +1,407 @@
+.users-container {
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+
+/* TOPBAR */
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: white;
+  border-bottom: 1px solid #ddd;
+}
+
+  .topbar h1 {
+    margin: 0;
+    font-size: 26px;
+  }
+
+  .topbar span {
+    color: #666;
+    font-size: 14px;
+  }
+
+
+/* CONTENT */
+
+.users-content {
+  padding: 40px;
+}
+
+.page-header {
+  margin-bottom: 25px;
+}
+
+  .page-header h2 {
+    margin: 0;
+    font-size: 28px;
+  }
+
+  .page-header p {
+    margin-top: 6px;
+    color: #666;
+  }
+
+
+/* FILTER */
+
+.filter-card {
+  display: flex;
+  align-items: end;
+  gap: 20px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  margin-bottom: 25px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  flex: 1;
+}
+
+  .filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .filter-group input,
+  .filter-group select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+  }
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.search-btn,
+.clear-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-btn {
+  background: #222;
+  color: white;
+}
+
+.clear-btn {
+  background: #eee;
+}
+
+
+/* TABLE */
+
+.table-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8f8f8;
+}
+
+th,
+td {
+  padding: 15px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+th {
+  font-weight: 600;
+}
+
+
+/* BADGES */
+
+.role-badge,
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  text-transform: capitalize;
+}
+
+  .role-badge.admin {
+    background: #eee;
+    color: #222;
+  }
+
+  .role-badge.customer {
+    background: #f1f1f1;
+    color: #555;
+  }
+
+  .status-badge.active {
+    background: #e8f7ed;
+    color: #217a3b;
+  }
+
+  .status-badge.inactive {
+    background: #fbeaea;
+    color: #a33;
+  }
+
+
+/* ACTIONS */
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+  .actions button {
+    padding: 7px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+.edit-btn {
+  background: #eee;
+}
+
+.deactivate-btn {
+  background: #f3dede;
+}
+
+
+/* PAGINATION */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+  .pagination button {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+    .pagination button.current {
+      background: #222;
+      color: white;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+
+/* LOADING */
+
+.loading {
+  padding: 30px;
+  text-align: center;
+  color: #666;
+}
+
+
+/* ERROR */
+
+.error-message {
+  padding: 12px;
+  margin-bottom: 15px;
+  background: #fbeaea;
+  color: #a33;
+  border-radius: 6px;
+}
+
+.success-message {
+  padding: 12px 16px;
+  margin-bottom: 15px;
+  background: #e8f7ed;
+  color: #217a3b;
+  border: 1px solid #b7e1c3;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+
+/* NO DATA */
+
+.no-data {
+  text-align: center;
+  padding: 30px;
+  color: #777;
+}
+
+
+/* MODAL */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  width: 500px;
+  max-width: 90%;
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+  .modal-header h2 {
+    margin: 0;
+  }
+
+.close-btn {
+  border: none;
+  background: none;
+  font-size: 25px;
+  cursor: pointer;
+}
+
+
+/* FORM */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+  .form-group label {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-family: inherit;
+    resize: vertical;
+  }
+
+  .form-group small {
+    color: #c33;
+  }
+
+
+/* MODAL ACTIONS */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.cancel-btn,
+.save-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel-btn {
+  background: #eee;
+}
+
+.save-btn {
+  background: #222;
+  color: white;
+}
+
+.confirm-modal {
+  width: 420px;
+  max-width: 90%;
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+}
+
+  .confirm-modal h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  .confirm-modal p {
+    color: #666;
+    margin: 8px 0;
+  }
+
+.warning-text {
+  font-size: 13px;
+}
+
+.confirm-deactivate-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #c0392b;
+  color: white;
+  cursor: pointer;
+}
+
+  .confirm-deactivate-btn:hover {
+    background: #a93226;
+  }
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.back-btn {
+  padding: 10px 18px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+  .back-btn:hover {
+    background: #f1f1f1;
+  }
