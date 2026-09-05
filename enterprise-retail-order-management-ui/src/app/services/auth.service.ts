@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { LoginResponse } from '../Models/login-responce';
 import { LoginRequest } from '../Models/login-request';
 
@@ -11,17 +12,42 @@ export class AuthService {
 
   private apiUrl = 'https://localhost:7259/api/Auth';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient
+  ) { }
 
-  login(request: LoginRequest): Observable<LoginResponse> {
+
+  // Login
+  login(
+    request: LoginRequest
+  ): Observable<LoginResponse> {
 
     return this.http.post<LoginResponse>(
-      `${this.apiUrl}/login`,
-      request
+      `${ this.apiUrl }/login`,
+request
     );
   }
 
-  logout(): void {
-    localStorage.removeItem('token');
-  }
+// Register
+register(
+  request: any
+): Observable<string> {
+
+  return this.http.post(
+    `${ this.apiUrl }/register`,
+request,
+{
+  responseType: 'text'
+}
+  );
+}
+
+
+
+// Logout
+logout(): void {
+
+  localStorage.removeItem('token');
+
+}
 }

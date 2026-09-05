@@ -70,3 +70,287 @@ button {
   margin-bottom: 15px;
   text-align: center;
 }
+.signup-section {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.signup-section a {
+  margin-left: 5px;
+  color: #2563eb;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+  .signup-section a:hover {
+    text-decoration: underline;
+  }
+
+/* =========================
+   REGISTER POPUP
+========================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.register-modal {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+
+/* Header */
+
+.register-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+  .register-header h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    color: #111827;
+  }
+
+  .register-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+  }
+
+.close-btn {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 5px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 22px;
+  cursor: pointer;
+}
+
+  .close-btn:hover {
+    background: #e5e7eb;
+  }
+
+
+/* Body */
+
+.register-body {
+  padding: 24px;
+  overflow-y: auto;
+  max-height: calc(90vh - 80px);
+}
+
+
+  /* Form */
+
+  .register-body .form-group {
+    margin-bottom: 16px;
+  }
+
+    .register-body .form-group label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 13px;
+      font-weight: 500;
+      color: #374151;
+    }
+
+  .register-body input,
+  .register-body textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    color: #374151;
+    font-size: 14px;
+    outline: none;
+  }
+
+  .register-body textarea {
+    min-height: 75px;
+    resize: vertical;
+  }
+
+    .register-body input:focus,
+    .register-body textarea:focus {
+      border-color: #2563eb;
+    }
+
+  .register-body small {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #b91c1c;
+  }
+
+
+/* Register Button */
+
+.register-btn {
+  width: 100%;
+  padding: 11px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .register-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+  }
+
+  .register-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+
+/* Login Link */
+
+.login-link {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+  .login-link a {
+    margin-left: 4px;
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+    .login-link a:hover {
+      text-decoration: underline;
+    }
+
+
+/* Existing Sign Up */
+
+.signup-section {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+  .signup-section a {
+    margin-left: 5px;
+    color: #2563eb;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+    .signup-section a:hover {
+      text-decoration: underline;
+    }
+
+
+/* Responsive */
+
+@media (max-width: 600px) {
+
+  .modal-overlay {
+    padding: 12px;
+  }
+
+  .register-modal {
+    max-width: 100%;
+  }
+
+  .register-body {
+    padding: 20px;
+  }
+}
+
+/* =========================
+   SUCCESS POPUP
+========================= */
+.success-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.success-popup {
+  width: 90%;
+  max-width: 400px;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  animation: popupIn 0.25s ease-out;
+}
+
+.success-icon {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #dcfce7;
+  color: #15803d;
+  font-size: 30px;
+  font-weight: 700;
+}
+
+.success-popup h2 {
+  margin: 0 0 8px;
+  font-size: 20px;
+  color: #111827;
+}
+
+.success-popup p {
+  margin: 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+@keyframes popupIn {
+
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
