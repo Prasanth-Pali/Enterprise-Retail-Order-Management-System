@@ -1,0 +1,662 @@
+
+.orders-container {
+  min-height: 100vh;
+  background: #f5f7fb;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.topbar {
+  height: 70px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 30px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+  .topbar h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #1f2937;
+  }
+
+.back-btn {
+  margin-left: auto;
+  padding: 10px 18px;
+  border: 1px solid #ddd;
+  background: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #374151;
+}
+
+  .back-btn:hover {
+    background: #f1f1f1;
+  }
+
+
+/* =========================
+   MAIN CONTENT
+========================= */
+
+.orders-content {
+  padding: 30px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+  .page-header h1 {
+    margin: 0 0 6px;
+    color: #111827;
+    font-size: 28px;
+  }
+
+  .page-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+
+/* =========================
+   FILTER
+========================= */
+
+.filter-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  display: flex;
+  align-items: flex-end;
+  gap: 25px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+  .filter-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .filter-group select {
+    min-width: 180px;
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 14px;
+    outline: none;
+  }
+
+    .filter-group select:focus {
+      border-color: #2563eb;
+    }
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.clear-btn {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #6b7280;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+  .clear-btn:hover {
+    background: #4b5563;
+  }
+
+
+/* =========================
+   MESSAGES
+========================= */
+
+.success-message {
+  background: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.error-message {
+  background: #fef2f2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  padding: 12px 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+
+/* =========================
+   ORDERS TABLE
+========================= */
+
+.table-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+  .table-card table {
+    width: 100%;
+    min-width: 950px;
+    border-collapse: collapse;
+  }
+
+  .table-card thead {
+    background: #f9fafb;
+  }
+
+  .table-card th {
+    text-align: left;
+    padding: 15px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .table-card td {
+    padding: 15px;
+    font-size: 14px;
+    color: #4b5563;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .table-card tbody tr:hover {
+    background: #f9fafb;
+  }
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+  .status-badge.pending {
+    background: #fef3c7;
+    color: #92400e;
+  }
+
+  .status-badge.confirmed {
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+
+  .status-badge.shipped {
+    background: #e0e7ff;
+    color: #4338ca;
+  }
+
+  .status-badge.delivered {
+    background: #dcfce7;
+    color: #166534;
+  }
+
+  .status-badge.cancelled {
+    background: #fee2e2;
+    color: #b91c1c;
+  }
+
+
+/* =========================
+   ACTION
+========================= */
+
+.actions {
+  white-space: nowrap;
+}
+
+.view-btn {
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  padding: 7px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+  .view-btn:hover {
+    background: #1d4ed8;
+  }
+
+
+/* =========================
+   NO DATA
+========================= */
+
+.no-data {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+
+/* =========================
+   PAGINATION
+========================= */
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin-top: 25px;
+}
+
+  .pagination button {
+    min-width: 36px;
+    height: 36px;
+    padding: 0 12px;
+    border: 1px solid #d1d5db;
+    background: #ffffff;
+    color: #374151;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+    .pagination button:hover:not(:disabled) {
+      background: #f3f4f6;
+    }
+
+    .pagination button.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+
+    .pagination button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+
+/* =================================================
+   POPUP OVERLAY
+================================================= */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+
+/* =========================
+   ORDER DETAILS POPUP
+========================= */
+
+.order-details-modal {
+  width: 850px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  animation: popup 0.2s ease-out;
+}
+
+@keyframes popup {
+
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
+/* =========================
+   MODAL HEADER
+========================= */
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+  .modal-header h2 {
+    margin: 0 0 5px;
+    color: #111827;
+    font-size: 22px;
+  }
+
+  .modal-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+.close-btn {
+  border: none;
+  background: #f3f4f6;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  font-size: 22px;
+  color: #374151;
+  cursor: pointer;
+}
+
+  .close-btn:hover {
+    background: #e5e7eb;
+  }
+
+
+/* =========================
+   ORDER INFORMATION
+========================= */
+
+.order-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  padding: 25px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+  .info-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+  }
+
+  .info-item span {
+    font-size: 14px;
+    color: #111827;
+  }
+
+.full-width {
+  grid-column: 1 / -1;
+}
+
+
+/* =========================
+   ORDER ITEMS
+========================= */
+
+.items-section {
+  padding: 0 25px 20px;
+}
+
+  .items-section h3 {
+    margin: 0 0 15px;
+    color: #111827;
+    font-size: 17px;
+  }
+
+.items-table {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+  .items-table table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+  }
+
+  .items-table th {
+    background: #f9fafb;
+    padding: 12px;
+    text-align: left;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .items-table td {
+    padding: 12px;
+    border-top: 1px solid #f3f4f6;
+    font-size: 14px;
+    color: #4b5563;
+  }
+
+.no-items {
+  text-align: center;
+  padding: 25px !important;
+  color: #6b7280 !important;
+}
+
+
+/* =========================
+   TOTAL
+========================= */
+
+.order-total {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 30px;
+  padding: 20px 25px;
+  border-top: 1px solid #e5e7eb;
+  font-size: 16px;
+}
+
+  .order-total span {
+    color: #4b5563;
+  }
+
+  .order-total strong {
+    font-size: 20px;
+    color: #111827;
+  }
+
+
+/* =========================
+   MODAL FOOTER
+========================= */
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px 25px 25px;
+}
+
+.cancel-btn {
+  padding: 9px 20px;
+  border: none;
+  border-radius: 6px;
+  background: #6b7280;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+  .cancel-btn:hover {
+    background: #4b5563;
+  }
+
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 768px) {
+
+  .topbar {
+    padding: 0 15px;
+  }
+
+  .orders-content {
+    padding: 20px 15px;
+  }
+
+  .page-header h1 {
+    font-size: 24px;
+  }
+
+  .filter-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-group select {
+    width: 100%;
+  }
+
+  .clear-btn {
+    width: 100%;
+  }
+
+  .order-info {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  .order-details-modal {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .order-total {
+    justify-content: space-between;
+  }
+}
+/* =========================
+   STATUS UPDATE
+========================= */
+.status-update-section {
+  margin: 0 25px 20px;
+  padding: 18px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+}
+
+.status-update-section h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: #111827;
+}
+
+.status-update-form {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+  .status-update-form select {
+    min-width: 200px;
+    padding: 9px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    font-size: 14px;
+    color: #374151;
+    outline: none;
+  }
+
+    .status-update-form select:focus {
+      border-color: #2563eb;
+    }
+
+.update-status-btn {
+  padding: 9px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+  .update-status-btn:hover:not(:disabled) {
+    background: #1d4ed8;
+  }
+
+  .update-status-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+
+/* =========================
+   RESPONSIVE STATUS UPDATE
+========================= */
+
+@media (max-width: 768px) {
+
+  .status-update-section {
+    margin: 0 15px 20px;
+  }
+
+  .status-update-form {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+    .status-update-form select {
+      width: 100%;
+    }
+
+  .update-status-btn {
+    width: 100%;
+  }
+}

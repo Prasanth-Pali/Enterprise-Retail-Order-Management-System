@@ -28,6 +28,10 @@ export class AdminComponent {
     this.router.navigate(['/products']);
   }
 
+  goToOrders(): void {
+    this.router.navigate(['/orders']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);

@@ -1,0 +1,492 @@
+
+<div class="orders-container">
+
+  <!-- =========================
+       TOP BAR
+  ========================== -->
+  <div class="topbar">
+
+    <h2>Orders</h2>
+
+    <button type="button"
+            class="back-btn"
+            (click)="goBack()">
+      ← Back
+    </button>
+
+  </div>
+
+
+  <div class="orders-content">
+
+    <!-- =========================
+         PAGE HEADER
+    ========================== -->
+    <div class="page-header">
+
+      <div>
+        <h1>Order Management</h1>
+        <p>View and manage customer orders</p>
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         FILTER
+    ========================== -->
+    <div class="filter-card">
+
+      <div class="filter-group">
+
+        <label>Status</label>
+
+        <select [(ngModel)]="selectedStatus"
+                (change)="filterOrders()">
+
+          <option value="">All Status</option>
+          <option value="Pending">Pending</option>
+          <option value="Confirmed">Confirmed</option>
+          <option value="Shipped">Shipped</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+
+        </select>
+
+      </div>
+
+
+      <div class="filter-buttons">
+
+        <button type="button"
+                class="clear-btn"
+                (click)="clearFilters()">
+
+          Clear
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+         SUCCESS MESSAGE
+    ========================== -->
+    <div class="success-message"
+         *ngIf="successMessage">
+
+      {{ successMessage }}
+
+    </div>
+
+
+    <!-- =========================
+         ERROR MESSAGE
+    ========================== -->
+    <div class="error-message"
+         *ngIf="errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <!-- =========================
+         LOADING
+    ========================== -->
+    <div class="loading"
+         *ngIf="isLoading">
+
+      Loading orders...
+
+    </div>
+
+
+    <!-- =========================
+         ORDERS TABLE
+    ========================== -->
+    <div class="table-card"
+         *ngIf="!isLoading">
+
+      <table>
+
+        <thead>
+
+          <tr>
+
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Total Amount</th>
+            <th>Status</th>
+            <th>Shipping Address</th>
+            <th>Order Date</th>
+            <th>Action</th>
+
+          </tr>
+
+        </thead>
+
+
+        <tbody>
+
+          <tr *ngFor="let order of orders">
+
+            <td>
+              #{{ order.orderId }}
+            </td>
+
+            <td>
+              {{ order.customerName }}
+            </td>
+
+            <td>
+              ₹{{ order.totalAmount | number:'1.2-2' }}
+            </td>
+
+            <td>
+
+              <span class="status-badge"
+                    [ngClass]="order.status.toLowerCase()">
+
+                {{ order.status }}
+
+              </span>
+
+            </td>
+
+            <td>
+              {{ order.shippingAddress || 'N/A' }}
+            </td>
+
+            <td>
+              {{ order.orderDate | date:'dd-MM-yyyy HH:mm' }}
+            </td>
+
+            <td class="actions">
+
+              <button type="button"
+                      class="view-btn"
+                      (click)="viewOrder(order.orderId)">
+
+                View
+
+              </button>
+
+            </td>
+
+          </tr>
+
+
+          <!-- No Data -->
+          <tr *ngIf="orders.length === 0">
+
+            <td colspan="7"
+                class="no-data">
+
+              No orders found.
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+
+    <!-- =========================
+         PAGINATION
+    ========================== -->
+    <div class="pagination"
+         *ngIf="totalPages > 1">
+
+      <button type="button"
+              [disabled]="currentPage === 1"
+              (click)="goToPage(currentPage - 1)">
+
+        Previous
+
+      </button>
+
+
+      <button type="button"
+              *ngFor="let page of pages"
+              [class.active]="page === currentPage"
+              (click)="goToPage(page)">
+
+        {{ page }}
+
+      </button>
+
+
+      <button type="button"
+              [disabled]="currentPage === totalPages"
+              (click)="goToPage(currentPage + 1)">
+
+        Next
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =================================================
+       ORDER DETAILS POPUP
+  ================================================== -->
+
+  <div class="modal-overlay"
+       *ngIf="showOrderDetailsModal && selectedOrder"
+       (click)="closeOrderDetails()">
+
+
+    <!-- Popup -->
+    <div class="order-details-modal"
+         (click)="$event.stopPropagation()">
+
+
+      <!-- =========================
+       MODAL HEADER
+  ========================== -->
+      <div class="modal-header">
+
+        <div>
+
+          <h2>
+            Order #{{ selectedOrder.orderId }}
+          </h2>
+
+          <p>
+            Order Details
+          </p>
+
+        </div>
+
+
+        <button type="button"
+                class="close-btn"
+                (click)="closeOrderDetails()">
+
+          ×
+
+        </button>
+
+      </div>
+
+
+      <!-- =========================
+       ORDER INFORMATION
+  ========================== -->
+      <div class="order-info">
+
+
+        <div class="info-item">
+
+          <label>Customer</label>
+
+          <span>
+            {{ selectedOrder.customerName }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <label>User ID</label>
+
+          <span>
+            {{ selectedOrder.userId }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <label>Order Date</label>
+
+          <span>
+            {{ selectedOrder.orderDate | date:'dd-MM-yyyy HH:mm' }}
+          </span>
+
+        </div>
+
+
+        <div class="info-item">
+
+          <label>Status</label>
+
+          <span class="status-badge"
+                [ngClass]="selectedOrder.status.toLowerCase()">
+
+            {{ selectedOrder.status }}
+
+          </span>
+
+        </div>
+
+
+        <div class="info-item full-width">
+
+          <label>Shipping Address</label>
+
+          <span>
+            {{ selectedOrder.shippingAddress || 'N/A' }}
+          </span>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+       ORDER ITEMS
+  ========================== -->
+      <div class="items-section">
+
+        <h3>Order Items</h3>
+
+
+        <div class="items-table">
+
+          <table>
+
+            <thead>
+
+              <tr>
+
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Sub Total</th>
+
+              </tr>
+
+            </thead>
+
+
+            <tbody>
+
+              <tr *ngFor="let item of selectedOrder.items">
+
+                <td>
+                  {{ item.productName }}
+                </td>
+
+                <td>
+                  {{ item.quantity }}
+                </td>
+
+                <td>
+                  ₹{{ item.unitPrice | number:'1.2-2' }}
+                </td>
+
+                <td>
+                  ₹{{ item.subTotal | number:'1.2-2' }}
+                </td>
+
+              </tr>
+
+
+              <tr *ngIf="selectedOrder.items.length === 0">
+
+                <td colspan="4"
+                    class="no-items">
+
+                  No items found.
+
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+      <!-- =========================
+       UPDATE ORDER STATUS
+  ========================== -->
+      <div class="status-update-section"
+           *ngIf="selectedOrder && getAllowedStatuses().length > 0">
+
+        <h3>Update Order Status</h3>
+
+        <div class="status-update-form">
+
+          <select [(ngModel)]="selectedNewStatus">
+
+            <option value="">
+              Select New Status
+            </option>
+
+            <option *ngFor="let status of getAllowedStatuses()"
+                    [value]="status">
+
+              {{ status }}
+
+            </option>
+
+          </select>
+
+
+          <button type="button"
+                  class="update-status-btn"
+                  [disabled]="!selectedNewStatus || isUpdatingStatus"
+                  (click)="updateStatus()">
+
+            {{ isUpdatingStatus ? 'Updating...' : 'Update Status' }}
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- =========================
+       TOTAL
+  ========================== -->
+      <div class="order-total">
+
+        <span>
+          Total Amount
+        </span>
+
+        <strong>
+          ₹{{ selectedOrder.totalAmount | number:'1.2-2' }}
+        </strong>
+
+      </div>
+
+
+      <!-- =========================
+       MODAL FOOTER
+  ========================== -->
+      <div class="modal-actions">
+
+        <button type="button"
+                class="cancel-btn"
+                (click)="closeOrderDetails()">
+
+          Close
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+</div>

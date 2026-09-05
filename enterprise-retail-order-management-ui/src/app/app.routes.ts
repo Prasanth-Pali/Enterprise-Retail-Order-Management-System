@@ -5,6 +5,7 @@ import { authGuard } from './guards/auth.guard';
 import { UsersComponent } from './Componets/users/users.component';
 import { CategoriesComponent } from './Componets/categories/categories.component';
 import { ProductsComponent } from './Componets/products/products.component';
+import { OrdersComponent } from './Componets/orders/orders.component';
 
 
 export const routes: Routes = [
@@ -40,6 +41,13 @@ export const routes: Routes = [
   {
     path: 'products',
     component: ProductsComponent,
+    canActivate: [authGuard],
+    data: { role: 'admin' }
+  },
+
+  {
+    path: 'orders',
+    component: OrdersComponent,
     canActivate: [authGuard],
     data: { role: 'admin' }
   },
