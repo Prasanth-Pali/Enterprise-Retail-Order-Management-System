@@ -52,3 +52,12 @@
   .menu-card p {
     color: #666;
   }
+
+.menu-card {
+  cursor: pointer;
+}
+
+  .menu-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
+  }
