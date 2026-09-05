@@ -24,6 +24,10 @@ export class AdminComponent {
     this.router.navigate(['/categories']);
   }
 
+  goToProducts(): void {
+    this.router.navigate(['/products']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
