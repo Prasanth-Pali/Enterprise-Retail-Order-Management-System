@@ -1,50 +1,159 @@
-  <div class="admin-container">
 
+<div class="admin-container">
+
+  <!-- ================= TOP BAR ================= -->
   <header class="topbar">
 
-    <div>
-      <h1>RetailFlow</h1>
-      <span>Admin Dashboard</span>
+    <!-- Brand -->
+    <div class="brand">
+
+      <div class="brand-logo">
+        RF
+      </div>
+
+      <div class="brand-info">
+        <h1>RetailFlow</h1>
+        <span>Management System</span>
+      </div>
+
     </div>
 
-    <button (click)="logout()">
-      Logout
-    </button>
+
+    <!-- Right Side -->
+    <div class="topbar-right">
+
+      <div class="status">
+        <span class="status-dot"></span>
+        System Online
+      </div>
+
+      <button class="logout-btn" (click)="logout()">
+        Logout
+      </button>
+
+    </div>
 
   </header>
 
+
+  <!-- ================= MAIN DASHBOARD ================= -->
   <main class="dashboard">
 
-    <h2>Dashboard</h2>
+    <!-- Dashboard Heading -->
+    <section class="page-heading">
 
-    <div class="menu-grid">
+      <h2>Admin Dashboard</h2>
 
-      <div class="menu-card" (click)="goToUsers()">
-        <h3>Users</h3>
-        <p>Manage users</p>
+      <p>
+        Manage your RetailFlow system
+      </p>
+
+    </section>
+
+
+    <!-- ================= MANAGEMENT CARDS ================= -->
+    <section class="menu-grid">
+
+      <!-- Users -->
+      <div class="menu-card users-card" (click)="goToUsers()">
+
+        <div class="card-icon">
+          U
+        </div>
+
+        <div class="card-content">
+
+          <h3>Users</h3>
+
+          <p>
+            Manage customers and user accounts
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="menu-card" (click)="goToCategories()">
-        <h3>Categories</h3>
-        <p>Manage categories</p>
+
+      <!-- Categories -->
+      <div class="menu-card categories-card" (click)="goToCategories()">
+
+        <div class="card-icon">
+          C
+        </div>
+
+        <div class="card-content">
+
+          <h3>Categories</h3>
+
+          <p>
+            Organize and manage product categories
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="menu-card" (click)="goToProducts()">
-        <h3>Products</h3>
-        <p>Manage products and inventory</p>
+
+      <!-- Products -->
+      <div class="menu-card products-card" (click)="goToProducts()">
+
+        <div class="card-icon">
+          P
+        </div>
+
+        <div class="card-content">
+
+          <h3>Products</h3>
+
+          <p>
+            Manage products, pricing and inventory
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="menu-card" (click)="goToOrders()">
-        <h3>Orders</h3>
-        <p>View and manage</p>
+
+      <!-- Orders -->
+      <div class="menu-card orders-card" (click)="goToOrders()">
+
+        <div class="card-icon">
+          O
+        </div>
+
+        <div class="card-content">
+
+          <h3>Orders</h3>
+
+          <p>
+            View and manage customer orders
+          </p>
+
+        </div>
+
       </div>
 
-      <div class="menu-card" (click)="goToPayments()">
-        <h3>Payments</h3>
-        <p>View payment information</p>
+
+      <!-- Payments -->
+      <div class="menu-card payments-card" (click)="goToPayments()">
+
+        <div class="card-icon">
+          ₹
+        </div>
+
+        <div class="card-content">
+
+          <h3>Payments</h3>
+
+          <p>
+            View transactions and payment information
+          </p>
+
+        </div>
+
       </div>
 
-    </div>
+    </section>
 
   </main>
 

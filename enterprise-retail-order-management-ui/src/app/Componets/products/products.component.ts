@@ -42,7 +42,7 @@ export class ProductsComponent implements OnInit {
   selectedStatus = '';
 
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 5;
   totalCount = 0;
 
   showAddModal = false;

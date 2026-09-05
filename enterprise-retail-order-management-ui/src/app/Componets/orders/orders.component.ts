@@ -47,7 +47,7 @@ export class OrdersComponent implements OnInit {
 
   currentPage = 1;
 
-  pageSize = 10;
+  pageSize = 5;
 
   totalCount = 0;
 

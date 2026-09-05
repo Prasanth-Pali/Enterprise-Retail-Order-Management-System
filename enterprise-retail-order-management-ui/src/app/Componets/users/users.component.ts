@@ -40,7 +40,7 @@ export class UsersComponent implements OnInit {
 
   // Pagination
   currentPage = 1;
-  pageSize = 10;
+  pageSize = 5;
   totalCount = 0;
 
   // Edit modal
