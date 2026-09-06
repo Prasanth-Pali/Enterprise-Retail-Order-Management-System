@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 
+
+
 import {
   Payment,
   PaymentService,
@@ -87,11 +89,17 @@ export class PaymentsComponent implements OnInit {
       console.log('Payment Amount:', this.amount);
       console.log('Payment Role:', role);
 
+      // Admin payment history load
+      if (this.isAdmin) {
+        this.loadPayments();
+      }
+
     } catch (error) {
 
       console.error('Invalid token:', error);
 
       localStorage.removeItem('token');
+
       this.router.navigate(['/login']);
     }
   }

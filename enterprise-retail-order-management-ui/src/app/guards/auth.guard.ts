@@ -7,44 +7,45 @@ export const authGuard: CanActivateFn = (route) => {
 
   const token = localStorage.getItem('token');
 
-  // Token lekapothe login ki
+  // Login avvakapothe → 404
   if (!token) {
-    return router.createUrlTree(['/login']);
+    return router.createUrlTree(['/404']);
   }
 
   try {
 
-    // JWT payload decode
     const payload = JSON.parse(
       atob(token.split('.')[1])
     );
 
-    // JWT nunchi role
     const role =
       payload[
       'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
-      ];
+      ] ||
+      payload['role'];
 
-    // Route ki required role
     const requiredRole = route.data['role'];
 
-    // Role match kakapothe
+    // Role mismatch
     if (requiredRole && role !== requiredRole) {
 
       if (role === 'admin') {
         return router.createUrlTree(['/admin']);
       }
 
-      return router.createUrlTree(['/customer']);
+      if (role === 'customer') {
+        return router.createUrlTree(['/customer']);
+      }
+
+      return router.createUrlTree(['/404']);
     }
 
     return true;
 
   } catch {
 
-    // Invalid token
     localStorage.removeItem('token');
 
-    return router.createUrlTree(['/login']);
+    return router.createUrlTree(['/404']);
   }
 };

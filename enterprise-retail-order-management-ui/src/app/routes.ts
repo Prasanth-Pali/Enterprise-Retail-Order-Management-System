@@ -1,40 +1,39 @@
 import { Routes } from '@angular/router';
-import { LoginComponent } from './Componets/login/login.component';
+import { AccountComponent } from './Componets/account/account.component';
 import { AdminComponent } from './Componets/admin/admin.component';
-import { authGuard } from './guards/auth.guard';
-import { UsersComponent } from './Componets/users/users.component';
 import { CategoriesComponent } from './Componets/categories/categories.component';
-import { ProductsComponent } from './Componets/products/products.component';
+import { CustomerComponent } from './Componets/customer/customer.component';
+import { LoginComponent } from './Componets/login/login.component';
 import { OrdersComponent } from './Componets/orders/orders.component';
 import { PaymentsComponent } from './Componets/payments/payments.component';
-import { AccountComponent } from './Componets/account/account.component';
-import { CustomerComponent } from './Componets/customer/customer.component';
+import { ProductsComponent } from './Componets/products/products.component';
+import { UsersComponent } from './Componets/users/users.component';
+import { authGuard } from './guards/auth.guard';
 import { NotFoundComponentComponent } from './Componets/not-found-component/not-found-component.component';
 
 
+
 export const routes: Routes = [
-  {
-    path: 'login',
-    component: LoginComponent
-  },
+    {
+        path: 'login',
+        component: LoginComponent
+    },
   {
     path: 'admin',
     component: AdminComponent,
     canActivate: [authGuard],
     data: {
       role: 'admin'
-    },
+    }
   },
-
   {
     path: 'customer',
     component: CustomerComponent,
     canActivate: [authGuard],
     data: {
       role: 'customer'
-    },
+    }
   },
-
   {
     path: 'users',
     component: UsersComponent,
@@ -43,41 +42,25 @@ export const routes: Routes = [
       role: 'admin'
     }
   },
-
-  {
-    path: 'profile',
-    component: AccountComponent,
-    canActivate: [authGuard],
-  },
-
-  {
-    path: 'categories',
-    component: CategoriesComponent,
-    canActivate: [authGuard],
-  },
-
   {
     path: 'products',
     component: ProductsComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
-
   {
     path: 'orders',
     component: OrdersComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
-
   {
     path: 'payments',
     component: PaymentsComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
-
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
+    path: 'profile',
+    component: AccountComponent,
+    canActivate: [authGuard]
   },
   {
     path: '404',
@@ -87,7 +70,4 @@ export const routes: Routes = [
     path: '**',
     component: NotFoundComponentComponent
   }
-
-
-  
 ];

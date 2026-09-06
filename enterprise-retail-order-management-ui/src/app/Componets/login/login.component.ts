@@ -106,35 +106,86 @@ export class LoginComponent {
 
     };
 
-    this.authService.login(request).subscribe({
+this.authService.login(request).subscribe({
 
-      next: (response) => {
+  next: (response) => {
 
-        console.log('Login successful');
+    console.log('Login successful');
 
-        localStorage.setItem(
-          'token',
-          response.token
-        );
+    // Store JWT
+    localStorage.setItem(
+      'token',
+      response.token
+    );
 
-        this.isLoading = false;
+    this.isLoading = false;
 
-        this.router.navigate(['/admin']);
+    try {
 
-      },
+      // Decode JWT payload
+      const payload = JSON.parse(
+        atob(response.token.split('.')[1])
+      );
 
-      error: (error) => {
+      // Get role from JWT
+      const role =
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'];
 
-        this.isLoading = false;
+      console.log('Logged-in Role:', role);
+
+      // Navigate based on JWT role
+      // replaceUrl removes Login from browser history
+      if (role === 'admin') {
+
+        this.router.navigate(['/admin'], {
+           });
+
+      } else if (role === 'customer') {
+
+        this.router.navigate(['/customer'], {
+        });
+
+      } else {
+
+        // Invalid role
+        localStorage.removeItem('token');
 
         this.errorMessage =
-          'Invalid email or password.';
-
-        console.error(error);
+          'Invalid user role.';
 
       }
 
-    });
+    } catch (error) {
+
+      console.error(
+        'Invalid JWT:',
+        error
+      );
+
+      localStorage.removeItem('token');
+
+      this.errorMessage =
+        'Invalid authentication token.';
+
+    }
+
+  },
+
+  error: (error) => {
+
+    this.isLoading = false;
+
+    this.errorMessage =
+      'Invalid email or password.';
+
+    console.error(error);
+
+  }
+
+});
 
   }
 
