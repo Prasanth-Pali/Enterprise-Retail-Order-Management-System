@@ -1,0 +1,1172 @@
+<div class="homepage">
+
+  <!-- ================= NAVBAR ================= -->
+  <nav class="navbar">
+
+    <div class="nav-brand" (click)="scrollToTop()">
+
+      <div class="brand-icon">
+        RF
+      </div>
+
+      <div class="brand-text">
+
+        <span class="brand-name">
+          RetailFlow
+        </span>
+
+        <span class="brand-subtitle">
+          Retail & Order Management
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="nav-links">
+
+      <a (click)="scrollToSection('about')">
+        About
+      </a>
+
+      <a (click)="scrollToSection('features')">
+        Features
+      </a>
+
+      <a (click)="scrollToSection('categories')">
+        Categories
+      </a>
+
+      <button class="login-btn"
+              (click)="goToLogin()">
+
+        Login
+
+      </button>
+
+    </div>
+
+  </nav>
+
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+
+    <div class="hero-content">
+
+      <div class="hero-badge">
+
+        <span class="status-dot"></span>
+
+        Enterprise Retail Platform
+
+      </div>
+
+
+      <h1>
+
+        Manage Your
+
+        <span>
+          Retail Business
+        </span>
+
+        Smarter
+
+      </h1>
+
+
+      <p>
+
+        RetailFlow is an enterprise retail and order management
+        platform designed to simplify products, inventory, orders,
+        payments and customer management in one place.
+
+      </p>
+
+
+      <div class="hero-buttons">
+
+        <button class="primary-btn"
+                (click)="goToLogin()">
+
+          Get Started
+
+          <span>→</span>
+
+        </button>
+
+
+        <button class="secondary-btn"
+                (click)="scrollToSection('about')">
+
+          Learn More
+
+        </button>
+
+      </div>
+
+
+      <div class="hero-stats">
+
+        <div class="stat">
+
+          <strong>
+            6+
+          </strong>
+
+          <span>
+            Management Modules
+          </span>
+
+        </div>
+
+
+        <div class="stat-divider"></div>
+
+
+        <div class="stat">
+
+          <strong>
+            JWT
+          </strong>
+
+          <span>
+            Secure Authentication
+          </span>
+
+        </div>
+
+
+        <div class="stat-divider"></div>
+
+
+        <div class="stat">
+
+          <strong>
+            24/7
+          </strong>
+
+          <span>
+            Business Visibility
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= DASHBOARD VISUAL ================= -->
+
+    <div class="hero-visual">
+
+      <div class="dashboard-window">
+
+        <div class="window-header">
+
+          <div class="window-dots">
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+          </div>
+
+          <span class="window-title">
+            RetailFlow Dashboard
+          </span>
+
+        </div>
+
+
+        <div class="dashboard-content">
+
+          <div class="dashboard-top">
+
+            <div>
+
+              <span class="small-label">
+                Welcome back
+              </span>
+
+              <h3>
+                Business Overview
+              </h3>
+
+            </div>
+
+
+            <div class="dashboard-date">
+              Today
+            </div>
+
+          </div>
+
+
+          <div class="dashboard-cards">
+
+            <div class="mini-card">
+
+              <div class="mini-icon">
+                📦
+              </div>
+
+              <div>
+
+                <span>
+                  Products
+                </span>
+
+                <strong>
+                  1,248
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="mini-card">
+
+              <div class="mini-icon">
+                🛒
+              </div>
+
+              <div>
+
+                <span>
+                  Orders
+                </span>
+
+                <strong>
+                  486
+                </strong>
+
+              </div>
+
+            </div>
+
+
+            <div class="mini-card">
+
+              <div class="mini-icon">
+                👥
+              </div>
+
+              <div>
+
+                <span>
+                  Customers
+                </span>
+
+                <strong>
+                  2,840
+                </strong>
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div class="chart-card">
+
+            <div class="chart-header">
+
+              <span>
+                Sales Overview
+              </span>
+
+              <span class="growth">
+                +18.6%
+              </span>
+
+            </div>
+
+
+            <div class="fake-chart">
+
+              <div class="chart-line line-one"></div>
+              <div class="chart-line line-two"></div>
+              <div class="chart-line line-three"></div>
+
+
+              <div class="chart-bars">
+
+                <div style="height:35%"></div>
+                <div style="height:48%"></div>
+                <div style="height:42%"></div>
+                <div style="height:65%"></div>
+                <div style="height:55%"></div>
+                <div style="height:78%"></div>
+                <div style="height:92%"></div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= TRUST BAR ================= -->
+
+  <section class="trust-bar">
+
+    <div class="trust-item">
+
+      <span>
+        🔐
+      </span>
+
+      <div>
+
+        <strong>
+          Secure
+        </strong>
+
+        <small>
+          JWT Authentication
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="trust-item">
+
+      <span>
+        ⚡
+      </span>
+
+      <div>
+
+        <strong>
+          Fast
+        </strong>
+
+        <small>
+          Optimized APIs
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="trust-item">
+
+      <span>
+        📊
+      </span>
+
+      <div>
+
+        <strong>
+          Organized
+        </strong>
+
+        <small>
+          Centralized Management
+        </small>
+
+      </div>
+
+    </div>
+
+
+    <div class="trust-item">
+
+      <span>
+        🛡️
+      </span>
+
+      <div>
+
+        <strong>
+          Reliable
+        </strong>
+
+        <small>
+          Role Based Access
+        </small>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= ABOUT ================= -->
+
+  <section class="section about-section"
+           id="about">
+
+    <div class="section-heading">
+
+      <span class="section-label">
+        ABOUT RETAILFLOW
+      </span>
+
+
+      <h2>
+
+        Everything Your Retail Business
+
+        <span>
+          Needs in One Place
+        </span>
+
+      </h2>
+
+
+      <p>
+
+        RetailFlow brings your entire retail operation together.
+        From managing products and customers to processing orders
+        and payments, everything can be managed through a single
+        secure platform.
+
+      </p>
+
+    </div>
+
+
+    <div class="about-grid">
+
+      <div class="about-card">
+
+        <div class="about-icon">
+          🎯
+        </div>
+
+        <h3>
+          Centralized Management
+        </h3>
+
+        <p>
+
+          Manage customers, products, categories, orders and
+          payments from a centralized system.
+
+        </p>
+
+      </div>
+
+
+      <div class="about-card">
+
+        <div class="about-icon">
+          🔒
+        </div>
+
+        <h3>
+          Secure Access
+        </h3>
+
+        <p>
+
+          JWT authentication and role-based authorization keep
+          business data protected.
+
+        </p>
+
+      </div>
+
+
+      <div class="about-card">
+
+        <div class="about-icon">
+          📈
+        </div>
+
+        <h3>
+          Better Visibility
+        </h3>
+
+        <p>
+
+          Get a clear view of products, inventory, orders and
+          payments to make better business decisions.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= CATEGORIES ================= -->
+
+  <section class="section categories-section"
+           id="categories">
+
+    <div class="section-heading">
+
+      <span class="section-label">
+        PRODUCT CATEGORIES
+      </span>
+
+
+      <h2>
+
+        Explore Our
+
+        <span>
+          Product Categories
+        </span>
+
+      </h2>
+
+
+      <p>
+
+        RetailFlow supports a wide range of products across
+        multiple categories, making retail management simple
+        and organized.
+
+      </p>
+
+    </div>
+
+
+    <div class="categories-grid">
+
+      <!-- Electronics -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          📱
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Electronics
+          </h3>
+
+          <p>
+            Smart devices & gadgets
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Fashion -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          👕
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Fashion
+          </h3>
+
+          <p>
+            Clothing & accessories
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Grocery -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          🛒
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Grocery
+          </h3>
+
+          <p>
+            Daily essentials
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Home Appliances -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          🏠
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Home Appliances
+          </h3>
+
+          <p>
+            Everyday home essentials
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Computers -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          💻
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Computers
+          </h3>
+
+          <p>
+            Laptops & computer products
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Accessories -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          🎧
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Accessories
+          </h3>
+
+          <p>
+            Technology accessories
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Cameras -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          📷
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Cameras
+          </h3>
+
+          <p>
+            Cameras & photography products
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- Watches -->
+
+      <div class="category-card">
+
+        <div class="category-icon">
+          ⌚
+        </div>
+
+        <div class="category-content">
+
+          <h3>
+            Watches
+          </h3>
+
+          <p>
+            Smart & classic watches
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- Security Information -->
+
+    <div class="category-info">
+
+      <div class="info-icon">
+        🔐
+      </div>
+
+
+      <div>
+
+        <strong>
+          Secure Product Access
+        </strong>
+
+        <p>
+
+          Product information is available only to authenticated
+          users through RetailFlow's role-based access control.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= FEATURES ================= -->
+
+  <section class="section features-section"
+           id="features">
+
+    <div class="section-heading">
+
+      <span class="section-label">
+        POWERFUL FEATURES
+      </span>
+
+
+      <h2>
+
+        Built for
+
+        <span>
+          Modern Retail
+        </span>
+
+      </h2>
+
+
+      <p>
+
+        RetailFlow provides the essential tools needed
+        to manage retail operations efficiently.
+
+      </p>
+
+    </div>
+
+
+    <div class="features-grid">
+
+      <div class="feature-card">
+
+        <div class="feature-number">
+          01
+        </div>
+
+        <div class="feature-icon">
+          👥
+        </div>
+
+        <h3>
+          Customer Management
+        </h3>
+
+        <p>
+
+          Securely manage customer accounts, profiles,
+          roles and account information.
+
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-number">
+          02
+        </div>
+
+        <div class="feature-icon">
+          📦
+        </div>
+
+        <h3>
+          Product & Inventory
+        </h3>
+
+        <p>
+
+          Manage products, categories, pricing,
+          availability and inventory levels.
+
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-number">
+          03
+        </div>
+
+        <div class="feature-icon">
+          🛍️
+        </div>
+
+        <h3>
+          Order Management
+        </h3>
+
+        <p>
+
+          Create, track and manage orders through
+          their complete lifecycle.
+
+        </p>
+
+      </div>
+
+
+      <div class="feature-card">
+
+        <div class="feature-number">
+          04
+        </div>
+
+        <div class="feature-icon">
+          💳
+        </div>
+
+        <h3>
+          Payment Management
+        </h3>
+
+        <p>
+
+          Process payments securely and maintain
+          transaction information.
+
+        </p>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= WHY RETAILFLOW ================= -->
+
+  <section class="why-section">
+
+    <div class="why-content">
+
+      <span class="section-label">
+        WHY RETAILFLOW?
+      </span>
+
+
+      <h2>
+
+        One Platform.
+
+        <span>
+          Complete Control.
+        </span>
+
+      </h2>
+
+
+      <p>
+
+        Instead of managing different systems for customers,
+        products, orders and payments, RetailFlow brings
+        everything together in one streamlined platform.
+
+      </p>
+
+
+      <div class="why-list">
+
+        <div class="why-item">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Role-based Admin & Customer access
+          </span>
+
+        </div>
+
+
+        <div class="why-item">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Secure JWT authentication
+          </span>
+
+        </div>
+
+
+        <div class="why-item">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Complete order lifecycle management
+          </span>
+
+        </div>
+
+
+        <div class="why-item">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Centralized product and inventory management
+          </span>
+
+        </div>
+
+
+        <div class="why-item">
+
+          <div class="check">
+            ✓
+          </div>
+
+          <span>
+            Secure payment processing
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="why-visual">
+
+      <div class="floating-card card-one">
+
+        <span>
+          📦
+        </span>
+
+        <div>
+
+          <strong>
+            Products
+          </strong>
+
+          <small>
+            Inventory managed
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="floating-card card-two">
+
+        <span>
+          🛒
+        </span>
+
+        <div>
+
+          <strong>
+            Orders
+          </strong>
+
+          <small>
+            Order tracking
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="floating-card card-three">
+
+        <span>
+          💳
+        </span>
+
+        <div>
+
+          <strong>
+            Payments
+          </strong>
+
+          <small>
+            Transactions secured
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= CTA ================= -->
+
+  <section class="cta-section">
+
+    <div class="cta-glow"></div>
+
+
+    <div class="cta-content">
+
+      <span class="section-label">
+        GET STARTED TODAY
+      </span>
+
+
+      <h2>
+
+        Ready to Transform
+
+        <span>
+          Your Retail Operations?
+        </span>
+
+      </h2>
+
+
+      <p>
+
+        Login to RetailFlow and experience a smarter
+        way to manage your retail business.
+
+      </p>
+
+
+      <button class="cta-btn"
+              (click)="goToLogin()">
+
+        Login to RetailFlow
+
+        <span>
+          →
+        </span>
+
+      </button>
+
+    </div>
+
+  </section>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer class="footer">
+
+    <div class="footer-brand">
+
+      <div class="brand-icon">
+        RF
+      </div>
+
+      <div>
+
+        <strong>
+          RetailFlow
+        </strong>
+
+        <span>
+          Enterprise Retail & Order Management
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <div class="footer-links">
+
+      <a (click)="scrollToSection('about')">
+        About
+      </a>
+
+      <a (click)="scrollToSection('features')">
+        Features
+      </a>
+
+      <a (click)="scrollToSection('categories')">
+        Categories
+      </a>
+
+      <a (click)="goToLogin()">
+        Login
+      </a>
+
+    </div>
+
+
+    <div class="footer-copy">
+      © 2026 RetailFlow. All rights reserved.
+    </div>
+
+  </footer>
+
+</div>

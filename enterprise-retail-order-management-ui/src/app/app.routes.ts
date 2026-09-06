@@ -10,20 +10,28 @@ import { PaymentsComponent } from './Componets/payments/payments.component';
 import { AccountComponent } from './Componets/account/account.component';
 import { CustomerComponent } from './Componets/customer/customer.component';
 import { NotFoundComponentComponent } from './Componets/not-found-component/not-found-component.component';
+import { HomepageComponent } from './Componets/homepage/homepage.component';
 
 
 export const routes: Routes = [
+
+  {
+    path: '',
+    component: HomepageComponent
+  },
+
   {
     path: 'login',
     component: LoginComponent
   },
+
   {
     path: 'admin',
     component: AdminComponent,
     canActivate: [authGuard],
     data: {
       role: 'admin'
-    },
+    }
   },
 
   {
@@ -32,7 +40,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
     data: {
       role: 'customer'
-    },
+    }
   },
 
   {
@@ -47,47 +55,40 @@ export const routes: Routes = [
   {
     path: 'profile',
     component: AccountComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
 
   {
     path: 'categories',
     component: CategoriesComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
 
   {
     path: 'products',
     component: ProductsComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
 
   {
     path: 'orders',
     component: OrdersComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
 
   {
     path: 'payments',
     component: PaymentsComponent,
-    canActivate: [authGuard],
+    canActivate: [authGuard]
   },
 
-  {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
-  },
   {
     path: '404',
     component: NotFoundComponentComponent
   },
+
   {
     path: '**',
     component: NotFoundComponentComponent
   }
-
-
-  
 ];

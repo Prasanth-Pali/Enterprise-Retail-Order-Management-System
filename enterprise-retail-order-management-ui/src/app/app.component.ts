@@ -20,7 +20,8 @@ export class AppComponent {
     if (
       currentUrl === '/admin' ||
       currentUrl === '/customer' ||
-      currentUrl === '/404'
+      currentUrl === '/404' ||
+      currentUrl === '/'
     ) {
 
       history.forward();

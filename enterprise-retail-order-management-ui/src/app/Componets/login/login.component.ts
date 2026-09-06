@@ -282,6 +282,12 @@ next: (response) => {
   }
 
 
+
+  goToHomepage(): void {
+    this.router.navigate(['/']);
+  }
+
+
   // Register → Login
   showLogin(): void {
 

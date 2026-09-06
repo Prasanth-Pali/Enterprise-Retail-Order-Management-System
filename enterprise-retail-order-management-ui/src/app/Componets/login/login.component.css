@@ -13,6 +13,16 @@
   box-sizing: border-box;
 }
 
+.brand-logo,
+.mobile-logo {
+  cursor: pointer;
+}
+  .brand-logo:hover,
+  .mobile-logo:hover {
+    transform: scale(1.05);
+    transition: 0.2s ease;
+  }
+
 
 /* ============================= */
 /* Login Container */
