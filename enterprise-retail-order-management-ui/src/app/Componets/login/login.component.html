@@ -1,14 +1,15 @@
+
 <div class="login-container">
 
-  <!-- Background -->
+  <!-- Background Glow -->
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+  <div class="background-glow glow-three"></div>
 
-  <div class="background-overlay"></div>
-
-  <!-- Brand Section -->
+  <!-- ================= BRAND SECTION ================= -->
 
   <div class="brand-section">
 
-    ```
     <div class="brand-content">
 
       <div class="brand-logo"
@@ -18,7 +19,9 @@
 
       </div>
 
-      <h1>RetailFlow</h1>
+      <h1>
+        RetailFlow
+      </h1>
 
       <p>
         Enterprise Retail & Order Management
@@ -31,12 +34,40 @@
         smarter, faster and securely.
       </span>
 
+      <div class="brand-features">
+
+        <div class="brand-feature">
+          <span>🔐</span>
+          <div>
+            <strong>Secure</strong>
+            <small>JWT Authentication</small>
+          </div>
+        </div>
+
+        <div class="brand-feature">
+          <span>📦</span>
+          <div>
+            <strong>Organized</strong>
+            <small>Centralized Management</small>
+          </div>
+        </div>
+
+        <div class="brand-feature">
+          <span>⚡</span>
+          <div>
+            <strong>Efficient</strong>
+            <small>Streamlined Operations</small>
+          </div>
+        </div>
+
+      </div>
+
     </div>
-    ```
 
   </div>
 
-  <!-- Login Card -->
+
+  <!-- ================= LOGIN SECTION ================= -->
 
   <div class="login-wrapper">
 
@@ -44,29 +75,41 @@
 
       <div class="login-header">
 
-        <div class="mobile-logo">
+        <div class="mobile-logo"
+             (click)="goToHomepage()">
+
           RF
+
         </div>
 
+        <span class="login-label">
+          WELCOME BACK
+        </span>
+
         <h2>
-          Welcome Back
+          Sign in to RetailFlow
         </h2>
 
         <p>
-          Sign in to your RetailFlow account
+          Access your retail management dashboard
         </p>
 
       </div>
 
 
-      <!-- Login Form -->
+      <!-- ================= LOGIN FORM ================= -->
+
       <form [formGroup]="loginForm"
             (ngSubmit)="login()">
 
+
         <!-- Email -->
+
         <div class="form-group">
 
-          <label>Email Address</label>
+          <label>
+            Email Address
+          </label>
 
           <div class="input-wrapper">
 
@@ -82,9 +125,9 @@
           </div>
 
           <small *ngIf="
-          loginForm.get('email')?.touched &&
-          loginForm.get('email')?.invalid
-        ">
+              loginForm.get('email')?.touched &&
+              loginForm.get('email')?.invalid
+            ">
 
             Please enter a valid email.
 
@@ -94,9 +137,12 @@
 
 
         <!-- Password -->
+
         <div class="form-group">
 
-          <label>Password</label>
+          <label>
+            Password
+          </label>
 
           <div class="input-wrapper">
 
@@ -112,9 +158,9 @@
           </div>
 
           <small *ngIf="
-          loginForm.get('password')?.touched &&
-          loginForm.get('password')?.invalid
-        ">
+              loginForm.get('password')?.touched &&
+              loginForm.get('password')?.invalid
+            ">
 
             Password is required.
 
@@ -124,8 +170,11 @@
 
 
         <!-- Error -->
+
         <div class="error-message"
              *ngIf="errorMessage && !isRegisterMode">
+
+          <span>⚠</span>
 
           {{ errorMessage }}
 
@@ -133,6 +182,7 @@
 
 
         <!-- Login Button -->
+
         <button type="submit"
                 class="login-btn"
                 [disabled]="isLoading">
@@ -158,18 +208,30 @@
 
 
       <!-- Security -->
+
       <div class="security-info">
 
-        <span>🔐</span>
-
-        <span>
-          Secure authentication powered by JWT
+        <span class="security-icon">
+          🔐
         </span>
+
+        <div>
+
+          <strong>
+            Secure Authentication
+          </strong>
+
+          <span>
+            Protected by JWT & Role-Based Access
+          </span>
+
+        </div>
 
       </div>
 
 
-      <!-- Sign Up -->
+      <!-- Signup -->
+
       <div class="signup-section">
 
         <span>
@@ -191,9 +253,10 @@
 
 </div>
 
-<!-- ============================= -->
-<!-- Register Popup -->
-<!-- ============================= -->
+
+<!-- ================================================= -->
+<!-- REGISTER MODAL -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
      *ngIf="isRegisterMode">
@@ -201,17 +264,27 @@
   <div class="register-modal"
        (click)="$event.stopPropagation()">
 
+
+    <!-- Register Header -->
+
     <div class="register-header">
 
       <div>
 
-        <h2>Create Account</h2>
+        <span class="register-label">
+          RETAILFLOW ACCOUNT
+        </span>
+
+        <h2>
+          Create Account
+        </h2>
 
         <p>
-          Register for RetailFlow
+          Register to access RetailFlow
         </p>
 
       </div>
+
 
       <button type="button"
               class="close-btn"
@@ -224,23 +297,30 @@
     </div>
 
 
+    <!-- Register Form -->
+
     <form [formGroup]="registerForm"
           (ngSubmit)="register()">
 
       <div class="register-body">
 
+
+        <!-- Full Name -->
+
         <div class="form-group">
 
-          <label>Full Name</label>
+          <label>
+            Full Name
+          </label>
 
           <input type="text"
                  formControlName="fullName"
                  placeholder="Enter your full name" />
 
           <small *ngIf="
-          registerForm.get('fullName')?.touched &&
-          registerForm.get('fullName')?.invalid
-        ">
+              registerForm.get('fullName')?.touched &&
+              registerForm.get('fullName')?.invalid
+            ">
 
             Full name must be at least 3 characters.
 
@@ -249,18 +329,22 @@
         </div>
 
 
+        <!-- Email -->
+
         <div class="form-group">
 
-          <label>Email</label>
+          <label>
+            Email
+          </label>
 
           <input type="email"
                  formControlName="email"
                  placeholder="Enter Gmail address" />
 
           <small *ngIf="
-          registerForm.get('email')?.touched &&
-          registerForm.get('email')?.invalid
-        ">
+              registerForm.get('email')?.touched &&
+              registerForm.get('email')?.invalid
+            ">
 
             Please enter a valid Gmail address.
 
@@ -269,18 +353,22 @@
         </div>
 
 
+        <!-- Password -->
+
         <div class="form-group">
 
-          <label>Password</label>
+          <label>
+            Password
+          </label>
 
           <input type="password"
                  formControlName="password"
                  placeholder="Enter password" />
 
           <small *ngIf="
-          registerForm.get('password')?.touched &&
-          registerForm.get('password')?.invalid
-        ">
+              registerForm.get('password')?.touched &&
+              registerForm.get('password')?.invalid
+            ">
 
             Password must contain uppercase, lowercase,
             number, special character and be at least 8 characters.
@@ -290,9 +378,13 @@
         </div>
 
 
+        <!-- Phone -->
+
         <div class="form-group">
 
-          <label>Phone Number</label>
+          <label>
+            Phone Number
+          </label>
 
           <input type="text"
                  formControlName="phoneNumber"
@@ -303,9 +395,9 @@
                  oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
 
           <small *ngIf="
-          registerForm.get('phoneNumber')?.touched &&
-          registerForm.get('phoneNumber')?.invalid
-        ">
+              registerForm.get('phoneNumber')?.touched &&
+              registerForm.get('phoneNumber')?.invalid
+            ">
 
             Phone number must contain exactly 10 digits.
 
@@ -314,37 +406,53 @@
         </div>
 
 
+        <!-- Address -->
+
         <div class="form-group">
 
-          <label>Address</label>
+          <label>
+            Address
+          </label>
 
           <textarea formControlName="address"
                     placeholder="Enter your address">
-      </textarea>
+          </textarea>
 
         </div>
 
 
+        <!-- Error -->
+
         <div class="error-message"
              *ngIf="errorMessage">
+
+          <span>⚠</span>
 
           {{ errorMessage }}
 
         </div>
 
 
+        <!-- Register -->
+
         <button type="submit"
                 class="register-btn"
                 [disabled]="isLoading">
 
           {{
-        isLoading
-          ? 'Creating Account...'
-          : 'Create Account'
+            isLoading
+              ? 'Creating Account...'
+              : 'Create Account'
           }}
+
+          <span *ngIf="!isLoading">
+            →
+          </span>
 
         </button>
 
+
+        <!-- Login -->
 
         <div class="login-link">
 
@@ -364,11 +472,15 @@
       </div>
 
     </form>
+
   </div>
 
 </div>
 
-<!-- Registration Success Popup -->
+
+<!-- ================================================= -->
+<!-- REGISTRATION SUCCESS -->
+<!-- ================================================= -->
 
 <div class="success-popup-overlay"
      *ngIf="successMessage">
@@ -379,8 +491,12 @@
       ✓
     </div>
 
+    <span class="success-label">
+      RETAILFLOW
+    </span>
+
     <h2>
-      User Successfully Created!
+      Account Created
     </h2>
 
     <p>
@@ -390,3 +506,4 @@
   </div>
 
 </div>
+

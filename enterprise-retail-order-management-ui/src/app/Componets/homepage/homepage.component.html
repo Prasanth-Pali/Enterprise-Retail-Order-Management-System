@@ -734,30 +734,37 @@
 
 
     <!-- Security Information -->
-
     <div class="category-info">
 
       <div class="info-icon">
         🔐
       </div>
 
-
-      <div>
+      <div class="category-info-content">
 
         <strong>
-          Secure Product Access
+          Want to Explore Our Products?
         </strong>
 
         <p>
-
-          Product information is available only to authenticated
-          users through RetailFlow's role-based access control.
-
+          Login to RetailFlow to view products, check availability,
+          place orders and access personalized features.
         </p>
 
       </div>
 
+      <button type="button"
+              class="category-login-btn"
+              (click)="goToLogin()">
+
+        Login to View
+
+        <span>→</span>
+
+      </button>
+
     </div>
+
 
   </section>
 
