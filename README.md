@@ -1,431 +1,248 @@
-# 🛒 Enterprise Retail & Order Management System
+🛒 Enterprise Retail & Order Management System
 
-A full-stack retail and order management application built with **ASP.NET Core Web API, Angular, SQL Server, and Entity Framework Core**.
+A full-stack retail and order management application built using ASP.NET Core Web API, Angular, SQL Server, and JWT Authentication.
 
-The system provides separate workflows for **Administrators and Customers**, covering authentication, user management, product and inventory management, order processing, and payment workflows.
+The application provides secure product management, customer shopping, cart and order processing, payment tracking, and admin operations following a layered and enterprise-style architecture.
 
----
+⸻
 
-## 🧰 Tech Stack
+🚀 Features
 
-### 🔹 Backend
+🔐 Authentication & Authorization
 
-* 💻 C#
-* ⚡ ASP.NET Core Web API
-* 🟣 .NET
-* 🗄️ Entity Framework Core
-* 🛢️ SQL Server
-* 🔎 LINQ
-* 🔐 JWT Bearer Authentication
-* 🔒 BCrypt
-* 🌐 REST APIs
-* 📘 Swagger
+* 🔑 User registration and login
+* 🪪 JWT-based authentication
+* 👤 Role-based authorization
+* 🛡️ Admin and Customer access control
+* 🔒 BCrypt password hashing
 
-### 🔹 Frontend
+📦 Product Management
 
-* 🅰️ Angular
-* 📘 TypeScript
-* 🌐 HTML5
-* 🎨 CSS3
-* 📝 Reactive Forms
-* 🔗 Angular HTTP Client
-* 🛡️ Route Guards
-* 🔐 HTTP Interceptors
-* 💾 Local Storage
-
----
-
-## ✨ Features
-
-### 🔐 Authentication & Authorization
-
-* User registration and login
-* JWT-based authentication
-* Role-based authorization
-* Admin and Customer roles
-* BCrypt password hashing
-* Protected API endpoints
-* Angular route guards
-* JWT HTTP interceptor
-
-### 👨‍💼 Admin
-
-* 👥 User management
-* 🗂️ Category management
-* 📦 Product management
-* 📊 Inventory and stock management
-* 🛒 Order management
-* 🔄 Order status updates
-* 💳 Payment history
-* 🔎 Search and filtering
+* ➕ Create products
+* ✏️ Update products
+* 🗑️ Delete products
+* 🔍 Search products
+* 🗂️ Filter by category
 * 📄 Pagination
 
-### 👤 Customer
+📋 Order Management
 
-* 🛍️ Product browsing
-* 🔎 Product search
-* 🗂️ Category filtering
-* 📋 Product details
-* 🛒 Order placement
-* 📍 Shipping address management
-* 💳 Payment workflow
-* 📦 Order history
+* 🛍️ Place orders from cart
+* 📦 Order and order-item management
 * 🚚 Order status tracking
-* 👤 Account management
+* ❌ Order cancellation
+* 📊 Admin order management
 
----
+💳 Payment Management
 
-## 🔄 Order Workflow
+* 💰 Payment tracking
+* 💳 Multiple payment methods
+* 🔄 Payment status management
+* 🧾 Order-payment relationship
 
-```text
-👤 Customer
-     ↓
-🛍️ Browse Products
-     ↓
-📋 Product Details
-     ↓
-🛒 Place Order
-     ↓
-📦 Order Created
-     ↓
-💳 Payment
-     ↓
-✅ Order Confirmed
-     ↓
-🚚 Shipped
-     ↓
-📬 Delivered
-```
+👥 User Management
 
-### 📌 Order Status
-
-```text
-Pending → Confirmed → Shipped → Delivered
-   │
-   └────────→ Cancelled
-```
-
-Order creation validates the customer, products, quantities, stock availability, and product details before creating the order.
-
----
-
-## 💳 Payment Workflow
-
-The application implements a payment business workflow for demonstration purposes.
-
-### Supported Payment Methods
-
-* 💳 Credit Card
-* 💳 Debit Card
-* 📱 UPI
-* 🏦 Net Banking
-* 💵 Cash on Delivery
-
-```text
-🛒 Create Order
-       ↓
-⏳ Pending
-       ↓
-💳 Create Payment
-       ↓
-🔍 Validate Order & Amount
-       ↓
-🧾 Create Payment Record
-       ↓
-✅ Payment Success
-       ↓
-📦 Order Confirmed
-```
-
-> ⚠️ No external payment gateway is integrated.
-
----
-
-## 🗄️ Database
-
-The application uses **Microsoft SQL Server** with **Entity Framework Core Database-First**.
-
-### Database
-
-```text
-RetailFlowDB
-```
-
-### Main Tables
-
-```text
-👥 Users
-🗂️ Categories
-📦 Products
-🛒 Orders
-📋 OrderItems
-💳 Payments
-```
-
----
-
-## 🏗️ Architecture
-
-The backend follows a layered architecture:
-
-```text
-🅰️ Angular Client
-        ↓
-🌐 ASP.NET Core Web API
-        ↓
-🎮 Controllers
-        ↓
-⚙️ Services
-        ↓
-📋 DTOs
-        ↓
-🔗 Entity Framework Core
-        ↓
-🗄️ SQL Server
-```
-
-### 🎮 Controllers
-
-Handle HTTP requests, authorization, validation, and API responses.
-
-### ⚙️ Services
-
-Contain business logic, validation, order processing, payment processing, stock management, and transaction handling.
-
-### 📋 DTOs
-
-Define API request and response models and separate API contracts from database entities.
-
-### 🔗 Data Access
-
-Entity Framework Core Database-First is used to access SQL Server.
-
----
-
-## 🔎 Search, Filtering & Pagination
-
-Server-side search, filtering, and pagination are implemented for management modules.
-
-Supported operations include:
-
-* 👥 User search and filtering
-* 🗂️ Category search
-* 📦 Product search and category filtering
-* 🛒 Order filtering
-* 💳 Payment search and status filtering
+* 👤 User management
+* 🔍 Search and filtering
 * 📄 Pagination
+* 🛡️ Role-based access
 
----
+⸻
 
-## 🌐 API Endpoints
+🏗️ Architecture
 
-### 🔐 Authentication
+The backend follows a layered architecture to maintain separation of concerns and make the application easier to maintain and extend.
 
-```text
-POST /api/Auth/register
-POST /api/Auth/login
-```
+┌──────────────────────────┐
+│      Angular Frontend    │
+└────────────┬─────────────┘
+             │
+             ▼
+┌──────────────────────────┐
+│   ASP.NET Core Web API   │
+├──────────────────────────┤
+│       Controllers        │
+│           ↓              │
+│        Services          │
+│           ↓              │
+│      EF Core / DbContext │
+│           ↓              │
+│       SQL Server         │
+└──────────────────────────┘
 
-### 👥 Users
+📂 Backend Structure
 
-```text
-GET    /api/Users
-GET    /api/Users/{id}
-PUT    /api/Users/{id}
-PATCH  /api/Users/{id}/deactivate
-```
-
-### 🗂️ Categories
-
-```text
-GET    /api/Categories
-GET    /api/Categories/{id}
-POST   /api/Categories
-PUT    /api/Categories/{id}
-PATCH  /api/Categories/{id}/deactivate
-```
-
-### 📦 Products
-
-```text
-GET    /api/Products
-GET    /api/Products/{id}
-POST   /api/Products
-PUT    /api/Products/{id}
-PATCH  /api/Products/{id}/deactivate
-```
-
-### 🛒 Orders
-
-```text
-POST   /api/Orders
-GET    /api/Orders
-GET    /api/Orders/{id}
-PATCH  /api/Orders/{id}/status
-```
-
-### 💳 Payments
-
-```text
-POST   /api/Payments
-GET    /api/Payments
-GET    /api/Payments/order/{orderId}
-```
-
----
-
-## 📁 Project Structure
-
-```text
 Enterprise-Retail-Order-Management-System
 │
-├── 📂 Enterprise Retail & Order Management System
-│   ├── 📂 Controllers
-│   ├── 📂 DTOs
-│   ├── 📂 Models
-│   ├── 📂 Services
-│   │   └── 📂 Interfaces
-│   ├── 📄 Program.cs
-│   ├── 📄 appsettings.json
-│   └── 📄 *.csproj
-│
-├── 📂 enterprise-retail-order-management-ui
-│   ├── 📂 src
-│   │   └── 📂 app
-│   │       ├── 📂 components
-│   │       ├── 📂 services
-│   │       ├── 📂 guards
-│   │       ├── 📂 interceptors
-│   │       └── 📂 Models
-│   ├── 📄 angular.json
-│   ├── 📄 package.json
-│   └── 📄 tsconfig.json
-│
-├── 📄 Enterprise Retail & Order Management System.slnx
-├── 📄 .gitignore
-└── 📄 README.md
-```
+├── Controllers
+├── Services
+├── Interfaces
+├── DTOs
+├── Models
+├── Data
+├── Migrations
+├── Program.cs
+└── appsettings.json
 
----
+⸻
 
-## 🚀 Getting Started
+🛠️ Technology Stack
 
-### 📋 Prerequisites
+Technology	Usage
+⚙️ ASP.NET Core Web API	Backend REST APIs
+💻 C#	Backend development
+🗄️ SQL Server	Database
+🔗 Entity Framework Core	Data access
+🔐 JWT	Authentication
+🔒 BCrypt	Password hashing
+📘 Swagger	API documentation & testing
+🅰️ Angular	Frontend
+📊 AG Grid	Data tables
+🌐 REST API	Client-server communication
 
-* 🟣 .NET SDK
-* 🟢 Node.js
-* 📦 npm
-* 🅰️ Angular CLI
-* 🗄️ SQL Server Express
-* 💻 Visual Studio or Visual Studio Code
+⸻
 
-### 📥 Clone Repository
+🔑 Authentication Flow
 
-```bash
+👤 User
+   │
+   ▼
+🔐 Login
+   │
+   ▼
+ASP.NET Core API
+   │
+   ▼
+JWT Token
+   │
+   ▼
+🖥️ Angular
+   │
+   ▼
+🔒 Authorized API Requests
+
+Protected APIs use JWT authentication and role-based authorization.
+
+⸻
+
+🔄 Order Flow
+
+👤 Customer
+     │
+     ▼
+🛍️ Browse Products
+     │
+     ▼
+🛒 Add to Cart
+     │
+     ▼
+💳 Checkout
+     │
+     ▼
+📋 Create Order
+     │
+     ▼
+💰 Payment
+     │
+     ▼
+📦 Order Processing
+     │
+     ▼
+🚚 Delivery
+
+⸻
+
+📄 API Capabilities
+
+The application exposes RESTful APIs for:
+
+* 🔐 Authentication
+* 👤 Users
+* 📦 Products
+* 🗂️ Categories
+* 📋 Orders
+* 💳 Payments
+
+Swagger is used to explore and test the APIs during development.
+
+⸻
+
+🧪 Testing
+
+APIs can be tested using:
+
+* 📘 Swagger UI
+* 📮 Postman
+
+Example:
+
+GET /api/products
+GET /api/products?pageNumber=1&pageSize=10
+GET /api/products?search=phone
+
+⸻
+
+⚙️ Getting Started
+
+1️⃣ Clone the repository
+
 git clone https://github.com/Prasanth-Pali/Enterprise-Retail-Order-Management-System.git
 
-cd Enterprise-Retail-Order-Management-System
-```
+2️⃣ Configure SQL Server
 
-### 🗄️ Configure SQL Server
+Update the connection string in:
 
-Make sure SQL Server Express is running.
+appsettings.json
 
-Default instance:
+3️⃣ Configure JWT
 
-```text
-.\SQLEXPRESS
-```
+Configure the required JWT settings:
 
-Database:
+Issuer
+Audience
+Key
 
-```text
-RetailFlowDB
-```
-
-Configure the connection string in the backend `appsettings.json`:
-
-```json
-{
-  "ConnectionStrings": {
-    "RetailFlowConnection": "Server=.\\SQLEXPRESS;Database=RetailFlowDB;Trusted_Connection=True;TrustServerCertificate=True;"
-  }
-}
-```
-
-### ▶️ Run Backend
-
-```bash
-cd "Enterprise Retail & Order Management System"
+4️⃣ Restore dependencies
 
 dotnet restore
-dotnet build
+
+5️⃣ Run the application
+
 dotnet run
-```
 
-### ▶️ Run Angular Frontend
+6️⃣ Open Swagger
 
-Open a new terminal:
+After starting the API, open the Swagger URL shown by the application and test the available endpoints.
 
-```bash
-cd enterprise-retail-order-management-ui
+⸻
 
-npm install
-ng serve
-```
+📌 Future Enhancements
 
-Open the URL displayed by Angular CLI.
+The project can be further enhanced with:
 
-Make sure the backend API is running before using the frontend.
+* 🔄 Refresh Token
+* 🛡️ Global Exception Handling
+* 📝 Structured Logging with Serilog
+* 🚦 API Rate Limiting
+* ⚡ Redis Caching
+* 🧪 Unit & Integration Testing
+* 📦 Docker
+* 🔁 CI/CD Pipeline
+* 📡 SignalR Notifications
+* 📨 Message Queue Integration
+* ☁️ Azure Deployment
 
----
+⸻
 
-## 🧪 API Testing
+👨‍💻 Developer
 
-Swagger is available when the backend is running.
+Prasanth Pali
 
-### 🔐 Authentication Flow
+💼 .NET / Full Stack Developer
+🛠️ C# | ASP.NET Core | Angular | SQL Server | EF Core
 
-```text
-📝 Register
-   ↓
-🔑 Login
-   ↓
-🎟️ Get JWT Token
-   ↓
-📘 Swagger → Authorize
-   ↓
-🧪 Test Protected APIs
-```
+⸻
 
-Use:
+⭐ Project
 
-```text
-Bearer YOUR_JWT_TOKEN
-```
-
----
-
-## 🛡️ Security
-
-* 🔐 JWT authentication
-* 👮 Role-based authorization
-* 🔒 BCrypt password hashing
-* 🛡️ Protected API endpoints
-* 🚧 Angular route guards
-* 🔑 JWT HTTP interceptor
-* ✅ Input validation
-* 📋 DTO-based API design
-* 🔒 Password hash excluded from API responses
-* 🔄 Database transactions
-* 👤 Active/inactive user management
-
----
-
-## 👨‍💻 Author
-
-**Prasanth Pali**
-
-💼 Software Engineer | .NET Developer
-
-🐙 GitHub: https://github.com/Prasanth-Pali
+If you find this project useful, feel free to ⭐ the repository.
