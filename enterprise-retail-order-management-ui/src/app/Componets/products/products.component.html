@@ -4,11 +4,16 @@
 
   <div class="topbar">
 
-
     <div>
       <h1>RetailFlow</h1>
-      <span *ngIf="isAdmin">Product Management</span>
-      <span *ngIf="isCustomer">Products</span>
+
+      <span *ngIf="isAdmin">
+        Product Management
+      </span>
+
+      <span *ngIf="isCustomer">
+        Products
+      </span>
     </div>
 
     <button type="button"
@@ -21,12 +26,14 @@
 
   </div>
 
+
   <!-- CONTENT -->
 
   <div class="products-content">
 
 
     <!-- PAGE HEADER -->
+
     <div class="page-header">
 
       <div>
@@ -45,6 +52,7 @@
 
 
       <!-- ADMIN ONLY -->
+
       <button *ngIf="isAdmin"
               type="button"
               class="add-btn"
@@ -58,12 +66,17 @@
 
 
     <!-- FILTERS -->
+
     <div class="filter-card">
 
+
       <!-- SEARCH -->
+
       <div class="filter-group">
 
-        <label>Search</label>
+        <label>
+          Search
+        </label>
 
         <input type="text"
                [(ngModel)]="search"
@@ -74,9 +87,12 @@
 
 
       <!-- CATEGORY FILTER -->
+
       <div class="filter-group">
 
-        <label>Category</label>
+        <label>
+          Category
+        </label>
 
         <select [(ngModel)]="selectedCategoryId"
                 (change)="filterProducts()">
@@ -98,10 +114,13 @@
 
 
       <!-- STATUS FILTER - ADMIN ONLY -->
+
       <div class="filter-group"
            *ngIf="isAdmin">
 
-        <label>Status</label>
+        <label>
+          Status
+        </label>
 
         <select [(ngModel)]="selectedStatus"
                 (change)="filterProducts()">
@@ -124,6 +143,7 @@
 
 
       <!-- FILTER BUTTONS -->
+
       <div class="filter-buttons">
 
         <button type="button"
@@ -133,7 +153,6 @@
           Search
 
         </button>
-
 
         <button type="button"
                 class="clear-btn"
@@ -149,6 +168,7 @@
 
 
     <!-- SUCCESS MESSAGE -->
+
     <div class="success-message"
          *ngIf="successMessage">
 
@@ -158,6 +178,7 @@
 
 
     <!-- ERROR MESSAGE -->
+
     <div class="error-message"
          *ngIf="errorMessage">
 
@@ -167,6 +188,7 @@
 
 
     <!-- LOADING -->
+
     <div class="loading"
          *ngIf="isLoading">
 
@@ -176,6 +198,7 @@
 
 
     <!-- PRODUCTS TABLE -->
+
     <div class="table-card"
          *ngIf="!isLoading">
 
@@ -202,11 +225,13 @@
             </th>
 
             <!-- ADMIN ONLY -->
+
             <th *ngIf="isAdmin">
               Status
             </th>
 
             <!-- ADMIN ONLY -->
+
             <th *ngIf="isAdmin">
               Created At
             </th>
@@ -222,7 +247,9 @@
 
         <tbody>
 
+
           <!-- PRODUCT ROW -->
+
           <tr *ngFor="let product of products">
 
             <td>
@@ -246,6 +273,7 @@
 
 
             <!-- ADMIN ONLY -->
+
             <td *ngIf="isAdmin">
 
               <span class="status-badge"
@@ -260,6 +288,7 @@
 
 
             <!-- ADMIN ONLY -->
+
             <td *ngIf="isAdmin">
 
               {{ product.createdAt | date:'dd-MM-yyyy' }}
@@ -268,12 +297,14 @@
 
 
             <!-- ACTIONS -->
+
             <td>
 
               <div class="actions">
 
 
                 <!-- ADMIN ACTIONS -->
+
                 <ng-container *ngIf="isAdmin">
 
                   <button type="button"
@@ -299,6 +330,7 @@
 
 
                 <!-- CUSTOMER ACTION -->
+
                 <button *ngIf="isCustomer && product.isActive"
                         type="button"
                         class="view-btn"
@@ -308,7 +340,6 @@
 
                 </button>
 
-
               </div>
 
             </td>
@@ -317,6 +348,7 @@
 
 
           <!-- NO DATA -->
+
           <tr *ngIf="products.length === 0">
 
             <td [attr.colspan]="isAdmin ? 7 : 5"
@@ -336,6 +368,7 @@
 
 
     <!-- PAGINATION -->
+
     <div class="pagination"
          *ngIf="!isLoading && totalPages > 0">
 
@@ -372,6 +405,7 @@
 
 </div>
 
+
 <!-- ================================================= -->
 <!-- ADD PRODUCT MODAL - ADMIN ONLY -->
 <!-- ================================================= -->
@@ -381,7 +415,9 @@
 
   <div class="modal">
 
+
     <!-- MODAL HEADER -->
+
     <div class="modal-header">
 
       <h2>
@@ -400,11 +436,13 @@
 
 
     <!-- FORM -->
+
     <form [formGroup]="addForm"
           (ngSubmit)="createProduct()">
 
 
       <!-- PRODUCT NAME -->
+
       <div class="form-group">
 
         <label>
@@ -416,20 +454,36 @@
                placeholder="Enter product name" />
 
 
+        <!-- REQUIRED -->
+
         <small *ngIf="
-        addForm.get('productName')?.touched &&
-        addForm.get('productName')?.hasError('required')
-      ">
+            addForm.get('productName')?.touched &&
+            addForm.get('productName')?.hasError('required')
+          ">
 
           Product name is required.
 
         </small>
 
 
+        <!-- MIN LENGTH -->
+
         <small *ngIf="
-        addForm.get('productName')?.touched &&
-        addForm.get('productName')?.hasError('maxlength')
-      ">
+            addForm.get('productName')?.touched &&
+            addForm.get('productName')?.hasError('minlength')
+          ">
+
+          Product name must be at least 2 characters.
+
+        </small>
+
+
+        <!-- MAX LENGTH -->
+
+        <small *ngIf="
+            addForm.get('productName')?.touched &&
+            addForm.get('productName')?.hasError('maxlength')
+          ">
 
           Maximum 100 characters allowed.
 
@@ -439,6 +493,7 @@
 
 
       <!-- DESCRIPTION -->
+
       <div class="form-group">
 
         <label>
@@ -448,13 +503,13 @@
         <textarea rows="3"
                   formControlName="description"
                   placeholder="Enter product description">
-    </textarea>
+        </textarea>
 
 
         <small *ngIf="
-        addForm.get('description')?.touched &&
-        addForm.get('description')?.hasError('maxlength')
-      ">
+            addForm.get('description')?.touched &&
+            addForm.get('description')?.hasError('maxlength')
+          ">
 
           Maximum 250 characters allowed.
 
@@ -464,6 +519,7 @@
 
 
       <!-- PRICE -->
+
       <div class="form-group">
 
         <label>
@@ -478,9 +534,9 @@
 
 
         <small *ngIf="
-        addForm.get('price')?.touched &&
-        addForm.get('price')?.hasError('required')
-      ">
+            addForm.get('price')?.touched &&
+            addForm.get('price')?.hasError('required')
+          ">
 
           Price is required.
 
@@ -488,9 +544,9 @@
 
 
         <small *ngIf="
-        addForm.get('price')?.touched &&
-        addForm.get('price')?.hasError('min')
-      ">
+            addForm.get('price')?.touched &&
+            addForm.get('price')?.hasError('min')
+          ">
 
           Price must be greater than 0.
 
@@ -500,6 +556,7 @@
 
 
       <!-- STOCK -->
+
       <div class="form-group">
 
         <label>
@@ -513,9 +570,9 @@
 
 
         <small *ngIf="
-        addForm.get('stockQuantity')?.touched &&
-        addForm.get('stockQuantity')?.hasError('required')
-      ">
+            addForm.get('stockQuantity')?.touched &&
+            addForm.get('stockQuantity')?.hasError('required')
+          ">
 
           Stock quantity is required.
 
@@ -523,9 +580,9 @@
 
 
         <small *ngIf="
-        addForm.get('stockQuantity')?.touched &&
-        addForm.get('stockQuantity')?.hasError('min')
-      ">
+            addForm.get('stockQuantity')?.touched &&
+            addForm.get('stockQuantity')?.hasError('min')
+          ">
 
           Stock cannot be negative.
 
@@ -535,6 +592,7 @@
 
 
       <!-- CATEGORY -->
+
       <div class="form-group">
 
         <label>
@@ -558,9 +616,9 @@
 
 
         <small *ngIf="
-        addForm.get('categoryId')?.touched &&
-        addForm.get('categoryId')?.hasError('required')
-      ">
+            addForm.get('categoryId')?.touched &&
+            addForm.get('categoryId')?.hasError('required')
+          ">
 
           Category is required.
 
@@ -570,6 +628,7 @@
 
 
       <!-- MODAL ACTIONS -->
+
       <div class="modal-actions">
 
         <button type="button"
@@ -596,6 +655,7 @@
 
 </div>
 
+
 <!-- ================================================= -->
 <!-- EDIT PRODUCT MODAL - ADMIN ONLY -->
 <!-- ================================================= -->
@@ -604,6 +664,9 @@
      *ngIf="showEditModal && isAdmin">
 
   <div class="modal">
+
+
+    <!-- HEADER -->
 
     <div class="modal-header">
 
@@ -622,11 +685,14 @@
     </div>
 
 
+    <!-- FORM -->
+
     <form [formGroup]="editForm"
           (ngSubmit)="updateProduct()">
 
 
       <!-- PRODUCT NAME -->
+
       <div class="form-group">
 
         <label>
@@ -637,12 +703,39 @@
                formControlName="productName"
                placeholder="Enter product name" />
 
+
+        <!-- REQUIRED -->
+
         <small *ngIf="
-        editForm.get('productName')?.touched &&
-        editForm.get('productName')?.hasError('required')
-      ">
+            editForm.get('productName')?.touched &&
+            editForm.get('productName')?.hasError('required')
+          ">
 
           Product name is required.
+
+        </small>
+
+
+        <!-- MIN LENGTH -->
+
+        <small *ngIf="
+            editForm.get('productName')?.touched &&
+            editForm.get('productName')?.hasError('minlength')
+          ">
+
+          Product name must be at least 2 characters.
+
+        </small>
+
+
+        <!-- MAX LENGTH -->
+
+        <small *ngIf="
+            editForm.get('productName')?.touched &&
+            editForm.get('productName')?.hasError('maxlength')
+          ">
+
+          Maximum 100 characters allowed.
 
         </small>
 
@@ -650,6 +743,7 @@
 
 
       <!-- DESCRIPTION -->
+
       <div class="form-group">
 
         <label>
@@ -659,12 +753,23 @@
         <textarea rows="3"
                   formControlName="description"
                   placeholder="Enter product description">
-    </textarea>
+        </textarea>
+
+
+        <small *ngIf="
+            editForm.get('description')?.touched &&
+            editForm.get('description')?.hasError('maxlength')
+          ">
+
+          Maximum 250 characters allowed.
+
+        </small>
 
       </div>
 
 
       <!-- PRICE -->
+
       <div class="form-group">
 
         <label>
@@ -677,10 +782,21 @@
                step="0.01"
                placeholder="Enter price" />
 
+
         <small *ngIf="
-        editForm.get('price')?.touched &&
-        editForm.get('price')?.hasError('min')
-      ">
+            editForm.get('price')?.touched &&
+            editForm.get('price')?.hasError('required')
+          ">
+
+          Price is required.
+
+        </small>
+
+
+        <small *ngIf="
+            editForm.get('price')?.touched &&
+            editForm.get('price')?.hasError('min')
+          ">
 
           Price must be greater than 0.
 
@@ -690,6 +806,7 @@
 
 
       <!-- STOCK -->
+
       <div class="form-group">
 
         <label>
@@ -701,10 +818,21 @@
                min="0"
                placeholder="Enter stock quantity" />
 
+
         <small *ngIf="
-        editForm.get('stockQuantity')?.touched &&
-        editForm.get('stockQuantity')?.hasError('min')
-      ">
+            editForm.get('stockQuantity')?.touched &&
+            editForm.get('stockQuantity')?.hasError('required')
+          ">
+
+          Stock quantity is required.
+
+        </small>
+
+
+        <small *ngIf="
+            editForm.get('stockQuantity')?.touched &&
+            editForm.get('stockQuantity')?.hasError('min')
+          ">
 
           Stock cannot be negative.
 
@@ -714,6 +842,7 @@
 
 
       <!-- CATEGORY -->
+
       <div class="form-group">
 
         <label>
@@ -737,9 +866,9 @@
 
 
         <small *ngIf="
-        editForm.get('categoryId')?.touched &&
-        editForm.get('categoryId')?.hasError('required')
-      ">
+            editForm.get('categoryId')?.touched &&
+            editForm.get('categoryId')?.hasError('required')
+          ">
 
           Category is required.
 
@@ -749,6 +878,7 @@
 
 
       <!-- ACTIONS -->
+
       <div class="modal-actions">
 
         <button type="button"
@@ -775,6 +905,7 @@
 
 </div>
 
+
 <!-- ================================================= -->
 <!-- DEACTIVATE PRODUCT MODAL - ADMIN ONLY -->
 <!-- ================================================= -->
@@ -783,6 +914,7 @@
      *ngIf="showDeactivateModal && isAdmin">
 
   <div class="confirm-modal">
+
     <h2>
       Deactivate Product?
     </h2>
@@ -832,6 +964,7 @@
 
 </div>
 
+
 <!-- ================================================= -->
 <!-- PRODUCT DETAILS MODAL - CUSTOMER ONLY -->
 <!-- ================================================= -->
@@ -840,6 +973,7 @@
      *ngIf="showProductDetailsModal && isCustomer">
 
   <div class="product-details-modal">
+
 
     <div class="modal-header">
 
@@ -861,24 +995,34 @@
     <div class="product-details-content"
          *ngIf="selectedProductForDetails as product">
 
+
       <div class="product-details-icon">
         🛍️
       </div>
 
+
       <h2 class="product-title">
+
         {{ product.productName }}
+
       </h2>
 
+
       <p class="product-description">
+
         {{ product.description || 'No description available.' }}
+
       </p>
 
 
       <div class="product-info-grid">
 
+
         <div class="product-info-item">
 
-          <span>Category</span>
+          <span>
+            Category
+          </span>
 
           <strong>
             {{ product.categoryName || '-' }}
@@ -889,7 +1033,9 @@
 
         <div class="product-info-item">
 
-          <span>Price</span>
+          <span>
+            Price
+          </span>
 
           <strong>
             ₹{{ product.price | number:'1.2-2' }}
@@ -900,7 +1046,9 @@
 
         <div class="product-info-item">
 
-          <span>Available Stock</span>
+          <span>
+            Available Stock
+          </span>
 
           <strong>
             {{ product.stockQuantity }}
@@ -920,6 +1068,7 @@
           Quantity
         </label>
 
+
         <div class="quantity-control">
 
           <button type="button"
@@ -930,9 +1079,11 @@
 
           </button>
 
+
           <span>
             {{ quantity }}
           </span>
+
 
           <button type="button"
                   (click)="increaseQuantity()"
@@ -985,6 +1136,7 @@
 
         </button>
 
+
         <button type="button"
                 class="save-btn"
                 *ngIf="product.stockQuantity > 0"
@@ -1002,16 +1154,22 @@
 
 </div>
 
+
+<!-- ================================================= -->
 <!-- SHIPPING ADDRESS MODAL -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
      *ngIf="showShippingModal && isCustomer">
 
   <div class="confirm-modal">
 
+
     <div class="modal-header">
 
-      <h2>Shipping Address</h2>
+      <h2>
+        Shipping Address
+      </h2>
 
       <button type="button"
               class="close-btn"
@@ -1023,11 +1181,13 @@
 
     </div>
 
+
     <div class="form-group">
 
       <label>
         Shipping Address
       </label>
+
 
       <textarea rows="4"
                 [(ngModel)]="shippingAddress"
@@ -1035,15 +1195,19 @@
                 placeholder="Enter your shipping address">
       </textarea>
 
-      <small *ngIf="shippingAddress.length >
+
+      <small *ngIf="
+             shippingAddress.length>
         0 &&
-        shippingAddress.trim().length < 5">
+        shippingAddress.trim().length < 5
+        ">
 
         Address must be at least 5 characters.
 
       </small>
 
     </div>
+
 
     <div class="modal-actions">
 
@@ -1054,6 +1218,7 @@
         Cancel
 
       </button>
+
 
       <button type="button"
               class="save-btn"
@@ -1070,7 +1235,11 @@
 
 </div>
 
+
+<!-- ================================================= -->
 <!-- ORDER SUCCESS MODAL -->
+<!-- ================================================= -->
+
 <div class="modal-overlay"
      *ngIf="showOrderSuccessModal && isCustomer">
 
@@ -1080,20 +1249,28 @@
       ✓
     </div>
 
-    <h2>Order Placed Successfully!</h2>
+
+    <h2>
+      Order Placed Successfully!
+    </h2>
+
 
     <p>
       Your order has been placed successfully.
     </p>
 
+
     <div class="order-number">
       Order #{{ placedOrderId }}
     </div>
 
+
     <button type="button"
             class="save-btn"
             (click)="continueToPayment()">
+
       Continue to Payment
+
     </button>
 
   </div>

@@ -90,12 +90,13 @@ export class ProductsComponent implements OnInit {
 
     this.addForm = this.fb.group({
       productName: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(100)
-        ]
-      ],
+  '',
+  [
+    Validators.required,
+    Validators.minLength(2),
+    Validators.maxLength(100)
+  ]
+],
 
       description: [
         '',
@@ -129,6 +130,7 @@ export class ProductsComponent implements OnInit {
         '',
         [
           Validators.required,
+          Validators.minLength(2),
           Validators.maxLength(100)
         ]
       ],

@@ -2,6 +2,7 @@
 
   <!-- TOP BAR -->
   <div class="topbar">
+
     <div>
       <h1>RetailFlow</h1>
       <span>Category Management</span>
@@ -10,9 +11,13 @@
     <button type="button"
             class="back-btn"
             (click)="goBack()">
+
       ← Back
+
     </button>
+
   </div>
+
 
   <!-- CONTENT -->
   <div class="categories-content">
@@ -28,66 +33,94 @@
       <button type="button"
               class="add-btn"
               (click)="openAddModal()">
+
         + Add Category
+
       </button>
+
     </div>
+
 
     <!-- FILTERS -->
     <div class="filter-card">
 
       <div class="filter-group">
+
         <label>Search</label>
 
         <input type="text"
                [(ngModel)]="search"
                placeholder="Search category..."
                (keyup.enter)="searchCategories()" />
+
       </div>
 
+
       <div class="filter-group">
+
         <label>Status</label>
 
         <select [(ngModel)]="selectedStatus"
                 (change)="filterCategories()">
+
           <option value="">All</option>
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
+
         </select>
+
       </div>
+
 
       <div class="filter-buttons">
 
-        <button class="search-btn"
+        <button type="button"
+                class="search-btn"
                 (click)="searchCategories()">
+
           Search
+
         </button>
 
-        <button class="clear-btn"
+        <button type="button"
+                class="clear-btn"
                 (click)="clearFilters()">
+
           Clear
+
         </button>
 
       </div>
 
     </div>
+
 
     <!-- SUCCESS MESSAGE -->
     <div class="success-message"
          *ngIf="successMessage">
+
       {{ successMessage }}
+
     </div>
+
 
     <!-- ERROR MESSAGE -->
     <div class="error-message"
          *ngIf="errorMessage">
+
       {{ errorMessage }}
+
     </div>
+
 
     <!-- LOADING -->
     <div class="loading"
          *ngIf="isLoading">
+
       Loading categories...
+
     </div>
+
 
     <!-- TABLE -->
     <div class="table-card"
@@ -96,14 +129,19 @@
       <table>
 
         <thead>
+
           <tr>
+
             <th>Category Name</th>
             <th>Description</th>
             <th>Status</th>
             <th>Created At</th>
             <th>Action</th>
+
           </tr>
+
         </thead>
+
 
         <tbody>
 
@@ -113,38 +151,51 @@
               {{ category.categoryName }}
             </td>
 
+
             <td>
               {{ category.description || '-' }}
             </td>
+
 
             <td>
 
               <span class="status-badge"
                     [class.active]="category.isActive"
                     [class.inactive]="!category.isActive">
+
                 {{ category.isActive ? 'Active' : 'Inactive' }}
+
               </span>
 
             </td>
+
 
             <td>
               {{ category.createdAt | date:'dd-MM-yyyy' }}
             </td>
 
+
             <td>
 
               <div class="actions">
 
-                <button class="edit-btn"
+                <button type="button"
+                        class="edit-btn"
                         *ngIf="category.isActive"
                         (click)="openEditModal(category)">
+
                   Edit
+
                 </button>
 
-                <button class="deactivate-btn"
+
+                <button type="button"
+                        class="deactivate-btn"
                         *ngIf="category.isActive"
                         (click)="openDeactivateModal(category)">
+
                   Deactivate
+
                 </button>
 
               </div>
@@ -153,12 +204,15 @@
 
           </tr>
 
+
           <!-- NO DATA -->
           <tr *ngIf="categories.length === 0">
 
             <td colspan="5"
                 class="no-data">
+
               No categories found.
+
             </td>
 
           </tr>
@@ -169,24 +223,36 @@
 
     </div>
 
+
     <!-- PAGINATION -->
     <div class="pagination"
          *ngIf="!isLoading && totalPages > 0">
 
-      <button (click)="previousPage()"
+      <button type="button"
+              (click)="previousPage()"
               [disabled]="currentPage === 1">
+
         Previous
+
       </button>
 
-      <button *ngFor="let page of pages"
+
+      <button type="button"
+              *ngFor="let page of pages"
               [class.current]="page === currentPage"
               (click)="goToPage(page)">
+
         {{ page }}
+
       </button>
 
-      <button (click)="nextPage()"
+
+      <button type="button"
+              (click)="nextPage()"
               [disabled]="currentPage === totalPages">
+
         Next
+
       </button>
 
     </div>
@@ -195,13 +261,17 @@
 
 </div>
 
+
+<!-- ================================================= -->
 <!-- ADD CATEGORY MODAL -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
      *ngIf="showAddModal">
 
   <div class="modal">
 
+    <!-- HEADER -->
     <div class="modal-header">
 
       <h2>Add Category</h2>
@@ -209,66 +279,108 @@
       <button type="button"
               class="close-btn"
               (click)="closeAddModal()">
+
         ×
+
       </button>
 
     </div>
 
+
+    <!-- FORM -->
     <form [formGroup]="addForm"
           (ngSubmit)="createCategory()">
 
+
+      <!-- CATEGORY NAME -->
       <div class="form-group">
 
-        <label>Category Name</label>
+        <label>
+          Category Name
+        </label>
 
         <input type="text"
                formControlName="categoryName"
                placeholder="Enter category name" />
 
+
+        <!-- REQUIRED -->
         <small *ngIf="
             addForm.get('categoryName')?.touched &&
             addForm.get('categoryName')?.hasError('required')
           ">
+
           Category name is required.
+
         </small>
 
+
+        <!-- MIN LENGTH -->
+        <small *ngIf="
+            addForm.get('categoryName')?.touched &&
+            addForm.get('categoryName')?.hasError('minlength')
+          ">
+
+          Category name must be at least 2 characters.
+
+        </small>
+
+
+        <!-- MAX LENGTH -->
         <small *ngIf="
             addForm.get('categoryName')?.touched &&
             addForm.get('categoryName')?.hasError('maxlength')
           ">
+
           Maximum 100 characters allowed.
+
         </small>
 
       </div>
 
+
+      <!-- DESCRIPTION -->
       <div class="form-group">
 
-        <label>Description</label>
+        <label>
+          Description
+        </label>
 
         <textarea rows="4"
                   formControlName="description"
-                  placeholder="Enter description"></textarea>
+                  placeholder="Enter description">
+        </textarea>
+
 
         <small *ngIf="
             addForm.get('description')?.touched &&
             addForm.get('description')?.hasError('maxlength')
           ">
+
           Maximum 250 characters allowed.
+
         </small>
 
       </div>
 
+
+      <!-- ACTIONS -->
       <div class="modal-actions">
 
         <button type="button"
                 class="cancel-btn"
                 (click)="closeAddModal()">
+
           Cancel
+
         </button>
+
 
         <button type="submit"
                 class="save-btn">
+
           Create Category
+
         </button>
 
       </div>
@@ -279,13 +391,17 @@
 
 </div>
 
+
+<!-- ================================================= -->
 <!-- EDIT CATEGORY MODAL -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
      *ngIf="showEditModal">
 
   <div class="modal">
 
+    <!-- HEADER -->
     <div class="modal-header">
 
       <h2>Edit Category</h2>
@@ -293,66 +409,108 @@
       <button type="button"
               class="close-btn"
               (click)="closeEditModal()">
+
         ×
+
       </button>
 
     </div>
 
+
+    <!-- FORM -->
     <form [formGroup]="editForm"
           (ngSubmit)="updateCategory()">
 
+
+      <!-- CATEGORY NAME -->
       <div class="form-group">
 
-        <label>Category Name</label>
+        <label>
+          Category Name
+        </label>
 
         <input type="text"
                formControlName="categoryName"
                placeholder="Enter category name" />
 
+
+        <!-- REQUIRED -->
         <small *ngIf="
             editForm.get('categoryName')?.touched &&
             editForm.get('categoryName')?.hasError('required')
           ">
+
           Category name is required.
+
         </small>
 
+
+        <!-- MIN LENGTH -->
+        <small *ngIf="
+            editForm.get('categoryName')?.touched &&
+            editForm.get('categoryName')?.hasError('minlength')
+          ">
+
+          Category name must be at least 2 characters.
+
+        </small>
+
+
+        <!-- MAX LENGTH -->
         <small *ngIf="
             editForm.get('categoryName')?.touched &&
             editForm.get('categoryName')?.hasError('maxlength')
           ">
+
           Maximum 100 characters allowed.
+
         </small>
 
       </div>
 
+
+      <!-- DESCRIPTION -->
       <div class="form-group">
 
-        <label>Description</label>
+        <label>
+          Description
+        </label>
 
         <textarea rows="4"
                   formControlName="description"
-                  placeholder="Enter description"></textarea>
+                  placeholder="Enter description">
+        </textarea>
+
 
         <small *ngIf="
             editForm.get('description')?.touched &&
             editForm.get('description')?.hasError('maxlength')
           ">
+
           Maximum 250 characters allowed.
+
         </small>
 
       </div>
 
+
+      <!-- ACTIONS -->
       <div class="modal-actions">
 
         <button type="button"
                 class="cancel-btn"
                 (click)="closeEditModal()">
+
           Cancel
+
         </button>
+
 
         <button type="submit"
                 class="save-btn">
+
           Save Changes
+
         </button>
 
       </div>
@@ -363,38 +521,56 @@
 
 </div>
 
+
+<!-- ================================================= -->
 <!-- DEACTIVATE CONFIRMATION MODAL -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
      *ngIf="showDeactivateModal">
 
   <div class="confirm-modal">
 
-    <h2>Deactivate Category</h2>
+    <h2>
+      Deactivate Category
+    </h2>
+
 
     <p>
+
       Are you sure you want to deactivate
+
       <strong>
         {{ selectedCategoryForDeactivate?.categoryName }}
       </strong>?
+
     </p>
 
+
     <p class="warning-text">
+
       This category will no longer be active.
+
     </p>
+
 
     <div class="modal-actions">
 
       <button type="button"
               class="cancel-btn"
               (click)="closeDeactivateModal()">
+
         Cancel
+
       </button>
+
 
       <button type="button"
               class="confirm-deactivate-btn"
               (click)="confirmDeactivate()">
+
         Deactivate
+
       </button>
 
     </div>

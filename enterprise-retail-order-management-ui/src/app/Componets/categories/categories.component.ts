@@ -63,6 +63,7 @@ export class CategoriesComponent implements OnInit {
         '',
         [
           Validators.required,
+          Validators.minLength(2),
           Validators.maxLength(100)
         ]
       ],
@@ -80,6 +81,7 @@ export class CategoriesComponent implements OnInit {
         '',
         [
           Validators.required,
+          Validators.minLength(2),
           Validators.maxLength(100)
         ]
       ],
