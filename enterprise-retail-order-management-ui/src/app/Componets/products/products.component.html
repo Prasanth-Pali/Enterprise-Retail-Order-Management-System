@@ -1,37 +1,57 @@
 <div class="products-container">
 
   <!-- TOP BAR -->
+
   <div class="topbar">
+
 
     <div>
       <h1>RetailFlow</h1>
-      <span>Product Management</span>
+      <span *ngIf="isAdmin">Product Management</span>
+      <span *ngIf="isCustomer">Products</span>
     </div>
 
     <button type="button"
             class="back-btn"
             (click)="goBack()">
+
       ← Back
+
     </button>
 
   </div>
 
-
   <!-- CONTENT -->
+
   <div class="products-content">
+
 
     <!-- PAGE HEADER -->
     <div class="page-header">
 
       <div>
+
         <h2>Products</h2>
-        <p>Manage products and inventory</p>
+
+        <p *ngIf="isAdmin">
+          Manage products and inventory
+        </p>
+
+        <p *ngIf="isCustomer">
+          Browse available products
+        </p>
+
       </div>
 
-      <button type="button"
+
+      <!-- ADMIN ONLY -->
+      <button *ngIf="isAdmin"
+              type="button"
               class="add-btn"
               (click)="openAddModal()">
+
         + Add Product
+
       </button>
 
     </div>
@@ -41,7 +61,6 @@
     <div class="filter-card">
 
       <!-- SEARCH -->
-
       <div class="filter-group">
 
         <label>Search</label>
@@ -55,7 +74,6 @@
 
 
       <!-- CATEGORY FILTER -->
-
       <div class="filter-group">
 
         <label>Category</label>
@@ -79,9 +97,9 @@
       </div>
 
 
-      <!-- STATUS FILTER -->
-
-      <div class="filter-group">
+      <!-- STATUS FILTER - ADMIN ONLY -->
+      <div class="filter-group"
+           *ngIf="isAdmin">
 
         <label>Status</label>
 
@@ -106,7 +124,6 @@
 
 
       <!-- FILTER BUTTONS -->
-
       <div class="filter-buttons">
 
         <button type="button"
@@ -116,6 +133,7 @@
           Search
 
         </button>
+
 
         <button type="button"
                 class="clear-btn"
@@ -131,7 +149,6 @@
 
 
     <!-- SUCCESS MESSAGE -->
-
     <div class="success-message"
          *ngIf="successMessage">
 
@@ -141,7 +158,6 @@
 
 
     <!-- ERROR MESSAGE -->
-
     <div class="error-message"
          *ngIf="errorMessage">
 
@@ -151,7 +167,6 @@
 
 
     <!-- LOADING -->
-
     <div class="loading"
          *ngIf="isLoading">
 
@@ -161,7 +176,6 @@
 
 
     <!-- PRODUCTS TABLE -->
-
     <div class="table-card"
          *ngIf="!isLoading">
 
@@ -187,11 +201,13 @@
               Stock
             </th>
 
-            <th>
+            <!-- ADMIN ONLY -->
+            <th *ngIf="isAdmin">
               Status
             </th>
 
-            <th>
+            <!-- ADMIN ONLY -->
+            <th *ngIf="isAdmin">
               Created At
             </th>
 
@@ -207,26 +223,30 @@
         <tbody>
 
           <!-- PRODUCT ROW -->
-
           <tr *ngFor="let product of products">
 
             <td>
               {{ product.productName }}
             </td>
 
+
             <td>
               {{ product.categoryName || '-' }}
             </td>
+
 
             <td>
               ₹{{ product.price | number:'1.2-2' }}
             </td>
 
+
             <td>
               {{ product.stockQuantity }}
             </td>
 
-            <td>
+
+            <!-- ADMIN ONLY -->
+            <td *ngIf="isAdmin">
 
               <span class="status-badge"
                     [class.active]="product.isActive"
@@ -238,27 +258,56 @@
 
             </td>
 
-            <td>
+
+            <!-- ADMIN ONLY -->
+            <td *ngIf="isAdmin">
+
               {{ product.createdAt | date:'dd-MM-yyyy' }}
+
             </td>
 
+
+            <!-- ACTIONS -->
             <td>
 
               <div class="actions">
 
-                <button type="button"
-                        class="edit-btn"
-                        *ngIf="product.isActive"
-                        (click)="openEditModal(product)">
-                  Edit
+
+                <!-- ADMIN ACTIONS -->
+                <ng-container *ngIf="isAdmin">
+
+                  <button type="button"
+                          class="edit-btn"
+                          *ngIf="product.isActive"
+                          (click)="openEditModal(product)">
+
+                    Edit
+
+                  </button>
+
+
+                  <button type="button"
+                          class="deactivate-btn"
+                          *ngIf="product.isActive"
+                          (click)="openDeactivateModal(product)">
+
+                    Deactivate
+
+                  </button>
+
+                </ng-container>
+
+
+                <!-- CUSTOMER ACTION -->
+                <button *ngIf="isCustomer && product.isActive"
+                        type="button"
+                        class="view-btn"
+                        (click)="viewProduct(product)">
+
+                  View Details
+
                 </button>
 
-                <button type="button"
-                        class="deactivate-btn"
-                        *ngIf="product.isActive"
-                        (click)="openDeactivateModal(product)">
-                  Deactivate
-                </button>
 
               </div>
 
@@ -268,10 +317,9 @@
 
 
           <!-- NO DATA -->
-
           <tr *ngIf="products.length === 0">
 
-            <td colspan="7"
+            <td [attr.colspan]="isAdmin ? 7 : 5"
                 class="no-data">
 
               No products found.
@@ -288,7 +336,6 @@
 
 
     <!-- PAGINATION -->
-
     <div class="pagination"
          *ngIf="!isLoading && totalPages > 0">
 
@@ -325,19 +372,16 @@
 
 </div>
 
-
-
 <!-- ================================================= -->
-<!-- ADD PRODUCT MODAL -->
+<!-- ADD PRODUCT MODAL - ADMIN ONLY -->
 <!-- ================================================= -->
 
 <div class="modal-overlay"
-     *ngIf="showAddModal">
+     *ngIf="showAddModal && isAdmin">
 
   <div class="modal">
 
     <!-- MODAL HEADER -->
-
     <div class="modal-header">
 
       <h2>
@@ -356,13 +400,11 @@
 
 
     <!-- FORM -->
-
     <form [formGroup]="addForm"
           (ngSubmit)="createProduct()">
 
 
       <!-- PRODUCT NAME -->
-
       <div class="form-group">
 
         <label>
@@ -375,9 +417,9 @@
 
 
         <small *ngIf="
-            addForm.get('productName')?.touched &&
-            addForm.get('productName')?.hasError('required')
-          ">
+        addForm.get('productName')?.touched &&
+        addForm.get('productName')?.hasError('required')
+      ">
 
           Product name is required.
 
@@ -385,9 +427,9 @@
 
 
         <small *ngIf="
-            addForm.get('productName')?.touched &&
-            addForm.get('productName')?.hasError('maxlength')
-          ">
+        addForm.get('productName')?.touched &&
+        addForm.get('productName')?.hasError('maxlength')
+      ">
 
           Maximum 100 characters allowed.
 
@@ -396,9 +438,7 @@
       </div>
 
 
-
       <!-- DESCRIPTION -->
-
       <div class="form-group">
 
         <label>
@@ -408,13 +448,13 @@
         <textarea rows="3"
                   formControlName="description"
                   placeholder="Enter product description">
-        </textarea>
+    </textarea>
 
 
         <small *ngIf="
-            addForm.get('description')?.touched &&
-            addForm.get('description')?.hasError('maxlength')
-          ">
+        addForm.get('description')?.touched &&
+        addForm.get('description')?.hasError('maxlength')
+      ">
 
           Maximum 250 characters allowed.
 
@@ -423,9 +463,7 @@
       </div>
 
 
-
       <!-- PRICE -->
-
       <div class="form-group">
 
         <label>
@@ -440,9 +478,9 @@
 
 
         <small *ngIf="
-            addForm.get('price')?.touched &&
-            addForm.get('price')?.hasError('required')
-          ">
+        addForm.get('price')?.touched &&
+        addForm.get('price')?.hasError('required')
+      ">
 
           Price is required.
 
@@ -450,9 +488,9 @@
 
 
         <small *ngIf="
-            addForm.get('price')?.touched &&
-            addForm.get('price')?.hasError('min')
-          ">
+        addForm.get('price')?.touched &&
+        addForm.get('price')?.hasError('min')
+      ">
 
           Price must be greater than 0.
 
@@ -461,9 +499,7 @@
       </div>
 
 
-
       <!-- STOCK -->
-
       <div class="form-group">
 
         <label>
@@ -477,9 +513,9 @@
 
 
         <small *ngIf="
-            addForm.get('stockQuantity')?.touched &&
-            addForm.get('stockQuantity')?.hasError('required')
-          ">
+        addForm.get('stockQuantity')?.touched &&
+        addForm.get('stockQuantity')?.hasError('required')
+      ">
 
           Stock quantity is required.
 
@@ -487,9 +523,9 @@
 
 
         <small *ngIf="
-            addForm.get('stockQuantity')?.touched &&
-            addForm.get('stockQuantity')?.hasError('min')
-          ">
+        addForm.get('stockQuantity')?.touched &&
+        addForm.get('stockQuantity')?.hasError('min')
+      ">
 
           Stock cannot be negative.
 
@@ -498,9 +534,7 @@
       </div>
 
 
-
       <!-- CATEGORY -->
-
       <div class="form-group">
 
         <label>
@@ -513,9 +547,6 @@
             Select Category
           </option>
 
-
-          <!-- LOAD CATEGORIES FROM API -->
-
           <option *ngFor="let category of categories"
                   [ngValue]="category.categoryId">
 
@@ -527,9 +558,9 @@
 
 
         <small *ngIf="
-            addForm.get('categoryId')?.touched &&
-            addForm.get('categoryId')?.hasError('required')
-          ">
+        addForm.get('categoryId')?.touched &&
+        addForm.get('categoryId')?.hasError('required')
+      ">
 
           Category is required.
 
@@ -538,9 +569,7 @@
       </div>
 
 
-
       <!-- MODAL ACTIONS -->
-
       <div class="modal-actions">
 
         <button type="button"
@@ -567,10 +596,12 @@
 
 </div>
 
-<!-- EDIT PRODUCT MODAL -->
+<!-- ================================================= -->
+<!-- EDIT PRODUCT MODAL - ADMIN ONLY -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
-     *ngIf="showEditModal">
+     *ngIf="showEditModal && isAdmin">
 
   <div class="modal">
 
@@ -596,7 +627,6 @@
 
 
       <!-- PRODUCT NAME -->
-
       <div class="form-group">
 
         <label>
@@ -608,9 +638,9 @@
                placeholder="Enter product name" />
 
         <small *ngIf="
-            editForm.get('productName')?.touched &&
-            editForm.get('productName')?.hasError('required')
-          ">
+        editForm.get('productName')?.touched &&
+        editForm.get('productName')?.hasError('required')
+      ">
 
           Product name is required.
 
@@ -620,7 +650,6 @@
 
 
       <!-- DESCRIPTION -->
-
       <div class="form-group">
 
         <label>
@@ -630,13 +659,12 @@
         <textarea rows="3"
                   formControlName="description"
                   placeholder="Enter product description">
-        </textarea>
+    </textarea>
 
       </div>
 
 
       <!-- PRICE -->
-
       <div class="form-group">
 
         <label>
@@ -650,9 +678,9 @@
                placeholder="Enter price" />
 
         <small *ngIf="
-            editForm.get('price')?.touched &&
-            editForm.get('price')?.hasError('min')
-          ">
+        editForm.get('price')?.touched &&
+        editForm.get('price')?.hasError('min')
+      ">
 
           Price must be greater than 0.
 
@@ -662,7 +690,6 @@
 
 
       <!-- STOCK -->
-
       <div class="form-group">
 
         <label>
@@ -675,9 +702,9 @@
                placeholder="Enter stock quantity" />
 
         <small *ngIf="
-            editForm.get('stockQuantity')?.touched &&
-            editForm.get('stockQuantity')?.hasError('min')
-          ">
+        editForm.get('stockQuantity')?.touched &&
+        editForm.get('stockQuantity')?.hasError('min')
+      ">
 
           Stock cannot be negative.
 
@@ -687,7 +714,6 @@
 
 
       <!-- CATEGORY -->
-
       <div class="form-group">
 
         <label>
@@ -709,10 +735,11 @@
 
         </select>
 
+
         <small *ngIf="
-            editForm.get('categoryId')?.touched &&
-            editForm.get('categoryId')?.hasError('required')
-          ">
+        editForm.get('categoryId')?.touched &&
+        editForm.get('categoryId')?.hasError('required')
+      ">
 
           Category is required.
 
@@ -722,7 +749,6 @@
 
 
       <!-- ACTIONS -->
-
       <div class="modal-actions">
 
         <button type="button"
@@ -732,6 +758,7 @@
           Cancel
 
         </button>
+
 
         <button type="submit"
                 class="save-btn">
@@ -748,27 +775,35 @@
 
 </div>
 
-<!-- DEACTIVATE PRODUCT MODAL -->
+<!-- ================================================= -->
+<!-- DEACTIVATE PRODUCT MODAL - ADMIN ONLY -->
+<!-- ================================================= -->
 
 <div class="modal-overlay"
-     *ngIf="showDeactivateModal">
+     *ngIf="showDeactivateModal && isAdmin">
 
   <div class="confirm-modal">
-
     <h2>
       Deactivate Product?
     </h2>
 
+
     <p>
+
       Are you sure you want to deactivate
+
       <strong>
         {{ selectedProductForDeactivate?.productName }}
       </strong>?
+
     </p>
 
+
     <p class="warning-text">
+
       This product will no longer be available
       as an active product.
+
     </p>
 
 
@@ -782,6 +817,7 @@
 
       </button>
 
+
       <button type="button"
               class="confirm-deactivate-btn"
               (click)="confirmDeactivate()">
@@ -791,6 +827,274 @@
       </button>
 
     </div>
+
+  </div>
+
+</div>
+
+<!-- ================================================= -->
+<!-- PRODUCT DETAILS MODAL - CUSTOMER ONLY -->
+<!-- ================================================= -->
+
+<div class="modal-overlay"
+     *ngIf="showProductDetailsModal && isCustomer">
+
+  <div class="product-details-modal">
+
+    <div class="modal-header">
+
+      <h2>
+        Product Details
+      </h2>
+
+      <button type="button"
+              class="close-btn"
+              (click)="closeProductDetails()">
+
+        ×
+
+      </button>
+
+    </div>
+
+
+    <div class="product-details-content"
+         *ngIf="selectedProductForDetails as product">
+
+      <div class="product-details-icon">
+        🛍️
+      </div>
+
+      <h2 class="product-title">
+        {{ product.productName }}
+      </h2>
+
+      <p class="product-description">
+        {{ product.description || 'No description available.' }}
+      </p>
+
+
+      <div class="product-info-grid">
+
+        <div class="product-info-item">
+
+          <span>Category</span>
+
+          <strong>
+            {{ product.categoryName || '-' }}
+          </strong>
+
+        </div>
+
+
+        <div class="product-info-item">
+
+          <span>Price</span>
+
+          <strong>
+            ₹{{ product.price | number:'1.2-2' }}
+          </strong>
+
+        </div>
+
+
+        <div class="product-info-item">
+
+          <span>Available Stock</span>
+
+          <strong>
+            {{ product.stockQuantity }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- QUANTITY -->
+
+      <div class="quantity-section"
+           *ngIf="product.stockQuantity > 0">
+
+        <label>
+          Quantity
+        </label>
+
+        <div class="quantity-control">
+
+          <button type="button"
+                  (click)="decreaseQuantity()"
+                  [disabled]="quantity <= 1">
+
+            −
+
+          </button>
+
+          <span>
+            {{ quantity }}
+          </span>
+
+          <button type="button"
+                  (click)="increaseQuantity()"
+                  [disabled]="quantity >= product.stockQuantity">
+
+            +
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- TOTAL -->
+
+      <div class="order-total"
+           *ngIf="product.stockQuantity > 0">
+
+        <span>
+          Total
+        </span>
+
+        <strong>
+          ₹{{ product.price * quantity | number:'1.2-2' }}
+        </strong>
+
+      </div>
+
+
+      <!-- OUT OF STOCK -->
+
+      <div class="out-of-stock"
+           *ngIf="product.stockQuantity === 0">
+
+        Out of Stock
+
+      </div>
+
+
+      <!-- ACTIONS -->
+
+      <div class="modal-actions">
+
+        <button type="button"
+                class="cancel-btn"
+                (click)="closeProductDetails()">
+
+          Close
+
+        </button>
+
+        <button type="button"
+                class="save-btn"
+                *ngIf="product.stockQuantity > 0"
+                (click)="placeOrder()">
+
+          Place Order
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- SHIPPING ADDRESS MODAL -->
+
+<div class="modal-overlay"
+     *ngIf="showShippingModal && isCustomer">
+
+  <div class="confirm-modal">
+
+    <div class="modal-header">
+
+      <h2>Shipping Address</h2>
+
+      <button type="button"
+              class="close-btn"
+              (click)="showShippingModal = false">
+
+        ×
+
+      </button>
+
+    </div>
+
+    <div class="form-group">
+
+      <label>
+        Shipping Address
+      </label>
+
+      <textarea rows="4"
+                [(ngModel)]="shippingAddress"
+                maxlength="250"
+                placeholder="Enter your shipping address">
+      </textarea>
+
+      <small *ngIf="shippingAddress.length >
+        0 &&
+        shippingAddress.trim().length < 5">
+
+        Address must be at least 5 characters.
+
+      </small>
+
+    </div>
+
+    <div class="modal-actions">
+
+      <button type="button"
+              class="cancel-btn"
+              (click)="showShippingModal = false">
+
+        Cancel
+
+      </button>
+
+      <button type="button"
+              class="save-btn"
+              [disabled]="shippingAddress.trim().length < 5"
+              (click)="submitOrder()">
+
+        Confirm Order
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ORDER SUCCESS MODAL -->
+<div class="modal-overlay"
+     *ngIf="showOrderSuccessModal && isCustomer">
+
+  <div class="success-modal">
+
+    <div class="success-icon">
+      ✓
+    </div>
+
+    <h2>Order Placed Successfully!</h2>
+
+    <p>
+      Your order has been placed successfully.
+    </p>
+
+    <div class="order-number">
+      Order #{{ placedOrderId }}
+    </div>
+
+    <button type="button"
+            class="save-btn"
+            (click)="continueToPayment()">
+      Continue to Payment
+    </button>
 
   </div>
 

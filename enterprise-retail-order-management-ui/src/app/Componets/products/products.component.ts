@@ -7,6 +7,10 @@ import {
   FormGroup,
   Validators
 } from '@angular/forms';
+import {
+  OrderService,
+  CreateOrder
+} from '../../services/order.service';
 
 import {
   Product,
@@ -45,6 +49,9 @@ export class ProductsComponent implements OnInit {
   pageSize = 5;
   totalCount = 0;
 
+  isAdmin = false;
+  isCustomer = false;
+
   showAddModal = false;
   addForm!: FormGroup;
 
@@ -57,14 +64,29 @@ export class ProductsComponent implements OnInit {
   showDeactivateModal = false;
   selectedProductForDeactivate: Product | null = null;
 
+  showProductDetailsModal = false;
+  selectedProductForDetails: Product | null = null;
+  quantity = 1;
+
+  shippingAddress = '';
+  showShippingModal = false;
+
+  showOrderSuccessModal = false;
+  placedOrderId: number | null = null;
+  placedOrderAmount = 0;
+
+
   constructor(
     private productService: ProductService,
     private categoryService: CategoryService,
+    private orderService: OrderService,
     private router: Router,
     private fb: FormBuilder
   ) { }
 
   ngOnInit(): void {
+
+    this.loadUserRole();
 
     this.addForm = this.fb.group({
       productName: [
@@ -140,6 +162,155 @@ export class ProductsComponent implements OnInit {
 
     this.loadCategories();
     this.loadProducts();
+  }
+
+  private loadUserRole(): void {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    try {
+
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      );
+
+      const role =
+        payload[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'];
+
+      this.isAdmin = role === 'admin';
+      this.isCustomer = role === 'customer';
+
+    } catch (error) {
+
+      console.error('Invalid token:', error);
+
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
+    }
+  }
+
+  viewProduct(product: Product): void {
+    this.selectedProductForDetails = product;
+    this.quantity = 1;
+    this.showProductDetailsModal = true;
+  }
+
+  closeProductDetails(): void {
+    this.showProductDetailsModal = false;
+    this.selectedProductForDetails = null;
+    this.quantity = 1;
+  }
+
+  increaseQuantity(): void {
+    if (
+      this.selectedProductForDetails &&
+      this.quantity < this.selectedProductForDetails.stockQuantity
+    ) {
+      this.quantity++;
+    }
+  }
+
+  decreaseQuantity(): void {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  placeOrder(): void {
+
+    if (!this.selectedProductForDetails) {
+      return;
+    }
+
+    this.shippingAddress = '';
+    this.showShippingModal = true;
+  }
+  
+
+  submitOrder(): void {
+
+    if (!this.selectedProductForDetails) {
+      return;
+    }
+
+    if (
+      !this.shippingAddress ||
+      this.shippingAddress.trim().length < 5
+    ) {
+      return;
+    }
+
+    const request: CreateOrder = {
+      items: [
+        {
+          productId:
+            this.selectedProductForDetails.productId,
+
+          quantity: this.quantity
+        }
+      ],
+
+      shippingAddress:
+        this.shippingAddress.trim()
+    };
+
+
+    // 👇 IDHI IKKADA ADD CHEYYALI
+    console.log(
+      'ORDER REQUEST:',
+      JSON.stringify(request, null, 2)
+    );
+
+
+    this.orderService.createOrder(request).subscribe({
+
+      next: (order) => {
+
+        console.log('Order created:', order);
+
+        this.showShippingModal = false;
+        this.closeProductDetails();
+
+        this.placedOrderId = order.orderId;
+        this.placedOrderAmount = order.totalAmount;
+
+        this.showOrderSuccessModal = true;
+      },
+
+      error: (error) => {
+
+        console.error(
+          'Order creation failed:',
+          error
+        );
+
+        this.errorMessage =
+          error.error ||
+          'Unable to place order.';
+      }
+
+    });
+  }
+
+
+  continueToPayment(): void {
+
+    this.showOrderSuccessModal = false;
+
+    this.router.navigate(['/payments'], {
+      state: {
+        orderId: this.placedOrderId,
+        amount: this.placedOrderAmount
+      }
+    });
   }
 
 
@@ -483,6 +654,10 @@ export class ProductsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/admin']);
+    if (this.isAdmin) {
+      this.router.navigate(['/admin']);
+    } else {
+      this.router.navigate(['/customer']);
+    }
   }
 }

@@ -4,14 +4,19 @@
   <!-- =========================
        TOP BAR
   ========================== -->
+
   <div class="topbar">
 
-    <h2>Orders</h2>
+    <h2>
+      {{ isCustomer ? 'My Orders' : 'Orders' }}
+    </h2>
 
     <button type="button"
             class="back-btn"
             (click)="goBack()">
+
       ← Back
+
     </button>
 
   </div>
@@ -22,11 +27,23 @@
     <!-- =========================
          PAGE HEADER
     ========================== -->
+
     <div class="page-header">
 
       <div>
-        <h1>Order Management</h1>
-        <p>View and manage customer orders</p>
+
+        <h1>
+          {{ isCustomer ? 'My Orders' : 'Order Management' }}
+        </h1>
+
+        <p>
+          {{
+            isCustomer
+              ? 'View your order history and details'
+              : 'View and manage customer orders'
+          }}
+        </p>
+
       </div>
 
     </div>
@@ -35,6 +52,7 @@
     <!-- =========================
          FILTER
     ========================== -->
+
     <div class="filter-card">
 
       <div class="filter-group">
@@ -44,12 +62,29 @@
         <select [(ngModel)]="selectedStatus"
                 (change)="filterOrders()">
 
-          <option value="">All Status</option>
-          <option value="Pending">Pending</option>
-          <option value="Confirmed">Confirmed</option>
-          <option value="Shipped">Shipped</option>
-          <option value="Delivered">Delivered</option>
-          <option value="Cancelled">Cancelled</option>
+          <option value="">
+            All Status
+          </option>
+
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Confirmed">
+            Confirmed
+          </option>
+
+          <option value="Shipped">
+            Shipped
+          </option>
+
+          <option value="Delivered">
+            Delivered
+          </option>
+
+          <option value="Cancelled">
+            Cancelled
+          </option>
 
         </select>
 
@@ -74,6 +109,7 @@
     <!-- =========================
          SUCCESS MESSAGE
     ========================== -->
+
     <div class="success-message"
          *ngIf="successMessage">
 
@@ -85,6 +121,7 @@
     <!-- =========================
          ERROR MESSAGE
     ========================== -->
+
     <div class="error-message"
          *ngIf="errorMessage">
 
@@ -96,6 +133,7 @@
     <!-- =========================
          LOADING
     ========================== -->
+
     <div class="loading"
          *ngIf="isLoading">
 
@@ -107,6 +145,7 @@
     <!-- =========================
          ORDERS TABLE
     ========================== -->
+
     <div class="table-card"
          *ngIf="!isLoading">
 
@@ -116,13 +155,33 @@
 
           <tr>
 
-            <th>Order ID</th>
-            <th>Customer</th>
-            <th>Total Amount</th>
-            <th>Status</th>
-            <th>Shipping Address</th>
-            <th>Order Date</th>
-            <th>Action</th>
+            <th>
+              Order ID
+            </th>
+
+            <th>
+              Customer
+            </th>
+
+            <th>
+              Total Amount
+            </th>
+
+            <th>
+              Status
+            </th>
+
+            <th>
+              Shipping Address
+            </th>
+
+            <th>
+              Order Date
+            </th>
+
+            <th>
+              Action
+            </th>
 
           </tr>
 
@@ -166,6 +225,7 @@
 
             <td class="actions">
 
+              <!-- CUSTOMER + ADMIN -->
               <button type="button"
                       class="view-btn"
                       (click)="viewOrder(order.orderId)">
@@ -179,13 +239,18 @@
           </tr>
 
 
-          <!-- No Data -->
+          <!-- NO DATA -->
+
           <tr *ngIf="orders.length === 0">
 
             <td colspan="7"
                 class="no-data">
 
-              No orders found.
+              {{
+                isCustomer
+                  ? 'You have no orders yet.'
+                  : 'No orders found.'
+              }}
 
             </td>
 
@@ -201,6 +266,7 @@
     <!-- =========================
          PAGINATION
     ========================== -->
+
     <div class="pagination"
          *ngIf="totalPages > 1">
 
@@ -241,18 +307,21 @@
   ================================================== -->
 
   <div class="modal-overlay"
-       *ngIf="showOrderDetailsModal && selectedOrder"
+       *ngIf="
+      showOrderDetailsModal &&
+      selectedOrder
+    "
        (click)="closeOrderDetails()">
 
 
-    <!-- Popup -->
     <div class="order-details-modal"
          (click)="$event.stopPropagation()">
 
 
       <!-- =========================
-       MODAL HEADER
-  ========================== -->
+           MODAL HEADER
+      ========================== -->
+
       <div class="modal-header">
 
         <div>
@@ -280,14 +349,17 @@
 
 
       <!-- =========================
-       ORDER INFORMATION
-  ========================== -->
+           ORDER INFORMATION
+      ========================== -->
+
       <div class="order-info">
 
 
         <div class="info-item">
 
-          <label>Customer</label>
+          <label>
+            Customer
+          </label>
 
           <span>
             {{ selectedOrder.customerName }}
@@ -298,7 +370,9 @@
 
         <div class="info-item">
 
-          <label>User ID</label>
+          <label>
+            User ID
+          </label>
 
           <span>
             {{ selectedOrder.userId }}
@@ -309,7 +383,9 @@
 
         <div class="info-item">
 
-          <label>Order Date</label>
+          <label>
+            Order Date
+          </label>
 
           <span>
             {{ selectedOrder.orderDate | date:'dd-MM-yyyy HH:mm' }}
@@ -320,7 +396,9 @@
 
         <div class="info-item">
 
-          <label>Status</label>
+          <label>
+            Status
+          </label>
 
           <span class="status-badge"
                 [ngClass]="selectedOrder.status.toLowerCase()">
@@ -334,7 +412,9 @@
 
         <div class="info-item full-width">
 
-          <label>Shipping Address</label>
+          <label>
+            Shipping Address
+          </label>
 
           <span>
             {{ selectedOrder.shippingAddress || 'N/A' }}
@@ -346,11 +426,14 @@
 
 
       <!-- =========================
-       ORDER ITEMS
-  ========================== -->
+           ORDER ITEMS
+      ========================== -->
+
       <div class="items-section">
 
-        <h3>Order Items</h3>
+        <h3>
+          Order Items
+        </h3>
 
 
         <div class="items-table">
@@ -361,10 +444,21 @@
 
               <tr>
 
-                <th>Product</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Sub Total</th>
+                <th>
+                  Product
+                </th>
+
+                <th>
+                  Quantity
+                </th>
+
+                <th>
+                  Unit Price
+                </th>
+
+                <th>
+                  Sub Total
+                </th>
 
               </tr>
 
@@ -373,7 +467,9 @@
 
             <tbody>
 
-              <tr *ngFor="let item of selectedOrder.items">
+              <tr *ngFor="
+                  let item of selectedOrder.items
+                ">
 
                 <td>
                   {{ item.productName }}
@@ -394,7 +490,9 @@
               </tr>
 
 
-              <tr *ngIf="selectedOrder.items.length === 0">
+              <tr *ngIf="
+                  selectedOrder.items.length === 0
+                ">
 
                 <td colspan="4"
                     class="no-items">
@@ -413,13 +511,24 @@
 
       </div>
 
-      <!-- =========================
-       UPDATE ORDER STATUS
-  ========================== -->
-      <div class="status-update-section"
-           *ngIf="selectedOrder && getAllowedStatuses().length > 0">
 
-        <h3>Update Order Status</h3>
+      <!-- =================================================
+           UPDATE ORDER STATUS
+           ADMIN ONLY
+      ================================================== -->
+
+      <div class="status-update-section"
+           *ngIf="
+           isAdmin &&
+           selectedOrder &&
+           getAllowedStatuses().length>
+        0
+        ">
+
+        <h3>
+          Update Order Status
+        </h3>
+
 
         <div class="status-update-form">
 
@@ -429,7 +538,9 @@
               Select New Status
             </option>
 
-            <option *ngFor="let status of getAllowedStatuses()"
+            <option *ngFor="
+                let status of getAllowedStatuses()
+              "
                     [value]="status">
 
               {{ status }}
@@ -441,10 +552,17 @@
 
           <button type="button"
                   class="update-status-btn"
-                  [disabled]="!selectedNewStatus || isUpdatingStatus"
+                  [disabled]="
+              !selectedNewStatus ||
+              isUpdatingStatus
+            "
                   (click)="updateStatus()">
 
-            {{ isUpdatingStatus ? 'Updating...' : 'Update Status' }}
+            {{
+              isUpdatingStatus
+                ? 'Updating...'
+                : 'Update Status'
+            }}
 
           </button>
 
@@ -454,8 +572,9 @@
 
 
       <!-- =========================
-       TOTAL
-  ========================== -->
+           TOTAL
+      ========================== -->
+
       <div class="order-total">
 
         <span>
@@ -470,8 +589,9 @@
 
 
       <!-- =========================
-       MODAL FOOTER
-  ========================== -->
+           MODAL FOOTER
+      ========================== -->
+
       <div class="modal-actions">
 
         <button type="button"

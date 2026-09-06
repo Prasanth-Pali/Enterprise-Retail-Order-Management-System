@@ -90,7 +90,7 @@ getPaymentByOrderId(
 ): Observable<Payment> {
 
   return this.http.get<Payment>(
-    `${ this.apiUrl}/order/${ orderId } `
+    `${ this.apiUrl}/order/${ orderId }`
   );
 }
 

@@ -44,10 +44,40 @@
 }
 
 
+.profile-btn {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.25);
+  transition: all 0.2s ease;
+}
+
+.profile-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.profile-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(79, 70, 229, 0.4);
+}
+
+.profile-btn:active {
+  transform: scale(0.95);
+}
+
+
 /* =========================================================
    BRAND
 ========================================================= */
-
 .brand {
   display: flex;
   align-items: center;

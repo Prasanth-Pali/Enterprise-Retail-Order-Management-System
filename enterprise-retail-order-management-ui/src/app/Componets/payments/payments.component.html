@@ -1,39 +1,334 @@
 
 <div class="payments-container">
 
-  <!-- Top Bar -->
+  <!-- ========================= -->
+  <!-- TOP BAR -->
+  <!-- ========================= -->
+
   <div class="topbar">
+
     <div class="topbar-left">
-      <h2>Payments</h2>
+
+      <h2>
+        {{ isCustomer ? 'Payment' : 'Payments' }}
+      </h2>
+
     </div>
 
     <button type="button"
             class="back-btn"
             (click)="goBack()">
+
       ← Back
+
     </button>
+
   </div>
 
 
-  <!-- Main Content -->
-  <div class="payments-content">
+  <!-- ========================= -->
+  <!-- CUSTOMER PAYMENT -->
+  <!-- ========================= -->
+
+  <div class="payments-content"
+       *ngIf="isCustomer">
+
+    <div class="page-header">
+
+      <div>
+
+        <h1>
+          Complete Payment
+        </h1>
+
+        <p>
+          Secure payment for your order
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- Error Message -->
+
+    <div class="error-message"
+         *ngIf="errorMessage">
+
+      {{ errorMessage }}
+
+    </div>
+
+
+    <div class="payment-form-card">
+
+
+      <!-- Order Summary -->
+
+      <div class="order-summary">
+
+        <div>
+
+          <span>
+            Order ID
+          </span>
+
+          <strong>
+            #{{ orderId }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Total Amount
+          </span>
+
+          <strong>
+            ₹{{ amount | number:'1.2-2' }}
+          </strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- Payment Methods -->
+
+      <div class="payment-method-section">
+
+        <h3>
+          Select Payment Method
+        </h3>
+
+
+        <div class="payment-methods">
+
+
+          <!-- Credit Card -->
+
+          <label class="payment-option"
+                 [class.selected]="
+              selectedPaymentMethod === 'CreditCard'
+            ">
+
+            <input type="radio"
+                   name="paymentMethod"
+                   value="CreditCard"
+                   [(ngModel)]="selectedPaymentMethod">
+
+            <span class="payment-icon">
+              💳
+            </span>
+
+            <div>
+
+              <strong>
+                Credit Card
+              </strong>
+
+              <small>
+                Pay using your credit card
+              </small>
+
+            </div>
+
+          </label>
+
+
+          <!-- Debit Card -->
+
+          <label class="payment-option"
+                 [class.selected]="
+              selectedPaymentMethod === 'DebitCard'
+            ">
+
+            <input type="radio"
+                   name="paymentMethod"
+                   value="DebitCard"
+                   [(ngModel)]="selectedPaymentMethod">
+
+            <span class="payment-icon">
+              💳
+            </span>
+
+            <div>
+
+              <strong>
+                Debit Card
+              </strong>
+
+              <small>
+                Pay using your debit card
+              </small>
+
+            </div>
+
+          </label>
+
+
+          <!-- UPI -->
+
+          <label class="payment-option"
+                 [class.selected]="
+              selectedPaymentMethod === 'UPI'
+            ">
+
+            <input type="radio"
+                   name="paymentMethod"
+                   value="UPI"
+                   [(ngModel)]="selectedPaymentMethod">
+
+            <span class="payment-icon">
+              📱
+            </span>
+
+            <div>
+
+              <strong>
+                UPI
+              </strong>
+
+              <small>
+                Pay using UPI
+              </small>
+
+            </div>
+
+          </label>
+
+
+          <!-- Net Banking -->
+
+          <label class="payment-option"
+                 [class.selected]="
+              selectedPaymentMethod === 'NetBanking'
+            ">
+
+            <input type="radio"
+                   name="paymentMethod"
+                   value="NetBanking"
+                   [(ngModel)]="selectedPaymentMethod">
+
+            <span class="payment-icon">
+              🏦
+            </span>
+
+            <div>
+
+              <strong>
+                Net Banking
+              </strong>
+
+              <small>
+                Pay using your bank account
+              </small>
+
+            </div>
+
+          </label>
+
+
+          <!-- Cash On Delivery -->
+
+          <label class="payment-option"
+                 [class.selected]="
+              selectedPaymentMethod === 'CashOnDelivery'
+            ">
+
+            <input type="radio"
+                   name="paymentMethod"
+                   value="CashOnDelivery"
+                   [(ngModel)]="selectedPaymentMethod">
+
+            <span class="payment-icon">
+              💵
+            </span>
+
+            <div>
+
+              <strong>
+                Cash on Delivery
+              </strong>
+
+              <small>
+                Pay when your order arrives
+              </small>
+
+            </div>
+
+          </label>
+
+
+        </div>
+
+      </div>
+
+
+      <!-- Pay Button -->
+
+      <div class="payment-actions">
+
+        <button type="button"
+                class="pay-btn"
+                [disabled]="
+                !selectedPaymentMethod ||
+                !orderId ||
+                amount <= 0
+          "
+          (click)="makePayment()">
+
+          Pay ₹{{ amount | number:'1.2-2' }}
+
+        </button>
+
+      </div>
+
+
+    </div>
+
+  </div>
+
+
+
+  <!-- ========================= -->
+  <!-- ADMIN PAYMENT MANAGEMENT -->
+  <!-- ========================= -->
+
+  <div class="payments-content"
+       *ngIf="isAdmin">
+
 
     <!-- Page Header -->
+
     <div class="page-header">
+
       <div>
-        <h1>Payment Management</h1>
-        <p>View and monitor customer payment history</p>
+
+        <h1>
+          Payment Management
+        </h1>
+
+        <p>
+          View and monitor customer payment history
+        </p>
+
       </div>
+
     </div>
 
 
     <!-- Messages -->
+
     <div class="success-message"
          *ngIf="successMessage">
 
       {{ successMessage }}
 
     </div>
+
 
     <div class="error-message"
          *ngIf="errorMessage">
@@ -44,7 +339,9 @@
 
 
     <!-- Filters -->
+
     <div class="filter-card">
+
 
       <div class="filter-group">
 
@@ -99,6 +396,7 @@
 
         </button>
 
+
         <button type="button"
                 class="clear-btn"
                 (click)="clearFilters()">
@@ -113,21 +411,29 @@
 
 
     <!-- Payment History -->
+
     <div class="payment-card">
+
 
       <div class="card-header">
 
         <div>
-          <h2>Payment History</h2>
+
+          <h2>
+            Payment History
+          </h2>
+
           <p>
             Total Payments: {{ totalCount }}
           </p>
+
         </div>
 
       </div>
 
 
       <!-- Loading -->
+
       <div class="loading"
            *ngIf="isLoading">
 
@@ -137,10 +443,13 @@
 
 
       <!-- Table -->
+
       <div class="table-wrapper"
            *ngIf="!isLoading">
 
+
         <table *ngIf="payments.length > 0">
+
 
           <thead>
 
@@ -187,29 +496,42 @@
 
             <tr *ngFor="let payment of payments">
 
+
               <td>
                 #{{ payment.paymentId }}
               </td>
+
 
               <td>
                 #{{ payment.orderId }}
               </td>
 
+
               <td class="amount">
                 ₹{{ payment.amount | number:'1.2-2' }}
               </td>
+
 
               <td>
                 {{ payment.paymentMethod }}
               </td>
 
+
               <td>
 
                 <span class="status-badge"
                       [ngClass]="{
-                    'success': payment.paymentStatus.toLowerCase() === 'success',
-                    'pending': payment.paymentStatus.toLowerCase() === 'pending',
-                    'failed': payment.paymentStatus.toLowerCase() === 'failed'
+                    'success':
+                      payment.paymentStatus.toLowerCase()
+                      === 'success',
+
+                    'pending':
+                      payment.paymentStatus.toLowerCase()
+                      === 'pending',
+
+                    'failed':
+                      payment.paymentStatus.toLowerCase()
+                      === 'failed'
                   }">
 
                   {{ payment.paymentStatus }}
@@ -218,21 +540,27 @@
 
               </td>
 
+
               <td class="transaction-id">
 
                 {{ payment.transactionId || '-' }}
 
               </td>
 
+
               <td>
 
                 {{
- payment.paymentDate
-                  ? (payment.paymentDate | date:'dd-MMM-yyyy, hh:mm a')
-                  : '-'
+                  payment.paymentDate
+                    ? (
+                        payment.paymentDate
+                        | date:'dd-MMM-yyyy, hh:mm a'
+                      )
+                    : '-'
                 }}
 
               </td>
+
 
               <td>
 
@@ -246,6 +574,7 @@
 
               </td>
 
+
             </tr>
 
           </tbody>
@@ -254,6 +583,7 @@
 
 
         <!-- No Payments -->
+
         <div class="no-data"
              *ngIf="payments.length === 0">
 
@@ -271,12 +601,19 @@
 
         </div>
 
+
       </div>
 
 
       <!-- Pagination -->
+
       <div class="pagination"
-           *ngIf="!isLoading && totalPages > 1">
+           *ngIf="
+           !isLoading &&
+           totalPages>
+        1
+        ">
+
 
         <button type="button"
                 class="page-btn"
@@ -308,31 +645,49 @@
 
         </button>
 
+
       </div>
 
+
     </div>
+
 
   </div>
 
 
-  <!-- Payment Details Modal -->
+
+  <!-- ========================= -->
+  <!-- PAYMENT DETAILS MODAL -->
+  <!-- ========================= -->
+
   <div class="modal-overlay"
-       *ngIf="showPaymentDetailsModal"
+       *ngIf="
+      showPaymentDetailsModal &&
+      isAdmin
+    "
        (click)="closePaymentDetails()">
+
 
     <div class="payment-details-modal"
          (click)="$event.stopPropagation()">
 
 
       <!-- Modal Header -->
+
       <div class="modal-header">
 
         <div>
-          <h2>Payment Details</h2>
+
+          <h2>
+            Payment Details
+          </h2>
+
           <p>
             Complete payment information
           </p>
+
         </div>
+
 
         <button type="button"
                 class="close-btn"
@@ -346,22 +701,33 @@
 
 
       <!-- Modal Body -->
+
       <div class="modal-body"
            *ngIf="selectedPayment">
 
 
         <!-- Status -->
+
         <div class="payment-status-section">
 
           <span class="status-label">
             Payment Status
           </span>
 
+
           <span class="status-badge large"
                 [ngClass]="{
-              'success': selectedPayment.paymentStatus.toLowerCase() === 'success',
-              'pending': selectedPayment.paymentStatus.toLowerCase() === 'pending',
-              'failed': selectedPayment.paymentStatus.toLowerCase() === 'failed'
+              'success':
+                selectedPayment.paymentStatus.toLowerCase()
+                === 'success',
+
+              'pending':
+                selectedPayment.paymentStatus.toLowerCase()
+                === 'pending',
+
+              'failed':
+                selectedPayment.paymentStatus.toLowerCase()
+                === 'failed'
             }">
 
             {{ selectedPayment.paymentStatus }}
@@ -372,7 +738,9 @@
 
 
         <!-- Details -->
+
         <div class="details-grid">
+
 
           <div class="detail-item">
 
@@ -448,19 +816,24 @@
             <span class="detail-value">
 
               {{
- selectedPayment.paymentDate
-                ? (selectedPayment.paymentDate | date:'dd-MMM-yyyy, hh:mm a')
-                : '-'
+                selectedPayment.paymentDate
+                  ? (
+                      selectedPayment.paymentDate
+                      | date:'dd-MMM-yyyy, hh:mm a'
+                    )
+                  : '-'
               }}
 
             </span>
 
           </div>
 
+
         </div>
 
 
         <!-- Modal Footer -->
+
         <div class="modal-footer">
 
           <button type="button"
@@ -473,10 +846,101 @@
 
         </div>
 
+
       </div>
 
     </div>
 
   </div>
+
+
+
+  <!-- ========================= -->
+  <!-- PAYMENT SUCCESS MODAL -->
+  <!-- ========================= -->
+
+  <div class="modal-overlay"
+       *ngIf="
+      showPaymentSuccessModal &&
+      isCustomer
+    ">
+
+
+    <div class="success-modal">
+
+
+      <div class="success-icon">
+        ✓
+      </div>
+
+
+      <h2>
+        Payment Successful!
+      </h2>
+
+
+      <p>
+        Your payment has been processed successfully.
+      </p>
+
+
+      <div class="payment-success-details">
+
+
+        <div>
+
+          <span>
+            Order ID
+          </span>
+
+          <strong>
+            #{{ orderId }}
+          </strong>
+
+        </div>
+
+
+        <div>
+
+          <span>
+            Amount
+          </span>
+
+          <strong>
+            ₹{{ amount | number:'1.2-2' }}
+          </strong>
+
+        </div>
+
+
+        <div *ngIf="paymentTransactionId">
+
+          <span>
+            Transaction ID
+          </span>
+
+          <strong>
+            {{ paymentTransactionId }}
+          </strong>
+
+        </div>
+
+
+      </div>
+
+
+      <button type="button"
+              class="save-btn"
+              (click)="goToMyOrders()">
+
+        View My Orders
+
+      </button>
+
+
+    </div>
+
+  </div>
+
 
 </div>

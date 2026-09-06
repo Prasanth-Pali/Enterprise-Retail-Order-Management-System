@@ -33,6 +33,16 @@ export interface UpdateOrderStatus {
   status: string;
 }
 
+export interface CreateOrderItem {
+  productId: number;
+  quantity: number;
+}
+
+export interface CreateOrder {
+  items: CreateOrderItem[];
+  shippingAddress: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -71,6 +81,16 @@ export class OrderService {
 
     return this.http.get<Order>(
       `${this.apiUrl}/${orderId}`
+    );
+  }
+
+  createOrder(
+    request: CreateOrder
+  ): Observable<Order> {
+
+    return this.http.post<Order>(
+      this.apiUrl,
+      request
     );
   }
 

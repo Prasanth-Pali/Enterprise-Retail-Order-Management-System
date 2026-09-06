@@ -7,7 +7,6 @@ namespace Enterprise_Retail___Order_Management_System.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "admin")]
 public class UsersController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -18,6 +17,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> GetUsers(
         [FromQuery] UserQueryDto query)
     {
@@ -33,6 +33,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("{userId:int}")]
+    [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetUserById(int userId)
     {
         var user = await _userService.GetUserByIdAsync(userId);
@@ -46,6 +47,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPut("{userId:int}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> UpdateUser(
         int userId,
         UpdateUserDto request)
@@ -62,6 +64,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPatch("{userId:int}/deactivate")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> DeactivateUser(int userId)
     {
         var result = await _userService

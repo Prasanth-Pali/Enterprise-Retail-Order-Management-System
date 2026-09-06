@@ -35,6 +35,15 @@ export class OrdersComponent implements OnInit {
 
 
   // =========================
+  // ROLE
+  // =========================
+
+  isAdmin = false;
+
+  isCustomer = false;
+
+
+  // =========================
   // FILTER
   // =========================
 
@@ -81,7 +90,57 @@ export class OrdersComponent implements OnInit {
   // =========================
 
   ngOnInit(): void {
+
+    this.checkUserRole();
+
     this.loadOrders();
+  }
+
+
+  // =========================
+  // CHECK USER ROLE
+  // =========================
+
+  private checkUserRole(): void {
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+
+      this.router.navigate(['/login']);
+
+      return;
+    }
+
+    try {
+
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      );
+
+      const role =
+        payload[
+          'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'];
+
+      this.isAdmin = role === 'admin';
+
+      this.isCustomer = role === 'customer';
+
+      console.log('Orders Role:', role);
+
+    } catch (error) {
+
+      console.error(
+        'Invalid token:',
+        error
+      );
+
+      localStorage.removeItem('token');
+
+      this.router.navigate(['/login']);
+    }
   }
 
 
@@ -249,9 +308,15 @@ export class OrdersComponent implements OnInit {
 
   // =========================
   // GET ALLOWED NEXT STATUS
+  // ADMIN ONLY
   // =========================
 
   getAllowedStatuses(): string[] {
+
+    // Customer cannot update status
+    if (!this.isAdmin) {
+      return [];
+    }
 
     if (!this.selectedOrder) {
       return [];
@@ -286,9 +351,15 @@ export class OrdersComponent implements OnInit {
 
   // =========================
   // UPDATE ORDER STATUS
+  // ADMIN ONLY
   // =========================
 
   updateStatus(): void {
+
+    // Extra frontend protection
+    if (!this.isAdmin) {
+      return;
+    }
 
     if (
       !this.selectedOrder ||
@@ -324,7 +395,6 @@ export class OrdersComponent implements OnInit {
               ...this.selectedOrder,
               status: this.selectedNewStatus
             };
-
           }
 
           this.successMessage =
@@ -380,14 +450,29 @@ export class OrdersComponent implements OnInit {
 
 
   // =========================
-  // BACK TO ADMIN
+  // BACK
   // =========================
 
   goBack(): void {
 
-    this.router.navigate([
-      '/admin'
-    ]);
+    if (this.isAdmin) {
+
+      this.router.navigate([
+        '/admin'
+      ]);
+
+    } else if (this.isCustomer) {
+
+      this.router.navigate([
+        '/customer'
+      ]);
+
+    } else {
+
+      this.router.navigate([
+        '/login'
+      ]);
+    }
   }
 
 }

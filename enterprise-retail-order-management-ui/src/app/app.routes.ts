@@ -7,6 +7,8 @@ import { CategoriesComponent } from './Componets/categories/categories.component
 import { ProductsComponent } from './Componets/products/products.component';
 import { OrdersComponent } from './Componets/orders/orders.component';
 import { PaymentsComponent } from './Componets/payments/payments.component';
+import { AccountComponent } from './Componets/account/account.component';
+import { CustomerComponent } from './Componets/customer/customer.component';
 
 
 export const routes: Routes = [
@@ -24,6 +26,15 @@ export const routes: Routes = [
   },
 
   {
+    path: 'customer',
+    component: CustomerComponent,
+    canActivate: [authGuard],
+    data: {
+      role: 'customer'
+    },
+  },
+
+  {
     path: 'users',
     component: UsersComponent,
     canActivate: [authGuard],
@@ -33,31 +44,33 @@ export const routes: Routes = [
   },
 
   {
+    path: 'profile',
+    component: AccountComponent,
+    canActivate: [authGuard],
+  },
+
+  {
     path: 'categories',
     component: CategoriesComponent,
     canActivate: [authGuard],
-    data: { role: 'admin' }
   },
 
   {
     path: 'products',
     component: ProductsComponent,
     canActivate: [authGuard],
-    data: { role: 'admin' }
   },
 
   {
     path: 'orders',
     component: OrdersComponent,
     canActivate: [authGuard],
-    data: { role: 'admin' }
   },
 
   {
     path: 'payments',
     component: PaymentsComponent,
     canActivate: [authGuard],
-    data: { role: 'admin' }
   },
 
   {
@@ -65,12 +78,5 @@ export const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
-  //{
-  //  path: 'customer',
-  //  component: CustomerComponent,
-  //  canActivate: [authGuard],
-  //  data: {
-  //    role: 'customer'
-  //  }
-  //}
+  
 ];

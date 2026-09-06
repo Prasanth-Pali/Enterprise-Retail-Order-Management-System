@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 
 import {
   Payment,
-  PaymentService
+  PaymentService,
+  CreatePayment
 } from '../../services/payment.service';
 
 @Component({
@@ -37,13 +38,126 @@ export class PaymentsComponent implements OnInit {
   showPaymentDetailsModal = false;
   selectedPayment: Payment | null = null;
 
+  orderId: number | null = null;
+  amount = 0;
+
+  isAdmin = false;
+  isCustomer = false;
+
+  selectedPaymentMethod = '';
+
+  showPaymentSuccessModal = false;
+  paymentTransactionId = '';
+
   constructor(
     private paymentService: PaymentService,
     private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.loadPayments();
+
+    const state = history.state;
+
+    this.orderId = state.orderId ?? null;
+    this.amount = state.amount ?? 0;
+
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    try {
+
+      const payload = JSON.parse(
+        atob(token.split('.')[1])
+      );
+
+      const role =
+        payload[
+        'http://schemas.microsoft.com/ws/2008/06/identity/claims/role'
+        ] ||
+        payload['role'];
+
+      this.isAdmin = role === 'admin';
+      this.isCustomer = role === 'customer';
+
+      console.log('Payment Order ID:', this.orderId);
+      console.log('Payment Amount:', this.amount);
+      console.log('Payment Role:', role);
+
+    } catch (error) {
+
+      console.error('Invalid token:', error);
+
+      localStorage.removeItem('token');
+      this.router.navigate(['/login']);
+    }
+  }
+
+  makePayment(): void {
+
+    if (!this.orderId) {
+      this.errorMessage = 'Order information is missing.';
+      return;
+    }
+
+    if (!this.selectedPaymentMethod) {
+      this.errorMessage = 'Please select a payment method.';
+      return;
+    }
+
+    const request: CreatePayment = {
+      orderId: this.orderId,
+      paymentMethod: this.selectedPaymentMethod,
+      amount: this.amount
+    };
+
+    console.log(
+      'PAYMENT REQUEST:',
+      JSON.stringify(request, null, 2)
+    );
+
+    this.paymentService
+      .createPayment(request)
+      .subscribe({
+
+        next: (payment) => {
+
+          console.log(
+            'PAYMENT SUCCESS:',
+            payment
+          );
+
+          this.paymentTransactionId =
+            payment.transactionId || '';
+
+          this.showPaymentSuccessModal = true;
+
+          this.errorMessage = '';
+        },
+
+        error: (error) => {
+
+          console.error(
+            'PAYMENT ERROR:',
+            error
+          );
+
+          this.errorMessage =
+            error.error ||
+            'Unable to process payment.';
+        }
+
+      });
+  }
+
+  goToMyOrders(): void {
+
+    this.showPaymentSuccessModal = false;
+
+    this.router.navigate(['/orders']);
   }
 
   // Load payment history
