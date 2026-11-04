@@ -630,6 +630,8 @@ npm test -- --watch=false
 
 The frontend uses Angular 22, TypeScript 6, and Vitest.
 
+GitHub Actions runs the backend restore/Release build and the frontend clean install, production build, and Vitest suite on pushes and pull requests targeting `master`. Deployment is not configured because no hosting target or deployment credentials are specified.
+
 ---
 
 ## 🧪 API Testing
