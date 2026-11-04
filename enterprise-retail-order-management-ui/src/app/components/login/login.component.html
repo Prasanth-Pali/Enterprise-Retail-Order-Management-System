@@ -1,0 +1,435 @@
+
+<div class="login-container">
+
+  <!-- Background Glow -->
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+  <div class="background-glow glow-three"></div>
+
+  <!-- ================= BRAND SECTION ================= -->
+
+  <div class="brand-section">
+
+    <div class="brand-content">
+
+      <div class="brand-logo"
+        (click)="goToHomepage()">
+
+        RF
+
+      </div>
+
+      <h1>
+        RetailFlow
+      </h1>
+
+      <p>
+        Enterprise Retail & Order Management
+      </p>
+
+      <div class="brand-line"></div>
+
+      <span>
+        Manage your retail operations<br>
+        smarter, faster and securely.
+      </span>
+
+      <div class="brand-features">
+
+        <div class="brand-feature">
+          <span>🔐</span>
+          <div>
+            <strong>Secure</strong>
+            <small>JWT Authentication</small>
+          </div>
+        </div>
+
+        <div class="brand-feature">
+          <span>📦</span>
+          <div>
+            <strong>Organized</strong>
+            <small>Centralized Management</small>
+          </div>
+        </div>
+
+        <div class="brand-feature">
+          <span>⚡</span>
+          <div>
+            <strong>Efficient</strong>
+            <small>Streamlined Operations</small>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <!-- ================= LOGIN SECTION ================= -->
+
+  <div class="login-wrapper">
+
+    <div class="login-card">
+
+      <div class="login-header">
+
+        <div class="mobile-logo"
+          (click)="goToHomepage()">
+
+          RF
+
+        </div>
+
+        <span class="login-label">
+          WELCOME BACK
+        </span>
+
+        <h2>
+          Sign in to RetailFlow
+        </h2>
+
+        <p>
+          Access your retail management dashboard
+        </p>
+
+      </div>
+
+
+      <!-- ================= LOGIN FORM ================= -->
+
+      <form [formGroup]="loginForm"
+        (ngSubmit)="login()">
+
+
+        <!-- Email -->
+
+        <div class="form-group">
+
+          <label>
+            Email Address
+          </label>
+
+          <div class="input-wrapper">
+
+            <span class="input-icon">
+              ✉
+            </span>
+
+            <input type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              autocomplete="email" />
+
+            </div>
+
+            @if (
+              loginForm.get('email')?.touched &&
+              loginForm.get('email')?.invalid
+              ) {
+              <small>
+                Please enter a valid email.
+              </small>
+            }
+          </div>
+
+
+          <!-- Password -->
+
+          <div class="form-group">
+
+            <label>
+              Password
+            </label>
+
+            <div class="input-wrapper">
+
+              <span class="input-icon">
+                🔒
+              </span>
+
+              <input type="password"
+                formControlName="password"
+                placeholder="Enter your password"
+                autocomplete="current-password" />
+
+              </div>
+
+              @if (
+                loginForm.get('password')?.touched &&
+                loginForm.get('password')?.invalid
+                ) {
+                <small>
+                  Password is required.
+                </small>
+              }
+
+            </div>
+
+
+            <!-- Error -->
+
+            @if (errorMessage && !isRegisterMode) {
+              <div class="error-message"
+                >
+                <span>⚠</span>
+                {{ errorMessage }}
+              </div>
+            }
+
+
+            <!-- Login Button -->
+
+            <button type="submit"
+              class="login-btn"
+              [disabled]="isLoading">
+
+              @if (!isLoading) {
+                <span>
+                  Login
+                </span>
+              }
+
+              @if (isLoading) {
+                <span>
+                  Signing in...
+                </span>
+              }
+
+              @if (!isLoading) {
+                <span class="arrow"
+                  >
+                  →
+                </span>
+              }
+
+            </button>
+
+          </form>
+
+
+          <!-- Security -->
+
+          <div class="security-info">
+
+            <span class="security-icon">
+              🔐
+            </span>
+
+            <div>
+
+              <strong>
+                Secure Authentication
+              </strong>
+
+              <span>
+                Protected by JWT & Role-Based Access
+              </span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Signup -->
+
+          <div class="signup-section">
+
+            <span>
+              Don't have an account?
+            </span>
+
+            <a href="javascript:void(0)"
+              (click)="showRegister()">
+
+              Sign Up
+
+            </a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- REGISTER MODAL -->
+    <!-- ================================================= -->
+
+    @if (isRegisterMode) {
+      <div class="modal-overlay"
+        >
+        <div class="register-modal"
+          (click)="$event.stopPropagation()">
+          <!-- Register Header -->
+          <div class="register-header">
+            <div>
+              <span class="register-label">
+                RETAILFLOW ACCOUNT
+              </span>
+              <h2>
+                Create Account
+              </h2>
+              <p>
+                Register to access RetailFlow
+              </p>
+            </div>
+            <button type="button"
+              class="close-btn"
+              (click)="showLogin()">
+              ×
+            </button>
+          </div>
+          <!-- Register Form -->
+          <form [formGroup]="registerForm"
+            (ngSubmit)="register()">
+            <div class="register-body">
+              <!-- Full Name -->
+              <div class="form-group">
+                <label>
+                  Full Name
+                </label>
+                <input type="text"
+                  formControlName="fullName"
+                  placeholder="Enter your full name" />
+                  @if (
+                    registerForm.get('fullName')?.touched &&
+                    registerForm.get('fullName')?.invalid
+                    ) {
+                    <small>
+                      Full name must be at least 3 characters.
+                    </small>
+                  }
+                </div>
+                <!-- Email -->
+                <div class="form-group">
+                  <label>
+                    Email
+                  </label>
+                  <input type="email"
+                    formControlName="email"
+                    placeholder="Enter Gmail address" />
+                    @if (
+                      registerForm.get('email')?.touched &&
+                      registerForm.get('email')?.invalid
+                      ) {
+                      <small>
+                        Please enter a valid Gmail address.
+                      </small>
+                    }
+                  </div>
+                  <!-- Password -->
+                  <div class="form-group">
+                    <label>
+                      Password
+                    </label>
+                    <input type="password"
+                      formControlName="password"
+                      placeholder="Enter password" />
+                      @if (
+                        registerForm.get('password')?.touched &&
+                        registerForm.get('password')?.invalid
+                        ) {
+                        <small>
+                          Password must contain uppercase, lowercase,
+                          number, special character and be at least 8 characters.
+                        </small>
+                      }
+                    </div>
+                    <!-- Phone -->
+                    <div class="form-group">
+                      <label>
+                        Phone Number
+                      </label>
+                      <input type="text"
+                        formControlName="phoneNumber"
+                        placeholder="Enter 10 digit phone number"
+                        maxlength="10"
+                        pattern="[0-9]{10}"
+                        inputmode="numeric"
+                        oninput="this.value=this.value.replace(/[^0-9]/g,'')" />
+                        @if (
+                          registerForm.get('phoneNumber')?.touched &&
+                          registerForm.get('phoneNumber')?.invalid
+                          ) {
+                          <small>
+                            Phone number must contain exactly 10 digits.
+                          </small>
+                        }
+                      </div>
+                      <!-- Address -->
+                      <div class="form-group">
+                        <label>
+                          Address
+                        </label>
+                        <textarea formControlName="address"
+                          placeholder="Enter your address">
+                        </textarea>
+                      </div>
+                      <!-- Error -->
+                      @if (errorMessage) {
+                        <div class="error-message"
+                          >
+                          <span>⚠</span>
+                          {{ errorMessage }}
+                        </div>
+                      }
+                      <!-- Register -->
+                      <button type="submit"
+                        class="register-btn"
+                        [disabled]="isLoading">
+                        {{
+                        isLoading
+                        ? 'Creating Account...'
+                        : 'Create Account'
+                        }}
+                        @if (!isLoading) {
+                          <span>
+                            →
+                          </span>
+                        }
+                      </button>
+                      <!-- Login -->
+                      <div class="login-link">
+                        <span>
+                          Already have an account?
+                        </span>
+                        <a href="javascript:void(0)"
+                          (click)="showLogin()">
+                          Login
+                        </a>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            }
+
+
+            <!-- ================================================= -->
+            <!-- REGISTRATION SUCCESS -->
+            <!-- ================================================= -->
+
+            @if (successMessage) {
+              <div class="success-popup-overlay"
+                >
+                <div class="success-popup">
+                  <div class="success-icon">
+                    ✓
+                  </div>
+                  <span class="success-label">
+                    RETAILFLOW
+                  </span>
+                  <h2>
+                    Account Created
+                  </h2>
+                  <p>
+                    Your account has been registered successfully.
+                  </p>
+                </div>
+              </div>
+            }

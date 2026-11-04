@@ -1,0 +1,440 @@
+<div class="categories-container">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+
+    <div>
+      <h1>RetailFlow</h1>
+      <span>Category Management</span>
+    </div>
+
+    <button type="button"
+      class="back-btn"
+      (click)="goBack()">
+
+      ← Back
+
+    </button>
+
+  </div>
+
+
+  <!-- CONTENT -->
+  <div class="categories-content">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+
+      <div>
+        <h2>Categories</h2>
+        <p>Manage product categories</p>
+      </div>
+
+      <button type="button"
+        class="add-btn"
+        (click)="openAddModal()">
+
+        + Add Category
+
+      </button>
+
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="filter-card">
+
+      <div class="filter-group">
+
+        <label>Search</label>
+
+        <input type="text"
+          [(ngModel)]="search"
+          placeholder="Search category..."
+          (keyup.enter)="searchCategories()" />
+
+        </div>
+
+
+        <div class="filter-group">
+
+          <label>Status</label>
+
+          <select [(ngModel)]="selectedStatus"
+            (change)="filterCategories()">
+
+            <option value="">All</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+
+          </select>
+
+        </div>
+
+
+        <div class="filter-buttons">
+
+          <button type="button"
+            class="search-btn"
+            (click)="searchCategories()">
+
+            Search
+
+          </button>
+
+          <button type="button"
+            class="clear-btn"
+            (click)="clearFilters()">
+
+            Clear
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SUCCESS MESSAGE -->
+      @if (successMessage) {
+        <div class="success-message"
+          >
+          {{ successMessage }}
+        </div>
+      }
+
+
+      <!-- ERROR MESSAGE -->
+      @if (errorMessage) {
+        <div class="error-message"
+          >
+          {{ errorMessage }}
+        </div>
+      }
+
+
+      <!-- LOADING -->
+      @if (isLoading) {
+        <div class="loading"
+          >
+          Loading categories...
+        </div>
+      }
+
+
+      <!-- TABLE -->
+      @if (!isLoading) {
+        <div class="table-card"
+          >
+          <table>
+            <thead>
+              <tr>
+                <th>Category Name</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (category of categories; track category) {
+                <tr>
+                  <td>
+                    {{ category.categoryName }}
+                  </td>
+                  <td>
+                    {{ category.description || '-' }}
+                  </td>
+                  <td>
+                    <span class="status-badge"
+                      [class.active]="category.isActive"
+                      [class.inactive]="!category.isActive">
+                      {{ category.isActive ? 'Active' : 'Inactive' }}
+                    </span>
+                  </td>
+                  <td>
+                    {{ category.createdAt | date:'dd-MM-yyyy' }}
+                  </td>
+                  <td>
+                    <div class="actions">
+                      @if (category.isActive) {
+                        <button type="button"
+                          class="edit-btn"
+                          (click)="openEditModal(category)">
+                          Edit
+                        </button>
+                      }
+                      @if (category.isActive) {
+                        <button type="button"
+                          class="deactivate-btn"
+                          (click)="openDeactivateModal(category)">
+                          Deactivate
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+              <!-- NO DATA -->
+              @if (categories.length === 0) {
+                <tr>
+                  <td colspan="5"
+                    class="no-data">
+                    No categories found.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+
+      <!-- PAGINATION -->
+      @if (!isLoading && totalPages > 0) {
+        <div class="pagination"
+          >
+          <button type="button"
+            (click)="previousPage()"
+            [disabled]="currentPage === 1">
+            Previous
+          </button>
+          @for (page of pages; track page) {
+            <button type="button"
+              [class.current]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+          <button type="button"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages">
+            Next
+          </button>
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ADD CATEGORY MODAL -->
+  <!-- ================================================= -->
+
+  @if (showAddModal) {
+    <div class="modal-overlay"
+      >
+      <div class="modal">
+        <!-- HEADER -->
+        <div class="modal-header">
+          <h2>Add Category</h2>
+          <button type="button"
+            class="close-btn"
+            (click)="closeAddModal()">
+            ×
+          </button>
+        </div>
+        <!-- FORM -->
+        <form [formGroup]="addForm"
+          (ngSubmit)="createCategory()">
+          <!-- CATEGORY NAME -->
+          <div class="form-group">
+            <label>
+              Category Name
+            </label>
+            <input type="text"
+              formControlName="categoryName"
+              placeholder="Enter category name" />
+              <!-- REQUIRED -->
+              @if (
+                addForm.get('categoryName')?.touched &&
+                addForm.get('categoryName')?.hasError('required')
+                ) {
+                <small>
+                  Category name is required.
+                </small>
+              }
+              <!-- MIN LENGTH -->
+              @if (
+                addForm.get('categoryName')?.touched &&
+                addForm.get('categoryName')?.hasError('minlength')
+                ) {
+                <small>
+                  Category name must be at least 2 characters.
+                </small>
+              }
+              <!-- MAX LENGTH -->
+              @if (
+                addForm.get('categoryName')?.touched &&
+                addForm.get('categoryName')?.hasError('maxlength')
+                ) {
+                <small>
+                  Maximum 100 characters allowed.
+                </small>
+              }
+            </div>
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+              <label>
+                Description
+              </label>
+              <textarea rows="4"
+                formControlName="description"
+                placeholder="Enter description">
+              </textarea>
+              @if (
+                addForm.get('description')?.touched &&
+                addForm.get('description')?.hasError('maxlength')
+                ) {
+                <small>
+                  Maximum 250 characters allowed.
+                </small>
+              }
+            </div>
+            <!-- ACTIONS -->
+            <div class="modal-actions">
+              <button type="button"
+                class="cancel-btn"
+                (click)="closeAddModal()">
+                Cancel
+              </button>
+              <button type="submit"
+                class="save-btn">
+                Create Category
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+
+    <!-- ================================================= -->
+    <!-- EDIT CATEGORY MODAL -->
+    <!-- ================================================= -->
+
+    @if (showEditModal) {
+      <div class="modal-overlay"
+        >
+        <div class="modal">
+          <!-- HEADER -->
+          <div class="modal-header">
+            <h2>Edit Category</h2>
+            <button type="button"
+              class="close-btn"
+              (click)="closeEditModal()">
+              ×
+            </button>
+          </div>
+          <!-- FORM -->
+          <form [formGroup]="editForm"
+            (ngSubmit)="updateCategory()">
+            <!-- CATEGORY NAME -->
+            <div class="form-group">
+              <label>
+                Category Name
+              </label>
+              <input type="text"
+                formControlName="categoryName"
+                placeholder="Enter category name" />
+                <!-- REQUIRED -->
+                @if (
+                  editForm.get('categoryName')?.touched &&
+                  editForm.get('categoryName')?.hasError('required')
+                  ) {
+                  <small>
+                    Category name is required.
+                  </small>
+                }
+                <!-- MIN LENGTH -->
+                @if (
+                  editForm.get('categoryName')?.touched &&
+                  editForm.get('categoryName')?.hasError('minlength')
+                  ) {
+                  <small>
+                    Category name must be at least 2 characters.
+                  </small>
+                }
+                <!-- MAX LENGTH -->
+                @if (
+                  editForm.get('categoryName')?.touched &&
+                  editForm.get('categoryName')?.hasError('maxlength')
+                  ) {
+                  <small>
+                    Maximum 100 characters allowed.
+                  </small>
+                }
+              </div>
+              <!-- DESCRIPTION -->
+              <div class="form-group">
+                <label>
+                  Description
+                </label>
+                <textarea rows="4"
+                  formControlName="description"
+                  placeholder="Enter description">
+                </textarea>
+                @if (
+                  editForm.get('description')?.touched &&
+                  editForm.get('description')?.hasError('maxlength')
+                  ) {
+                  <small>
+                    Maximum 250 characters allowed.
+                  </small>
+                }
+              </div>
+              <!-- ACTIONS -->
+              <div class="modal-actions">
+                <button type="button"
+                  class="cancel-btn"
+                  (click)="closeEditModal()">
+                  Cancel
+                </button>
+                <button type="submit"
+                  class="save-btn">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      }
+
+
+      <!-- ================================================= -->
+      <!-- DEACTIVATE CONFIRMATION MODAL -->
+      <!-- ================================================= -->
+
+      @if (showDeactivateModal) {
+        <div class="modal-overlay"
+          >
+          <div class="confirm-modal">
+            <h2>
+              Deactivate Category
+            </h2>
+            <p>
+              Are you sure you want to deactivate
+              <strong>
+                {{ selectedCategoryForDeactivate?.categoryName }}
+              </strong>?
+            </p>
+            <p class="warning-text">
+              This category will no longer be active.
+            </p>
+            <div class="modal-actions">
+              <button type="button"
+                class="cancel-btn"
+                (click)="closeDeactivateModal()">
+                Cancel
+              </button>
+              <button type="button"
+                class="confirm-deactivate-btn"
+                (click)="confirmDeactivate()">
+                Deactivate
+              </button>
+            </div>
+          </div>
+        </div>
+      }

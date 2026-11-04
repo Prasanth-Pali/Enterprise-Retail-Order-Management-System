@@ -1,0 +1,935 @@
+<div class="products-container">
+
+  <!-- TOP BAR -->
+
+  <div class="topbar">
+
+    <div>
+      <h1>RetailFlow</h1>
+
+      @if (isAdmin) {
+        <span>
+          Product Management
+        </span>
+      }
+
+      @if (isCustomer) {
+        <span>
+          Products
+        </span>
+      }
+    </div>
+
+    <button type="button"
+      class="back-btn"
+      (click)="goBack()">
+
+      ← Back
+
+    </button>
+
+  </div>
+
+
+  <!-- CONTENT -->
+
+  <div class="products-content">
+
+
+    <!-- PAGE HEADER -->
+
+    <div class="page-header">
+
+      <div>
+
+        <h2>Products</h2>
+
+        @if (isAdmin) {
+          <p>
+            Manage products and inventory
+          </p>
+        }
+
+        @if (isCustomer) {
+          <p>
+            Browse available products
+          </p>
+        }
+
+      </div>
+
+
+      <!-- ADMIN ONLY -->
+
+      @if (isAdmin) {
+        <button
+          type="button"
+          class="add-btn"
+          (click)="openAddModal()">
+          + Add Product
+        </button>
+      }
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filter-card">
+
+
+      <!-- SEARCH -->
+
+      <div class="filter-group">
+
+        <label>
+          Search
+        </label>
+
+        <input type="text"
+          [(ngModel)]="search"
+          placeholder="Search product..."
+          (keyup.enter)="searchProducts()" />
+
+        </div>
+
+
+        <!-- CATEGORY FILTER -->
+
+        <div class="filter-group">
+
+          <label>
+            Category
+          </label>
+
+          <select [(ngModel)]="selectedCategoryId"
+            (change)="filterProducts()">
+
+            <option [ngValue]="undefined">
+              All Categories
+            </option>
+
+            @for (category of categories; track category) {
+              <option
+                [ngValue]="category.categoryId">
+                {{ category.categoryName }}
+              </option>
+            }
+
+          </select>
+
+        </div>
+
+
+        <!-- STATUS FILTER - ADMIN ONLY -->
+
+        @if (isAdmin) {
+          <div class="filter-group"
+            >
+            <label>
+              Status
+            </label>
+            <select [(ngModel)]="selectedStatus"
+              (change)="filterProducts()">
+              <option value="">
+                All
+              </option>
+              <option value="active">
+                Active
+              </option>
+              <option value="inactive">
+                Inactive
+              </option>
+            </select>
+          </div>
+        }
+
+
+        <!-- FILTER BUTTONS -->
+
+        <div class="filter-buttons">
+
+          <button type="button"
+            class="search-btn"
+            (click)="searchProducts()">
+
+            Search
+
+          </button>
+
+          <button type="button"
+            class="clear-btn"
+            (click)="clearFilters()">
+
+            Clear
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      <!-- SUCCESS MESSAGE -->
+
+      @if (successMessage) {
+        <div class="success-message"
+          >
+          {{ successMessage }}
+        </div>
+      }
+
+
+      <!-- ERROR MESSAGE -->
+
+      @if (errorMessage) {
+        <div class="error-message"
+          >
+          {{ errorMessage }}
+        </div>
+      }
+
+
+      <!-- LOADING -->
+
+      @if (isLoading) {
+        <div class="loading"
+          >
+          Loading products...
+        </div>
+      }
+
+
+      <!-- PRODUCTS TABLE -->
+
+      @if (!isLoading) {
+        <div class="table-card"
+          >
+          <table>
+            <thead>
+              <tr>
+                <th>
+                  Product Name
+                </th>
+                <th>
+                  Category
+                </th>
+                <th>
+                  Price
+                </th>
+                <th>
+                  Stock
+                </th>
+                <!-- ADMIN ONLY -->
+                @if (isAdmin) {
+                  <th>
+                    Status
+                  </th>
+                }
+                <!-- ADMIN ONLY -->
+                @if (isAdmin) {
+                  <th>
+                    Created At
+                  </th>
+                }
+                <th>
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- PRODUCT ROW -->
+              @for (product of products; track product) {
+                <tr>
+                  <td>
+                    {{ product.productName }}
+                  </td>
+                  <td>
+                    {{ product.categoryName || '-' }}
+                  </td>
+                  <td>
+                    ₹{{ product.price | number:'1.2-2' }}
+                  </td>
+                  <td>
+                    {{ product.stockQuantity }}
+                  </td>
+                  <!-- ADMIN ONLY -->
+                  @if (isAdmin) {
+                    <td>
+                      <span class="status-badge"
+                        [class.active]="product.isActive"
+                        [class.inactive]="!product.isActive">
+                        {{ product.isActive ? 'Active' : 'Inactive' }}
+                      </span>
+                    </td>
+                  }
+                  <!-- ADMIN ONLY -->
+                  @if (isAdmin) {
+                    <td>
+                      {{ product.createdAt | date:'dd-MM-yyyy' }}
+                    </td>
+                  }
+                  <!-- ACTIONS -->
+                  <td>
+                    <div class="actions">
+                      <!-- ADMIN ACTIONS -->
+                      @if (isAdmin) {
+                        @if (product.isActive) {
+                          <button type="button"
+                            class="edit-btn"
+                            (click)="openEditModal(product)">
+                            Edit
+                          </button>
+                        }
+                        @if (product.isActive) {
+                          <button type="button"
+                            class="deactivate-btn"
+                            (click)="openDeactivateModal(product)">
+                            Deactivate
+                          </button>
+                        }
+                      }
+                      <!-- CUSTOMER ACTION -->
+                      @if (isCustomer && product.isActive) {
+                        <button
+                          type="button"
+                          class="view-btn"
+                          (click)="viewProduct(product)">
+                          View Details
+                        </button>
+                      }
+                    </div>
+                  </td>
+                </tr>
+              }
+              <!-- NO DATA -->
+              @if (products.length === 0) {
+                <tr>
+                  <td [attr.colspan]="isAdmin ? 7 : 5"
+                    class="no-data">
+                    No products found.
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+
+      <!-- PAGINATION -->
+
+      @if (!isLoading && totalPages > 0) {
+        <div class="pagination"
+          >
+          <button type="button"
+            (click)="previousPage()"
+            [disabled]="currentPage === 1">
+            Previous
+          </button>
+          @for (page of pages; track page) {
+            <button type="button"
+              [class.current]="page === currentPage"
+              (click)="goToPage(page)">
+              {{ page }}
+            </button>
+          }
+          <button type="button"
+            (click)="nextPage()"
+            [disabled]="currentPage === totalPages">
+            Next
+          </button>
+        </div>
+      }
+
+    </div>
+
+  </div>
+
+
+  <!-- ================================================= -->
+  <!-- ADD PRODUCT MODAL - ADMIN ONLY -->
+  <!-- ================================================= -->
+
+  @if (showAddModal && isAdmin) {
+    <div class="modal-overlay"
+      >
+      <div class="modal">
+        <!-- MODAL HEADER -->
+        <div class="modal-header">
+          <h2>
+            Add Product
+          </h2>
+          <button type="button"
+            class="close-btn"
+            (click)="closeAddModal()">
+            ×
+          </button>
+        </div>
+        <!-- FORM -->
+        <form [formGroup]="addForm"
+          (ngSubmit)="createProduct()">
+          <!-- PRODUCT NAME -->
+          <div class="form-group">
+            <label>
+              Product Name
+            </label>
+            <input type="text"
+              formControlName="productName"
+              placeholder="Enter product name" />
+              <!-- REQUIRED -->
+              @if (
+                addForm.get('productName')?.touched &&
+                addForm.get('productName')?.hasError('required')
+                ) {
+                <small>
+                  Product name is required.
+                </small>
+              }
+              <!-- MIN LENGTH -->
+              @if (
+                addForm.get('productName')?.touched &&
+                addForm.get('productName')?.hasError('minlength')
+                ) {
+                <small>
+                  Product name must be at least 2 characters.
+                </small>
+              }
+              <!-- MAX LENGTH -->
+              @if (
+                addForm.get('productName')?.touched &&
+                addForm.get('productName')?.hasError('maxlength')
+                ) {
+                <small>
+                  Maximum 100 characters allowed.
+                </small>
+              }
+            </div>
+            <!-- DESCRIPTION -->
+            <div class="form-group">
+              <label>
+                Description
+              </label>
+              <textarea rows="3"
+                formControlName="description"
+                placeholder="Enter product description">
+              </textarea>
+              @if (
+                addForm.get('description')?.touched &&
+                addForm.get('description')?.hasError('maxlength')
+                ) {
+                <small>
+                  Maximum 250 characters allowed.
+                </small>
+              }
+            </div>
+            <!-- PRICE -->
+            <div class="form-group">
+              <label>
+                Price
+              </label>
+              <input type="number"
+                formControlName="price"
+                min="0.01"
+                step="0.01"
+                placeholder="Enter price" />
+                @if (
+                  addForm.get('price')?.touched &&
+                  addForm.get('price')?.hasError('required')
+                  ) {
+                  <small>
+                    Price is required.
+                  </small>
+                }
+                @if (
+                  addForm.get('price')?.touched &&
+                  addForm.get('price')?.hasError('min')
+                  ) {
+                  <small>
+                    Price must be greater than 0.
+                  </small>
+                }
+              </div>
+              <!-- STOCK -->
+              <div class="form-group">
+                <label>
+                  Stock Quantity
+                </label>
+                <input type="number"
+                  formControlName="stockQuantity"
+                  min="0"
+                  placeholder="Enter stock quantity" />
+                  @if (
+                    addForm.get('stockQuantity')?.touched &&
+                    addForm.get('stockQuantity')?.hasError('required')
+                    ) {
+                    <small>
+                      Stock quantity is required.
+                    </small>
+                  }
+                  @if (
+                    addForm.get('stockQuantity')?.touched &&
+                    addForm.get('stockQuantity')?.hasError('min')
+                    ) {
+                    <small>
+                      Stock cannot be negative.
+                    </small>
+                  }
+                </div>
+                <!-- CATEGORY -->
+                <div class="form-group">
+                  <label>
+                    Category
+                  </label>
+                  <select formControlName="categoryId">
+                    <option value="">
+                      Select Category
+                    </option>
+                    @for (category of categories; track category) {
+                      <option
+                        [ngValue]="category.categoryId">
+                        {{ category.categoryName }}
+                      </option>
+                    }
+                  </select>
+                  @if (
+                    addForm.get('categoryId')?.touched &&
+                    addForm.get('categoryId')?.hasError('required')
+                    ) {
+                    <small>
+                      Category is required.
+                    </small>
+                  }
+                </div>
+                <!-- MODAL ACTIONS -->
+                <div class="modal-actions">
+                  <button type="button"
+                    class="cancel-btn"
+                    (click)="closeAddModal()">
+                    Cancel
+                  </button>
+                  <button type="submit"
+                    class="save-btn">
+                    Save Product
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        }
+
+
+        <!-- ================================================= -->
+        <!-- EDIT PRODUCT MODAL - ADMIN ONLY -->
+        <!-- ================================================= -->
+
+        @if (showEditModal && isAdmin) {
+          <div class="modal-overlay"
+            >
+            <div class="modal">
+              <!-- HEADER -->
+              <div class="modal-header">
+                <h2>
+                  Edit Product
+                </h2>
+                <button type="button"
+                  class="close-btn"
+                  (click)="closeEditModal()">
+                  ×
+                </button>
+              </div>
+              <!-- FORM -->
+              <form [formGroup]="editForm"
+                (ngSubmit)="updateProduct()">
+                <!-- PRODUCT NAME -->
+                <div class="form-group">
+                  <label>
+                    Product Name
+                  </label>
+                  <input type="text"
+                    formControlName="productName"
+                    placeholder="Enter product name" />
+                    <!-- REQUIRED -->
+                    @if (
+                      editForm.get('productName')?.touched &&
+                      editForm.get('productName')?.hasError('required')
+                      ) {
+                      <small>
+                        Product name is required.
+                      </small>
+                    }
+                    <!-- MIN LENGTH -->
+                    @if (
+                      editForm.get('productName')?.touched &&
+                      editForm.get('productName')?.hasError('minlength')
+                      ) {
+                      <small>
+                        Product name must be at least 2 characters.
+                      </small>
+                    }
+                    <!-- MAX LENGTH -->
+                    @if (
+                      editForm.get('productName')?.touched &&
+                      editForm.get('productName')?.hasError('maxlength')
+                      ) {
+                      <small>
+                        Maximum 100 characters allowed.
+                      </small>
+                    }
+                  </div>
+                  <!-- DESCRIPTION -->
+                  <div class="form-group">
+                    <label>
+                      Description
+                    </label>
+                    <textarea rows="3"
+                      formControlName="description"
+                      placeholder="Enter product description">
+                    </textarea>
+                    @if (
+                      editForm.get('description')?.touched &&
+                      editForm.get('description')?.hasError('maxlength')
+                      ) {
+                      <small>
+                        Maximum 250 characters allowed.
+                      </small>
+                    }
+                  </div>
+                  <!-- PRICE -->
+                  <div class="form-group">
+                    <label>
+                      Price
+                    </label>
+                    <input type="number"
+                      formControlName="price"
+                      min="0.01"
+                      step="0.01"
+                      placeholder="Enter price" />
+                      @if (
+                        editForm.get('price')?.touched &&
+                        editForm.get('price')?.hasError('required')
+                        ) {
+                        <small>
+                          Price is required.
+                        </small>
+                      }
+                      @if (
+                        editForm.get('price')?.touched &&
+                        editForm.get('price')?.hasError('min')
+                        ) {
+                        <small>
+                          Price must be greater than 0.
+                        </small>
+                      }
+                    </div>
+                    <!-- STOCK -->
+                    <div class="form-group">
+                      <label>
+                        Stock Quantity
+                      </label>
+                      <input type="number"
+                        formControlName="stockQuantity"
+                        min="0"
+                        placeholder="Enter stock quantity" />
+                        @if (
+                          editForm.get('stockQuantity')?.touched &&
+                          editForm.get('stockQuantity')?.hasError('required')
+                          ) {
+                          <small>
+                            Stock quantity is required.
+                          </small>
+                        }
+                        @if (
+                          editForm.get('stockQuantity')?.touched &&
+                          editForm.get('stockQuantity')?.hasError('min')
+                          ) {
+                          <small>
+                            Stock cannot be negative.
+                          </small>
+                        }
+                      </div>
+                      <!-- CATEGORY -->
+                      <div class="form-group">
+                        <label>
+                          Category
+                        </label>
+                        <select formControlName="categoryId">
+                          <option value="">
+                            Select Category
+                          </option>
+                          @for (category of categories; track category) {
+                            <option
+                              [ngValue]="category.categoryId">
+                              {{ category.categoryName }}
+                            </option>
+                          }
+                        </select>
+                        @if (
+                          editForm.get('categoryId')?.touched &&
+                          editForm.get('categoryId')?.hasError('required')
+                          ) {
+                          <small>
+                            Category is required.
+                          </small>
+                        }
+                      </div>
+                      <!-- ACTIONS -->
+                      <div class="modal-actions">
+                        <button type="button"
+                          class="cancel-btn"
+                          (click)="closeEditModal()">
+                          Cancel
+                        </button>
+                        <button type="submit"
+                          class="save-btn">
+                          Update Product
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              }
+
+
+              <!-- ================================================= -->
+              <!-- DEACTIVATE PRODUCT MODAL - ADMIN ONLY -->
+              <!-- ================================================= -->
+
+              @if (showDeactivateModal && isAdmin) {
+                <div class="modal-overlay"
+                  >
+                  <div class="confirm-modal">
+                    <h2>
+                      Deactivate Product?
+                    </h2>
+                    <p>
+                      Are you sure you want to deactivate
+                      <strong>
+                        {{ selectedProductForDeactivate?.productName }}
+                      </strong>?
+                    </p>
+                    <p class="warning-text">
+                      This product will no longer be available
+                      as an active product.
+                    </p>
+                    <div class="modal-actions">
+                      <button type="button"
+                        class="cancel-btn"
+                        (click)="closeDeactivateModal()">
+                        Cancel
+                      </button>
+                      <button type="button"
+                        class="confirm-deactivate-btn"
+                        (click)="confirmDeactivate()">
+                        Deactivate
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+
+
+              <!-- ================================================= -->
+              <!-- PRODUCT DETAILS MODAL - CUSTOMER ONLY -->
+              <!-- ================================================= -->
+
+              @if (showProductDetailsModal && isCustomer) {
+                <div class="modal-overlay"
+                  >
+                  <div class="product-details-modal">
+                    <div class="modal-header">
+                      <h2>
+                        Product Details
+                      </h2>
+                      <button type="button"
+                        class="close-btn"
+                        (click)="closeProductDetails()">
+                        ×
+                      </button>
+                    </div>
+                    @if (selectedProductForDetails; as product) {
+                      <div class="product-details-content"
+                        >
+                        <div class="product-details-icon">
+                          🛍️
+                        </div>
+                        <h2 class="product-title">
+                          {{ product.productName }}
+                        </h2>
+                        <p class="product-description">
+                          {{ product.description || 'No description available.' }}
+                        </p>
+                        <div class="product-info-grid">
+                          <div class="product-info-item">
+                            <span>
+                              Category
+                            </span>
+                            <strong>
+                              {{ product.categoryName || '-' }}
+                            </strong>
+                          </div>
+                          <div class="product-info-item">
+                            <span>
+                              Price
+                            </span>
+                            <strong>
+                              ₹{{ product.price | number:'1.2-2' }}
+                            </strong>
+                          </div>
+                          <div class="product-info-item">
+                            <span>
+                              Available Stock
+                            </span>
+                            <strong>
+                              {{ product.stockQuantity }}
+                            </strong>
+                          </div>
+                        </div>
+                        <!-- QUANTITY -->
+                        @if (product.stockQuantity > 0) {
+                          <div class="quantity-section"
+                            >
+                            <label>
+                              Quantity
+                            </label>
+                            <div class="quantity-control">
+                              <button type="button"
+                                (click)="decreaseQuantity()"
+                                [disabled]="quantity <= 1">
+                                −
+                              </button>
+                              <span>
+                                {{ quantity }}
+                              </span>
+                              <button type="button"
+                                (click)="increaseQuantity()"
+                                [disabled]="quantity >= product.stockQuantity">
+                                +
+                              </button>
+                            </div>
+                          </div>
+                        }
+                        <!-- TOTAL -->
+                        @if (product.stockQuantity > 0) {
+                          <div class="order-total"
+                            >
+                            <span>
+                              Total
+                            </span>
+                            <strong>
+                              ₹{{ product.price * quantity | number:'1.2-2' }}
+                            </strong>
+                          </div>
+                        }
+                        <!-- OUT OF STOCK -->
+                        @if (product.stockQuantity === 0) {
+                          <div class="out-of-stock"
+                            >
+                            Out of Stock
+                          </div>
+                        }
+                        <!-- ACTIONS -->
+                        <div class="modal-actions">
+                          <button type="button"
+                            class="cancel-btn"
+                            (click)="closeProductDetails()">
+                            Close
+                          </button>
+                          @if (product.stockQuantity > 0) {
+                            <button type="button"
+                              class="save-btn"
+                              (click)="placeOrder()">
+                              Place Order
+                            </button>
+                          }
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+
+
+              <!-- ================================================= -->
+              <!-- SHIPPING ADDRESS MODAL -->
+              <!-- ================================================= -->
+
+              @if (showShippingModal && isCustomer) {
+                <div class="modal-overlay"
+                  >
+                  <div class="confirm-modal">
+                    <div class="modal-header">
+                      <h2>
+                        Shipping Address
+                      </h2>
+                      <button type="button"
+                        class="close-btn"
+                        (click)="showShippingModal = false">
+                        ×
+                      </button>
+                    </div>
+                    <div class="form-group">
+                      <label>
+                        Shipping Address
+                      </label>
+                      <textarea rows="4"
+                        [(ngModel)]="shippingAddress"
+                        maxlength="250"
+                        placeholder="Enter your shipping address">
+                      </textarea>
+                      @if (
+                        shippingAddress.length>
+                        0 &&
+                        shippingAddress.trim().length < 5
+                        ) {
+                        <small>
+                          Address must be at least 5 characters.
+                        </small>
+                      }
+                    </div>
+                    <div class="modal-actions">
+                      <button type="button"
+                        class="cancel-btn"
+                        (click)="showShippingModal = false">
+                        Cancel
+                      </button>
+                      <button type="button"
+                        class="save-btn"
+                        [disabled]="shippingAddress.trim().length < 5"
+                        (click)="submitOrder()">
+                        Confirm Order
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              }
+
+
+              <!-- ================================================= -->
+              <!-- ORDER SUCCESS MODAL -->
+              <!-- ================================================= -->
+
+              @if (showOrderSuccessModal && isCustomer) {
+                <div class="modal-overlay"
+                  >
+                  <div class="success-modal">
+                    <div class="success-icon">
+                      ✓
+                    </div>
+                    <h2>
+                      Order Placed Successfully!
+                    </h2>
+                    <p>
+                      Your order has been placed successfully.
+                    </p>
+                    <div class="order-number">
+                      Order #{{ placedOrderId }}
+                    </div>
+                    <button type="button"
+                      class="save-btn"
+                      (click)="continueToPayment()">
+                      Continue to Payment
+                    </button>
+                  </div>
+                </div>
+              }

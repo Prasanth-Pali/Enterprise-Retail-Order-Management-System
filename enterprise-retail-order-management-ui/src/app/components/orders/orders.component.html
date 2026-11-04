@@ -1,0 +1,467 @@
+
+<div class="orders-container">
+
+  <!-- =========================
+  TOP BAR
+  ========================== -->
+
+  <div class="topbar">
+
+    <h2>
+      {{ isCustomer ? 'My Orders' : 'Orders' }}
+    </h2>
+
+    <button type="button"
+      class="back-btn"
+      (click)="goBack()">
+
+      ← Back
+
+    </button>
+
+  </div>
+
+
+  <div class="orders-content">
+
+    <!-- =========================
+    PAGE HEADER
+    ========================== -->
+
+    <div class="page-header">
+
+      <div>
+
+        <h1>
+          {{ isCustomer ? 'My Orders' : 'Order Management' }}
+        </h1>
+
+        <p>
+          {{
+          isCustomer
+          ? 'View your order history and details'
+          : 'View and manage customer orders'
+          }}
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+    FILTER
+    ========================== -->
+
+    <div class="filter-card">
+
+      <div class="filter-group">
+
+        <label>Status</label>
+
+        <select [(ngModel)]="selectedStatus"
+          (change)="filterOrders()">
+
+          <option value="">
+            All Status
+          </option>
+
+          <option value="Pending">
+            Pending
+          </option>
+
+          <option value="Confirmed">
+            Confirmed
+          </option>
+
+          <option value="Shipped">
+            Shipped
+          </option>
+
+          <option value="Delivered">
+            Delivered
+          </option>
+
+          <option value="Cancelled">
+            Cancelled
+          </option>
+
+        </select>
+
+      </div>
+
+
+      <div class="filter-buttons">
+
+        <button type="button"
+          class="clear-btn"
+          (click)="clearFilters()">
+
+          Clear
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =========================
+    SUCCESS MESSAGE
+    ========================== -->
+
+    @if (successMessage) {
+      <div class="success-message"
+        >
+        {{ successMessage }}
+      </div>
+    }
+
+
+    <!-- =========================
+    ERROR MESSAGE
+    ========================== -->
+
+    @if (errorMessage) {
+      <div class="error-message"
+        >
+        {{ errorMessage }}
+      </div>
+    }
+
+
+    <!-- =========================
+    LOADING
+    ========================== -->
+
+    @if (isLoading) {
+      <div class="loading"
+        >
+        Loading orders...
+      </div>
+    }
+
+
+    <!-- =========================
+    ORDERS TABLE
+    ========================== -->
+
+    @if (!isLoading) {
+      <div class="table-card"
+        >
+        <table>
+          <thead>
+            <tr>
+              <th>
+                Order ID
+              </th>
+              <th>
+                Customer
+              </th>
+              <th>
+                Total Amount
+              </th>
+              <th>
+                Status
+              </th>
+              <th>
+                Shipping Address
+              </th>
+              <th>
+                Order Date
+              </th>
+              <th>
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (order of orders; track order) {
+              <tr>
+                <td>
+                  #{{ order.orderId }}
+                </td>
+                <td>
+                  {{ order.customerName }}
+                </td>
+                <td>
+                  ₹{{ order.totalAmount | number:'1.2-2' }}
+                </td>
+                <td>
+                  <span class="status-badge"
+                    [ngClass]="order.status.toLowerCase()">
+                    {{ order.status }}
+                  </span>
+                </td>
+                <td>
+                  {{ order.shippingAddress || 'N/A' }}
+                </td>
+                <td>
+                  {{ order.orderDate | date:'dd-MM-yyyy HH:mm' }}
+                </td>
+                <td class="actions">
+                  <!-- CUSTOMER + ADMIN -->
+                  <button type="button"
+                    class="view-btn"
+                    (click)="viewOrder(order.orderId)">
+                    View
+                  </button>
+                </td>
+              </tr>
+            }
+            <!-- NO DATA -->
+            @if (orders.length === 0) {
+              <tr>
+                <td colspan="7"
+                  class="no-data">
+                  {{
+                  isCustomer
+                  ? 'You have no orders yet.'
+                  : 'No orders found.'
+                  }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+
+
+    <!-- =========================
+    PAGINATION
+    ========================== -->
+
+    @if (totalPages > 1) {
+      <div class="pagination"
+        >
+        <button type="button"
+          [disabled]="currentPage === 1"
+          (click)="goToPage(currentPage - 1)">
+          Previous
+        </button>
+        @for (page of pages; track page) {
+          <button type="button"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)">
+            {{ page }}
+          </button>
+        }
+        <button type="button"
+          [disabled]="currentPage === totalPages"
+          (click)="goToPage(currentPage + 1)">
+          Next
+        </button>
+      </div>
+    }
+
+  </div>
+
+
+  <!-- =================================================
+  ORDER DETAILS POPUP
+  ================================================== -->
+
+  @if (
+    showOrderDetailsModal &&
+    selectedOrder
+    ) {
+    <div class="modal-overlay"
+      (click)="closeOrderDetails()">
+      <div class="order-details-modal"
+        (click)="$event.stopPropagation()">
+        <!-- =========================
+        MODAL HEADER
+        ========================== -->
+        <div class="modal-header">
+          <div>
+            <h2>
+              Order #{{ selectedOrder.orderId }}
+            </h2>
+            <p>
+              Order Details
+            </p>
+          </div>
+          <button type="button"
+            class="close-btn"
+            (click)="closeOrderDetails()">
+            ×
+          </button>
+        </div>
+        <!-- =========================
+        ORDER INFORMATION
+        ========================== -->
+        <div class="order-info">
+          <div class="info-item">
+            <label>
+              Customer
+            </label>
+            <span>
+              {{ selectedOrder.customerName }}
+            </span>
+          </div>
+          <div class="info-item">
+            <label>
+              User ID
+            </label>
+            <span>
+              {{ selectedOrder.userId }}
+            </span>
+          </div>
+          <div class="info-item">
+            <label>
+              Order Date
+            </label>
+            <span>
+              {{ selectedOrder.orderDate | date:'dd-MM-yyyy HH:mm' }}
+            </span>
+          </div>
+          <div class="info-item">
+            <label>
+              Status
+            </label>
+            <span class="status-badge"
+              [ngClass]="selectedOrder.status.toLowerCase()">
+              {{ selectedOrder.status }}
+            </span>
+          </div>
+          <div class="info-item full-width">
+            <label>
+              Shipping Address
+            </label>
+            <span>
+              {{ selectedOrder.shippingAddress || 'N/A' }}
+            </span>
+          </div>
+        </div>
+        <!-- =========================
+        ORDER ITEMS
+        ========================== -->
+        <div class="items-section">
+          <h3>
+            Order Items
+          </h3>
+          <div class="items-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>
+                    Product
+                  </th>
+                  <th>
+                    Quantity
+                  </th>
+                  <th>
+                    Unit Price
+                  </th>
+                  <th>
+                    Sub Total
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (
+                  item of selectedOrder.items
+                  ; track
+                  item) {
+                  <tr>
+                    <td>
+                      {{ item.productName }}
+                    </td>
+                    <td>
+                      {{ item.quantity }}
+                    </td>
+                    <td>
+                      ₹{{ item.unitPrice | number:'1.2-2' }}
+                    </td>
+                    <td>
+                      ₹{{ item.subTotal | number:'1.2-2' }}
+                    </td>
+                  </tr>
+                }
+                @if (
+                  selectedOrder.items.length === 0
+                  ) {
+                  <tr>
+                    <td colspan="4"
+                      class="no-items">
+                      No items found.
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- =================================================
+        UPDATE ORDER STATUS
+        ADMIN ONLY
+        ================================================== -->
+        @if (
+          isAdmin &&
+          selectedOrder &&
+          getAllowedStatuses().length>
+          0
+          ) {
+          <div class="status-update-section"
+            >
+            <h3>
+              Update Order Status
+            </h3>
+            <div class="status-update-form">
+              <select [(ngModel)]="selectedNewStatus">
+                <option value="">
+                  Select New Status
+                </option>
+                @for (
+                  status of getAllowedStatuses()
+                  ; track
+                  status) {
+                  <option
+                    [value]="status">
+                    {{ status }}
+                  </option>
+                }
+              </select>
+              <button type="button"
+                class="update-status-btn"
+                  [disabled]="
+              !selectedNewStatus ||
+              isUpdatingStatus
+            "
+                (click)="updateStatus()">
+                {{
+                isUpdatingStatus
+                ? 'Updating...'
+                : 'Update Status'
+                }}
+              </button>
+            </div>
+          </div>
+        }
+        <!-- =========================
+        TOTAL
+        ========================== -->
+        <div class="order-total">
+          <span>
+            Total Amount
+          </span>
+          <strong>
+            ₹{{ selectedOrder.totalAmount | number:'1.2-2' }}
+          </strong>
+        </div>
+        <!-- =========================
+        MODAL FOOTER
+        ========================== -->
+        <div class="modal-actions">
+          <button type="button"
+            class="cancel-btn"
+            (click)="closeOrderDetails()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</div>
