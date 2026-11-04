@@ -641,6 +641,23 @@ The [CI/CD workflow](.github/workflows/ci-cd.yml) runs automatically on pushes a
 
 The workflow currently provides continuous integration (build and test checks); automatic deployment is not configured because no hosting target or deployment credentials have been specified.
 
+### Run with Docker
+
+Docker Compose builds the API and Angular frontend images. SQL Server remains external; create the database with the SQL script described above and ensure the API container can reach it.
+
+1. Copy `.env.example` to `.env`, then set `RETAILFLOW_CONNECTION_STRING` to a connection string reachable from Docker and `JWT_KEY` to a random secret of at least 32 bytes. Keep `.env` private; it is excluded from Git.
+2. Start both services from the repository root:
+
+```powershell
+Copy-Item .env.example .env
+# Edit .env and provide the database connection string and JWT key.
+docker compose up --build
+```
+
+The UI is available at `http://localhost:8080`, and the API at `http://localhost:5150`. Swagger is enabled only in the API's Development environment. The UI's Nginx server forwards `/api` requests to the API container. For a database running on the host machine, configure SQL Server to accept connections from Docker and use a host-reachable address in the connection string (for example, `host.docker.internal` where supported).
+
+To stop the containers, press Ctrl+C and run `docker compose down`.
+
 ---
 
 ## 🧪 API Testing

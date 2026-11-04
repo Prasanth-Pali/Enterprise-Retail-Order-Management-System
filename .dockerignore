@@ -1,0 +1,15 @@
+.git
+.github
+.vs
+**/bin
+**/obj
+**/node_modules
+**/dist
+**/coverage
+**/.angular
+.env
+.env.*
+!.env.example
+**/*.user
+**/*.suo
+**/*.log
