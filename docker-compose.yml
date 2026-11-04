@@ -2,7 +2,8 @@ services:
   api:
     build:
       context: .
-      dockerfile: "Enterprise Retail & Order Management System/Dockerfile"
+      dockerfile: Dockerfile
+      target: api
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://+:8080
@@ -14,8 +15,9 @@ services:
 
   frontend:
     build:
-      context: ./enterprise-retail-order-management-ui
+      context: .
       dockerfile: Dockerfile
+      target: frontend
     depends_on:
       - api
     ports:

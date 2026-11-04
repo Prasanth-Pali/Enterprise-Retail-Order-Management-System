@@ -643,7 +643,7 @@ The workflow currently provides continuous integration (build and test checks); 
 
 ### Run with Docker
 
-Docker Compose builds the API and Angular frontend images. SQL Server remains external; create the database with the SQL script described above and ensure the API container can reach it.
+Docker Compose builds the API and Angular frontend images from separate targets in the root-level `Dockerfile`. The API and frontend remain separate containers because they use different runtimes. SQL Server remains external; create the database with the SQL script described above and ensure the API container can reach it.
 
 1. Copy `.env.example` to `.env`, then set `RETAILFLOW_CONNECTION_STRING` to a connection string reachable from Docker and `JWT_KEY` to a random secret of at least 32 bytes. Keep `.env` private; it is excluded from Git.
 2. Start both services from the repository root:
