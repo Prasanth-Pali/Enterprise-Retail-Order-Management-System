@@ -656,7 +656,20 @@ docker compose up --build
 
 The UI is available at `http://localhost:8080`, and the API at `http://localhost:5150`. Swagger is enabled only in the API's Development environment. The UI's Nginx server forwards `/api` requests to the API container. For a database running on the host machine, configure SQL Server to accept connections from Docker and use a host-reachable address in the connection string (for example, `host.docker.internal` where supported).
 
-For a single Render web service, use the repository root as the root directory, choose Docker as the runtime, and leave the Docker command and any Docker build target empty. The default final Dockerfile stage starts both the API and UI; Nginx serves the UI and proxies `/api` requests to the API in the same container. Set `ConnectionStrings__RetailFlowConnection` and `Jwt__Key` in Render's Environment settings (or use `RETAILFLOW_CONNECTION_STRING` and `JWT_KEY`). Remove any `API_UPSTREAM` override; the combined image routes to its local API automatically. Render supplies `PORT`. If you deploy the API and UI as separate services instead, configure the frontend's `API_UPSTREAM` to the API's public URL and set the API's `Cors__AllowedOrigins__0` to the frontend's public URL.
+### Deploy to Render as one service
+
+This repository's default Dockerfile target runs the API and Angular UI in one Render web service. Nginx listens on Render's `PORT`, serves the UI, and proxies `/api` requests to the API on the same container. SQL Server remains external and must be reachable from the Render service.
+
+1. In Render, create a **Web Service** from this repository and select the `master` branch.
+2. Choose **Docker** as the runtime. Keep the root directory at the repository root, use the root `Dockerfile`, and leave the Docker command and Docker build target empty. The default final Dockerfile stage runs both applications.
+3. Add these variables under the service's **Environment** settings:
+   * `ConnectionStrings__RetailFlowConnection` — the SQL Server connection string reachable from Render.
+   * `Jwt__Key` — a private random secret with at least 32 bytes.
+   * `PORT` is provided by Render; do not set it to `8080` or `80`.
+4. Remove any `API_UPSTREAM` override left over from trying to deploy the frontend separately. The combined image routes API requests to its local API automatically.
+5. Deploy the service. Open the Render service URL to load the UI; API requests are sent through that same URL under `/api`.
+
+Do not use the `api` Docker Compose hostname in Render: it only resolves when the API and frontend are separate Compose containers. For a database hosted outside Render, allow the Render service to connect to it and use a host/connection string appropriate for that network. Keep the connection string and JWT key in Render's environment settings, not in source control.
 
 To stop the containers, press Ctrl+C and run `docker compose down`.
 
