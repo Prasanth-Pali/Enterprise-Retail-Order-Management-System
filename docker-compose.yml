@@ -20,5 +20,7 @@ services:
       target: frontend
     depends_on:
       - api
+    environment:
+      API_UPSTREAM: http://api:8080
     ports:
       - "8080:80"

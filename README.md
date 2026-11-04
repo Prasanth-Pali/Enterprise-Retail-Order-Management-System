@@ -656,6 +656,8 @@ docker compose up --build
 
 The UI is available at `http://localhost:8080`, and the API at `http://localhost:5150`. Swagger is enabled only in the API's Development environment. The UI's Nginx server forwards `/api` requests to the API container. For a database running on the host machine, configure SQL Server to accept connections from Docker and use a host-reachable address in the connection string (for example, `host.docker.internal` where supported).
 
+When deploying the frontend outside Docker Compose (for example, as a separate Render service), set its `API_UPSTREAM` environment variable to the API service URL, such as `https://your-api-service.onrender.com`. Also set the API service's `Cors__AllowedOrigins__0` to the frontend's public URL. The Compose setup configures its internal API address automatically.
+
 To stop the containers, press Ctrl+C and run `docker compose down`.
 
 ---
