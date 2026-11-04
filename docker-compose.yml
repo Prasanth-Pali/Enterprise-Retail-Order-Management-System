@@ -22,5 +22,6 @@ services:
       - api
     environment:
       API_UPSTREAM: http://api:8080
+      PORT: 80
     ports:
       - "8080:80"

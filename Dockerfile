@@ -33,8 +33,31 @@ RUN npm run build
 
 FROM nginx:alpine AS frontend
 ENV API_UPSTREAM=http://api:8080
-ENV NGINX_ENVSUBST_FILTER=^API_UPSTREAM$
+ENV PORT=80
+ENV NGINX_ENVSUBST_FILTER=^(API_UPSTREAM|PORT)$
 COPY ["enterprise-retail-order-management-ui/nginx.conf", "/etc/nginx/templates/default.conf.template"]
 COPY --from=frontend-build /app/dist/enterprise-retail-order-management-ui/browser /usr/share/nginx/html
 
 EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS app
+ENV API_UPSTREAM=http://127.0.0.1:8081 \
+    ASPNETCORE_URLS=http://127.0.0.1:8081 \
+    PORT=10000
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends nginx supervisor gettext-base \
+    && rm -rf /var/lib/apt/lists/* \
+    && rm -f /etc/nginx/sites-enabled/default
+
+WORKDIR /app
+COPY --from=api-build /app/publish ./api
+COPY --from=frontend-build /app/dist/enterprise-retail-order-management-ui/browser /usr/share/nginx/html
+COPY ["enterprise-retail-order-management-ui/nginx.conf", "/etc/nginx/templates/default.conf.template"]
+COPY ["docker/supervisord.conf", "/etc/supervisor/supervisord.conf"]
+COPY ["docker/entrypoint.sh", "/entrypoint.sh"]
+
+RUN chmod +x /entrypoint.sh
+
+EXPOSE 10000
+ENTRYPOINT ["/entrypoint.sh"]

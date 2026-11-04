@@ -643,7 +643,7 @@ The workflow currently provides continuous integration (build and test checks); 
 
 ### Run with Docker
 
-Docker Compose builds the API and Angular frontend images from separate targets in the root-level `Dockerfile`. The API and frontend remain separate containers because they use different runtimes. SQL Server remains external; create the database with the SQL script described above and ensure the API container can reach it.
+The root-level `Dockerfile` builds the API and Angular frontend. By default, its final image runs both behind Nginx in one container, suitable for a single web service. Docker Compose can also run them as separate containers using their individual Dockerfile targets. SQL Server remains external; create the database with the SQL script described above and ensure the API container can reach it.
 
 1. Copy `.env.example` to `.env`, then set `RETAILFLOW_CONNECTION_STRING` to a connection string reachable from Docker and `JWT_KEY` to a random secret of at least 32 bytes. Keep `.env` private; it is excluded from Git.
 2. Start both services from the repository root:
@@ -656,7 +656,7 @@ docker compose up --build
 
 The UI is available at `http://localhost:8080`, and the API at `http://localhost:5150`. Swagger is enabled only in the API's Development environment. The UI's Nginx server forwards `/api` requests to the API container. For a database running on the host machine, configure SQL Server to accept connections from Docker and use a host-reachable address in the connection string (for example, `host.docker.internal` where supported).
 
-When deploying the frontend outside Docker Compose (for example, as a separate Render service), set its `API_UPSTREAM` environment variable to the API service URL, such as `https://your-api-service.onrender.com`. Also set the API service's `Cors__AllowedOrigins__0` to the frontend's public URL. The Compose setup configures its internal API address automatically.
+For a single Render web service, use the repository root as the root directory, choose Docker as the runtime, and leave the Docker command and any Docker build target empty. The default final Dockerfile stage starts both the API and UI; Nginx serves the UI and proxies `/api` requests to the API in the same container. Set `ConnectionStrings__RetailFlowConnection` and `Jwt__Key` in Render's Environment settings (or use `RETAILFLOW_CONNECTION_STRING` and `JWT_KEY`). Remove any `API_UPSTREAM` override; the combined image routes to its local API automatically. Render supplies `PORT`. If you deploy the API and UI as separate services instead, configure the frontend's `API_UPSTREAM` to the API's public URL and set the API's `Cors__AllowedOrigins__0` to the frontend's public URL.
 
 To stop the containers, press Ctrl+C and run `docker compose down`.
 
