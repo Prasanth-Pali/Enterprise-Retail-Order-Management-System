@@ -32,6 +32,7 @@ COPY ["enterprise-retail-order-management-ui/", "./"]
 RUN npm run build
 
 FROM nginx:alpine AS frontend
+ENV API_UPSTREAM=http://api:8080
 ENV NGINX_ENVSUBST_FILTER=^API_UPSTREAM$
 COPY ["enterprise-retail-order-management-ui/nginx.conf", "/etc/nginx/templates/default.conf.template"]
 COPY --from=frontend-build /app/dist/enterprise-retail-order-management-ui/browser /usr/share/nginx/html
