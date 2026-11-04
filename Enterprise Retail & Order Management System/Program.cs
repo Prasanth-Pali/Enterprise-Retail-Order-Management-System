@@ -10,6 +10,45 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
+var jwtKey = builder.Configuration["Jwt:Key"];
+if (string.IsNullOrWhiteSpace(jwtKey) ||
+    Encoding.UTF8.GetByteCount(jwtKey) < 32)
+{
+    throw new InvalidOperationException(
+        "Configure Jwt:Key with a secret of at least 32 bytes using user secrets or environment variables.");
+}
+
+var issuer = builder.Configuration["Jwt:Issuer"];
+var audience = builder.Configuration["Jwt:Audience"];
+if (string.IsNullOrWhiteSpace(issuer) ||
+    string.IsNullOrWhiteSpace(audience))
+{
+    throw new InvalidOperationException(
+        "Configure Jwt:Issuer and Jwt:Audience before starting the API.");
+}
+
+if (builder.Configuration.GetValue<int>("Jwt:ExpirationMinutes") <= 0)
+{
+    throw new InvalidOperationException(
+        "Jwt:ExpirationMinutes must be greater than zero.");
+}
+
+var connectionString =
+    builder.Configuration.GetConnectionString("RetailFlowConnection");
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException(
+        "Configure the RetailFlowConnection connection string using user secrets or environment variables.");
+}
+
+var allowedOrigins = builder.Configuration
+    .GetSection("Cors:AllowedOrigins")
+    .Get<string[]>();
+if (allowedOrigins is not { Length: > 0 })
+{
+    throw new InvalidOperationException(
+        "Configure at least one origin in Cors:AllowedOrigins.");
+}
 
 // ===============================
 // CORS - Angular Frontend
@@ -18,7 +57,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularClient", policy =>
     {
-        policy.WithOrigins("http://localhost:4200")
+        policy.WithOrigins(allowedOrigins)
               .AllowAnyHeader()
               .AllowAnyMethod();
     });
@@ -43,17 +82,13 @@ builder.Services.AddAuthentication(
 
                 ValidateIssuerSigningKey = true,
 
-                ValidIssuer =
-                    builder.Configuration["Jwt:Issuer"],
+                ValidIssuer = issuer,
 
-                ValidAudience =
-                    builder.Configuration["Jwt:Audience"],
+                ValidAudience = audience,
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(
-                            builder.Configuration["Jwt:Key"]!
-                        )
+                        Encoding.UTF8.GetBytes(jwtKey)
                     )
             };
     });
@@ -64,10 +99,7 @@ builder.Services.AddAuthentication(
 // ===============================
 builder.Services.AddDbContext<RetailFlowDbContext>(
     options =>
-        options.UseSqlServer(
-            builder.Configuration
-                .GetConnectionString("RetailFlowConnection")
-        ));
+        options.UseSqlServer(connectionString));
 
 
 // ===============================

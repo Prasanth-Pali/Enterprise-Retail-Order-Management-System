@@ -54,7 +54,7 @@ public class AuthService : IAuthService
         var user = await _context.Users
             .FirstOrDefaultAsync(x => x.Email == request.Email);
 
-        if (user == null)
+        if (user == null || !user.IsActive)
         {
             return null;
         }
@@ -99,7 +99,8 @@ public class AuthService : IAuthService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddHours(1),
+            expires: DateTime.UtcNow.AddMinutes(
+                _configuration.GetValue<int>("Jwt:ExpirationMinutes")),
             signingCredentials: credentials
         );
 

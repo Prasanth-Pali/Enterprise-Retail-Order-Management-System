@@ -2,6 +2,7 @@
 using Enterprise_Retail___Order_Management_System.Models;
 using Enterprise_Retail___Order_Management_System.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace Enterprise_Retail___Order_Management_System.Services;
 
@@ -245,7 +246,13 @@ public class OrderService : IOrderService
         int orderId,
         UpdateOrderStatusDto request)
     {
+        await using var transaction =
+            await _context.Database.BeginTransactionAsync(
+                IsolationLevel.Serializable);
+
         var order = await _context.Orders
+            .Include(x => x.OrderItems)
+                .ThenInclude(x => x.Product)
             .FirstOrDefaultAsync(x =>
                 x.OrderId == orderId);
 
@@ -327,7 +334,17 @@ public class OrderService : IOrderService
                 newStatus,
                 StringComparison.OrdinalIgnoreCase));
 
+        if (order.Status == "Cancelled")
+        {
+            foreach (var item in order.OrderItems)
+            {
+                item.Product.StockQuantity += item.Quantity;
+                item.Product.UpdatedAt = DateTime.UtcNow;
+            }
+        }
+
         await _context.SaveChangesAsync();
+        await transaction.CommitAsync();
 
         return true;
     }

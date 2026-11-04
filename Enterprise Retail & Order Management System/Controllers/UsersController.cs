@@ -2,6 +2,7 @@
 using Enterprise_Retail___Order_Management_System.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Enterprise_Retail___Order_Management_System.Controllers;
 
@@ -36,6 +37,16 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin,customer")]
     public async Task<IActionResult> GetUserById(int userId)
     {
+        var role = User.FindFirst(ClaimTypes.Role)?.Value;
+        var callerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (!string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase) &&
+            (!int.TryParse(callerId, out var authenticatedUserId) ||
+             authenticatedUserId != userId))
+        {
+            return Forbid();
+        }
+
         var user = await _userService.GetUserByIdAsync(userId);
 
         if (user == null)
