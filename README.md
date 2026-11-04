@@ -4,6 +4,8 @@ A full-stack retail and order management application built using **ASP.NET Core 
 
 RetailFlow provides product and category management, customer shopping, order processing, payment-record tracking, user management, and role-based administration through a layered architecture. Payment records are simulated by the API; no payment provider is integrated.
 
+[![CI/CD](https://github.com/Prasanth-Pali/Enterprise-Retail-Order-Management-System/actions/workflows/ci-cd.yml/badge.svg?branch=master)](https://github.com/Prasanth-Pali/Enterprise-Retail-Order-Management-System/actions/workflows/ci-cd.yml)
+
 ---
 
 ## 🚀 Features
@@ -630,7 +632,14 @@ npm test -- --watch=false
 
 The frontend uses Angular 22, TypeScript 6, and Vitest.
 
-GitHub Actions runs the backend restore/Release build and the frontend clean install, production build, and Vitest suite on pushes and pull requests targeting `master`. Deployment is not configured because no hosting target or deployment credentials are specified.
+### GitHub Actions CI
+
+The [CI/CD workflow](.github/workflows/ci-cd.yml) runs automatically on pushes and pull requests targeting `master`, and can also be started manually from the repository's **Actions** tab. Its backend and frontend jobs run independently:
+
+* **Backend:** restores the .NET solution and builds it in Release configuration.
+* **Frontend:** installs dependencies with `npm ci`, builds the Angular app for production, and runs the Vitest suite.
+
+The workflow currently provides continuous integration (build and test checks); automatic deployment is not configured because no hosting target or deployment credentials have been specified.
 
 ---
 
